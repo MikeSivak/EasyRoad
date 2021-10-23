@@ -1,0 +1,23 @@
+<div>
+    <div class="container">
+        <h2>Users list</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users_list}}
+                <tr class="info">
+                    <td>{{this.user_login}}</td>
+                    <td>{{this.user_phone}}</td>
+                    <td>{{'role.role_name'}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

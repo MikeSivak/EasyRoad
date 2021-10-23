@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/css/login.css">
+<div class="wrapper fadeInDown" style="background-color: rgb(25, 152, 194); margin-top:-30px">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <style>
+        .header{
+            background:#373a3c;
+        }
+    </style>
+    <!-- Icon -->
+    <div class="fadeIn first">
+        <br><br>
+      <img style="width:48px; height:48px; margin-bottom:20px" src="https://img.icons8.com/fluent/48/000000/car.png" id="icon" alt="User Icon" />
+    </div>
+    <!-- Login Form -->
+    <form method="POST">
+      <input type="text" id="login" class="fadeIn second" name="email" placeholder="Login">
+      <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password">
+      {{#each urlPath}}
+      <input type="text" id="prev_url" name="prevURL" value="{{this}}" hidden>
+      {{/each}}
+      <br><br>
+      <input type="submit" formaction="/auth/login" class="fadeIn fourth" value="Sign In">
+    </form>
+    <style>
+        #reg{
+            color: #23527c;
+        }
+    </style>
+
+    <!-- Remind Passowrd -->
+    {{!-- <div id="formFooter">
+        <form method="GET">
+            <button id="reg" type="button" onclick="location.href='/register'">Sign Up</button>
+        </form>
+    </div> --}}
+    <div id="formFooter">
+      <a id="reg" class="underlineHover" href="http://localhost:4000/register">Sign up</a>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,180 @@
+<link rel="stylesheet" href="/css/adsList.css">
+<script src="/js/search.js"></script>
+<div class="main-div">
+
+    {{>adsSearchField}}
+
+    <div class="main">
+        {{>fullSearchField}}
+    </div>
+    <br>
+    {{!-- <br> --}}
+
+    {{!-- <div class="card-columns"> --}}
+        {{!-- {{>testBlocks1}} --}}
+        {{>testBlocks2}}
+        {{!-- ================================================================================== --}}
+        {{!-- <div class="card">
+            <div class="card-body">
+                <div id="title_div" class="row">
+                    <div class="col-md">
+                        <div class="block-title">
+                            <img src="/img/map.png" style="height: 24px; width:24px;" alt="map" />
+                            <label class="card-title">Минск (Беларусь)</label>
+                        </div>
+                    </div>
+                    <div id="img_div" class="col-md-4">
+                        <div class="block-user">
+                            <label class="card-title">Ярик</label>
+                            <img src="/img/auto/user.png" alt="pic" />
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div id="body_card_div" class="row">
+                    <div class="col-md-2">
+                        <div class="row">
+                            <label class="lbl-time">08:00</label>
+                        </div>
+                        <div class="row">
+                            <br>
+                        </div>
+                        <div class="row">
+                            <label class="lbl-time">12:00</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="block-lbl-km">
+                            <label class="lbl-km">13 км.</label><img src="/img/start_finish.jpg" alt="lbl" />
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="block-address">
+                            <div class="row">
+                                <label>ул. Свердлова 13а.</label>
+                            </div>
+                            <div class="row">
+                                <br>
+                            </div>
+                            <div class="row">
+                                <label>ул. Беларусская 25</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md">
+                        <div class="quantity">
+                            <input type="number" min="1" max="9" step="1" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <label class="lbl-date">07/05/2021</label>
+                    </div>
+                    <div class="col-md">
+                        <button id="more_info_btn" type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#bd-example-modal-lg">Бронь
+                        </button>
+                    </div>
+                    <div class="col-md">
+                        <label class="lbl-price">2 руб.</label>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
+        {{!-- ========================================================================== --}}
+
+        {{!-- <div class="card p-3">
+            <div class="card-body">
+                <h5 class="card-title">Пассажир</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Ромчик водила</li>
+                    <li class="list-group-item">Как с деньгами обстоит вопрос?</li>
+                    <li class="list-group-item" style="border-bottom:none;">. . .</li>
+                </ul>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bd-example-modal-lg-2"
+                    style="margin-top: 5%; width:100%; border-radius:11px; height:50px !important;">Показать подробнее
+                </button>
+
+            </div>
+        </div> --}}
+    {{!-- </div> --}}
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="bd-example-modal-lg" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" style="z-index:3000000000;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius:11px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: 37%;">Подробное описание</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <img src="https://images.wallpaperscraft.ru/image/chevrolet_camaro_chevrolet_avtomobil_204282_1920x1080.jpg"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Водитель</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Ромчик водила</li>
+                            <li class="list-group-item">Как с деньгами обстоит вопрос?</li>
+                            <li class="list-group-item">С какими деньгами?</li>
+                            <li class="list-group-item">Которые я влОжил</li>
+                            <li class="list-group-item">Куда вложил?</li>
+                            <li class="list-group-item">В капитал прожиточного минимума</li>
+                            <li class="list-group-item">Ты куда звонишь?!!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Оформить заказ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="bd-example-modal-lg-2" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" style="z-index:3000000000;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius:11px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: 37%;">Подробное описание</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    {{!-- <img
+                        src="https://images.wallpaperscraft.ru/image/chevrolet_camaro_chevrolet_avtomobil_204282_1920x1080.jpg"
+                        class="card-img-top" alt="..."> --}}
+                    <div class="card-body">
+                        <h5 class="card-title">Пассажир</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Ромчик водила</li>
+                            <li class="list-group-item">Как с деньгами обстоит вопрос?</li>
+                            <li class="list-group-item">С какими деньгами?</li>
+                            <li class="list-group-item">Которые я влОжил</li>
+                            <li class="list-group-item">Куда вложил?</li>
+                            <li class="list-group-item">В капитал прожиточного минимума</li>
+                            <li class="list-group-item">Ты куда звонишь?!!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Оформить заказ</button>
+            </div>
+        </div>
+    </div>
+</div>
