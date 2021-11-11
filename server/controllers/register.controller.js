@@ -19,7 +19,7 @@ exports.register = (req, res) => {
         let newUser = new User({
             user_email: email,
             user_number: phone,
-            id_role: 1,
+            id_role: 2,
             gender: gender,
             user_password: password,
         });

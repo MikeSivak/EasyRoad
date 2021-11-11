@@ -5,6 +5,8 @@ const ads = db.ads;
 const travel_history = db.travel_history;
 const roles = db.roles;
 const cities = db.cities;
+const countries = db.countries;
+const reviews = db.reviews;
 
 roles.hasOne(users, {
     foreignKey: 'id_role',
@@ -29,6 +31,22 @@ users.hasMany(ads, {
 ads.belongsTo(users, {
     foreignKey: 'id_user'
 });
+
+countries.hasMany(cities, {
+    foreignKey: 'id_country',
+    sourceKey: 'id'
+});
+cities.belongsTo(countries, {
+    foreignKey:'id_country'
+})
+
+users.hasMany(reviews, {
+    foreignKey: 'id_user',
+    sourceKey: 'id'
+});
+reviews.belongsTo(users, {
+    foreignKey: 'id_user'
+})
 
 users.hasMany(travel_history, {
     foreignKey: 'id_driver',
