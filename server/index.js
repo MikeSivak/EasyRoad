@@ -3,35 +3,17 @@ const app = express();
 const db = require('./models');
 db.sequelize.sync();
 const auth = require('./middleware/auth');
-const Handlebars = require('handlebars');
-
 const path = require('path');
-var exphbs = require('express-handlebars');
-var hbs = require('hbs');
-
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { nextTick } = require('process');
 
+const PORT = process.env.PORT || 3001;
+
 app.use(cookieParser())
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.engine('.hbs', exphbs({ extname: '.hbs' }));
-
-app.set("view engine", "hbs");
-
-app.set('views', path.join(__dirname, '/views'));
-app.engine("hbs", exphbs({
-    layoutsDir: "views/layouts",
-    defaultLayout: "main",
-    extname: "hbs"
-}));
-
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
 app.use(express.static('public'));
-hbs.registerPartials(path.join(__dirname, '/views/partials'));
-
-const port = 4000;
 app.use(express.json({
     extended: true
 }));
@@ -52,14 +34,22 @@ app.get('/login', (req, res) => {
     }
 });
 
-/**registration part */
+//test api
+app.use('/test', (req,res)=>{
+    res.json({ message: "Hello from server!" });
+})
+
+//  registration part
 app.use('/register', require('./routes/register.route.js'));
-/**for users/admins*/
+
+//  for users/admins
 app.use('/ads', require('./routes/ads.route.js'));
-/**for users */
+
+//  for users
 app.use('/profile', require('./routes/profile.route.js'));
-/**for admins */
+
+//  for admins
 app.use('/admin', require('./routes/admin.route.js'));
 
-app.listen(port);
-console.log(`server was started on port: ${port} ...`);
+app.listen(PORT);
+console.log(`server was started on port: ${PORT} ...`);
