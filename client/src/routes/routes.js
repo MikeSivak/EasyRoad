@@ -1,10 +1,9 @@
-import Home from '../components/Home/Home.js'
+import Home from '../components/Home/Home'
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Home,
+        component: <Home/>,
         exact: true,
         id: 0
     },

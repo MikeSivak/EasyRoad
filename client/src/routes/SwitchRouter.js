@@ -1,11 +1,13 @@
-import React from 'react';
-import { Route, Routes as Switch, BrowserRouter as Router } from 'react-router-dom';
+// import React from 'react';
+// import { Route, Routes as Switch, BrowserRouter as Router } from 'react-router-dom';
+import React from 'react'
+import { Route, Routes as Switch, BrowserRouter as Router} from 'react-router-dom';
 
 const SwitchRouter = ({ routes }) => (
     <Router>
         <Switch>
-            {routes.map(({ id, ...rest }) =>
-                <Route key={id} {...rest} />
+            {routes.map(({id, path, component}) =>
+                <Route key={id} path={path} element={component} />
             )}
         </Switch>
     </Router>

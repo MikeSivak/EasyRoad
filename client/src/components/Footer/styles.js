@@ -35,11 +35,15 @@ let stylesFooter = {
     secondGridMenuItems: {
         marginTop: '10px',
         '& .MuiBox-root': {
-            fontSize: '1.5em'
+            fontSize: '1.5em',
         },
         '& .MuiBox-root > .MuiLink-root': {
-            color: '#6c757d'
-        }
+            color: '#6c757d',
+            textDecoration:'none',
+        },
+        '& .MuiBox-root > .MuiLink-root:hover': {
+            color: 'white',
+        },
     },
     secondGridDevLabel: {
         fontSize: '1.5em',
@@ -48,6 +52,10 @@ let stylesFooter = {
     secondGridDevInfo: {
         marginTop: '10px',
         '& .MuiLink-root': {
+            color: '#6c757d',
+            textDecoration:'none',
+        },
+        '& .MuiLink-root:hover': {
             color: 'white',
         },
         '& .MuiLink-root > .MuiBox-root.MuiBox-root-34': {
@@ -68,11 +76,16 @@ let stylesFooter = {
         marginTop: '10px',
         color: '#6c757d',
         '& .MuiLink-root': {
-            color: '#6c757d'
+            color: '#6c757d',
+            textDecoration:'none',
         },
-        '& .MuiLink-root > .MuiBox-root.MuiBox-root-42 > .MuiSvgIcon-root': {
+        '& .MuiLink-root:hover': {
+            color: 'white',
+            textDecoration:'none',
+        },
+        '& .MuiLink-root > .MuiBox-root.css-0 > .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.css-i4bv87-MuiSvgIcon-root':{
             fontSize: '2.5em',
-            color: 'darkred'
+            color:'darkred'
         }
     }
 }
