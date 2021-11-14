@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Input, Divider, FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
+import { Box, Container, Grid, Input, Divider, Typography, FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useState } from 'react';
 
@@ -16,13 +16,13 @@ let stylesHome = {
         backgroundImage: 'url(/images/HomeBanner1.jpg)',
         minHeight: '400px',
         padding: '10em 0 0 0',
-        filter:'none'
+        filter: 'none'
     },
     mainSearchContainer: {
-        // maxWidth: '800px',
         padding: '0.5em',
         backgroundColor: 'white',
         borderRadius: '10px',
+        marginTop:'20px'
     },
     searchInput: {
         textAlign: 'center'
@@ -34,12 +34,11 @@ export default function Home() {
     const [depAddress, setDepAddress] = useState('');
     const [arrAddress, setArrAddress] = useState('');
 
-    const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+    const [date, setDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
-    const handleChange = (newValue) => {
-        setValue(newValue);
+    const dateChange = (newValue) => {
+        setDate(newValue);
     };
-
     const cityChange = (event) => {
         setCity(event.target.value);
     };
@@ -52,9 +51,12 @@ export default function Home() {
     return (
         <>
             <Box style={stylesHome.bannerBoxImage}>
+                <Box>
+                    <Typography variant='h2' color='white'>Выберите поездку</Typography>
+                </Box>
                 <Container style={stylesHome.mainSearchContainer} maxWidth='lg'>
                     <Grid container xs={12} spacing={2}>
-                        <Grid item xs={2}>
+                        <Grid item xs>
                             <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
                                 <InputLabel id="demo-simple-select-label">Город</InputLabel>
                                 <Select
@@ -110,8 +112,8 @@ export default function Home() {
                                         <DesktopDatePicker
                                             label="Дата поездки"
                                             inputFormat="MM/dd/yyyy"
-                                            value={value}
-                                            onChange={handleChange}
+                                            value={date}
+                                            onChange={dateChange}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
                                     </Stack>
@@ -120,7 +122,7 @@ export default function Home() {
                         </Grid>
                         <Grid item xs>
                             <FormControl margin='normal'>
-                                <Button variant="contained" size='large' color='primary'><SearchIcon />Search</Button>
+                                <Button variant="contained" size='large' color='primary'><SearchIcon />Поиск</Button>
                             </FormControl>
                         </Grid>
                     </Grid>
