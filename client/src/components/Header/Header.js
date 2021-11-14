@@ -39,7 +39,7 @@ const style = {
   boxShadow: 24,
   borderRadius: '10px',
   p: 4,
-  textAlign: 'center'
+  textAlign: 'center',
 };
 
 export default function Header() {
@@ -74,9 +74,13 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [loginForm, setLoginForm] = React.useState(false);
+  const loginOpen = () => setLoginForm(true);
+  const loginClose = () => setLoginForm(false);
+
+  const [registerForm, setRegisterForm] = React.useState(false);
+  const registerOpen = () => setRegisterForm(true);
+  const registerClose = () => setRegisterForm(false);
 
   const handleClickShowPassword = () => {
     setValues({
@@ -170,24 +174,24 @@ export default function Header() {
   return (
     <>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={loginForm}
+        onClose={loginClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h5" component="h1">
-            Войти
+            Вход
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <FormControl sx={{ m: 1, width: '30ch'}} variant='outlined'>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
               <TextField
                 type={'email'}
                 id="outlined-required"
                 label="Email"
               />
             </FormControl>
-            <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
+            <FormControl sx={{ m: 1, width: '28ch' }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 required
@@ -210,8 +214,81 @@ export default function Header() {
                 label="Password"
               />
             </FormControl>
-            <FormControl sx={{ m: 2, width: '30ch'}} variant='outlined'>
-              <Button variant="contained" sx={{width:'120px', height:'40px', borderRadius:'8px', margin:'0 auto'}}>Войти</Button>
+            <FormControl sx={{ m: 2, width: '28ch' }} variant='outlined'>
+              <Button variant="contained" sx={{ width: '140px', height: '50px', borderRadius: '8px', margin: '0 auto' }}>Войти</Button>
+            </FormControl>
+            {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
+            <FormControl sx={{ m: 0, width: '28ch' }} variant='outlined'>
+              <Button variant="text"
+                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '14px', textTransform: 'none' }}
+                onClick={()=>{registerOpen(); loginClose();}}
+              >
+                Зарегистрироваться
+              </Button>
+            </FormControl>
+          </Typography>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={registerForm}
+        onClose={registerClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h5" component="h1">
+            Регистрация
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
+              <TextField
+                type={'email'}
+                id="outlined-required"
+                label="Email"
+              />
+            </FormControl>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+              <OutlinedInput
+                required
+                id="outlined-adornment-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+                onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
+              <TextField
+                type={'phone'}
+                id="outlined-required"
+                label="Phone"
+              />
+            </FormControl>
+            <FormControl sx={{ m: 2, width: '28ch' }} variant='outlined'>
+              <Button variant="contained" sx={{ height: '50px', borderRadius: '8px', margin: '0 auto' }}>Зарегистрироваться</Button>
+            </FormControl>
+            {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
+            <FormControl sx={{ m: 0, width: '28ch' }} variant='outlined'>
+              <Button variant="text"
+                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '14px', textTransform: 'none' }}
+                onClick={()=>{loginOpen(); registerClose();}}
+              >
+                Войти
+              </Button>
             </FormControl>
           </Typography>
         </Box>
@@ -239,7 +316,7 @@ export default function Header() {
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant='success' onClick={handleOpen}>Войти</Button>
+              <Button variant='success' onClick={loginOpen}>Войти</Button>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
