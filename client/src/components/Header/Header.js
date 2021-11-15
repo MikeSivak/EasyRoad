@@ -49,7 +49,15 @@ export default function Header() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const [values, setValues] = React.useState({
+  const [passLoginInput, setPassLoginInput] = React.useState({
+    amount: '',
+    password: '',
+    weight: '',
+    weightRange: '',
+    showPassword: false,
+  });
+
+  const [passRegisterInput, setPassRegisterInput] = React.useState({
     amount: '',
     password: '',
     weight: '',
@@ -83,9 +91,13 @@ export default function Header() {
   const registerClose = () => setRegisterForm(false);
 
   const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
+    setPassLoginInput({
+      ...passLoginInput,
+      showPassword: !passLoginInput.showPassword,
+    });
+    setPassRegisterInput({
+      ...passRegisterInput,
+      showPassword: !passRegisterInput.showPassword,
     });
   };
 
@@ -93,8 +105,12 @@ export default function Header() {
     event.preventDefault();
   };
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const passwordLoginChange = (prop) => (event) => {
+    setPassLoginInput({ ...passLoginInput, [prop]: event.target.value });
+  };
+
+  const passwordRegisterChange = (prop) => (event) => {
+    setPassRegisterInput({ ...passRegisterInput, [prop]: event.target.value });
   };
 
   const menuId = 'primary-search-account-menu';
@@ -196,9 +212,9 @@ export default function Header() {
               <OutlinedInput
                 required
                 id="outlined-adornment-password"
-                type={values.showPassword ? 'text' : 'password'}
-                value={values.password}
-                onChange={handleChange('password')}
+                type={passLoginInput.showPassword ? 'text' : 'password'}
+                value={passLoginInput.password}
+                onChange={passwordLoginChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -207,7 +223,7 @@ export default function Header() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      {passLoginInput.showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -253,9 +269,9 @@ export default function Header() {
               <OutlinedInput
                 required
                 id="outlined-adornment-password"
-                type={values.showPassword ? 'text' : 'password'}
-                value={values.password}
-                onChange={handleChange('password')}
+                type={passRegisterInput.showPassword ? 'text' : 'password'}
+                value={passRegisterInput.password}
+                onChange={passwordRegisterChange('password')}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -264,7 +280,7 @@ export default function Header() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      {passRegisterInput.showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }

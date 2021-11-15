@@ -22,7 +22,7 @@ let stylesHome = {
         padding: '0.5em',
         backgroundColor: 'white',
         borderRadius: '10px',
-        marginTop:'20px'
+        marginTop: '20px'
     },
     searchInput: {
         textAlign: 'center'
@@ -34,7 +34,7 @@ export default function Home() {
     const [depAddress, setDepAddress] = useState('');
     const [arrAddress, setArrAddress] = useState('');
 
-    const [date, setDate] = React.useState(new Date('2014-08-18T21:11:54'));
+    const [date, setDate] = React.useState(new Date());
 
     const dateChange = (newValue) => {
         setDate(newValue);
@@ -65,7 +65,6 @@ export default function Home() {
                                     value={city}
                                     label="Город"
                                     onChange={cityChange}
-                                    sx={{ textAlign: 'center' }}
                                 >
                                     <MenuItem value={10}>Минск</MenuItem>
                                     <MenuItem value={20}>Мозырь</MenuItem>
@@ -124,6 +123,79 @@ export default function Home() {
                             <FormControl margin='normal'>
                                 <Button variant="contained" size='large' color='primary'><SearchIcon />Поиск</Button>
                             </FormControl>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Box>
+            <Box style={{ backgroundColor: '#19181C', padding: '5em 0' }}>
+                <Box>
+                    <Typography variant='h3' color='white'>Наши преимущества</Typography>
+                </Box>
+                <Container style={{ marginTop: '80px' }} maxWidth='lg'>
+                    <Grid container xs={12} spacing={6}>
+                        <Grid item xs={6}>
+                            <img src='/images/HomeInfo17.jpg' width='100%' />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box style={{ textAlign: 'justify' }}>
+                                <Typography fontSize='2em' color='white'>
+                                    Всегда под рукой
+                                </Typography>
+                                <Typography color='white'>
+                                    Вы можете совершать заказы поездок как на компьютере, так и на вашем смартфоне благодаря адаптивности сайта.
+                                    Для этого вам не нужно ничего устанавливать на вашем смартфоне, вам нужно просто перейти на наш сайт в браузере
+                                    вашего мобильного телефона. В дальнейшем разработчик создаст приложение для мобильных устройств на платформах Android и IOS.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box style={{ textAlign: 'justify' }}>
+                                <Typography fontSize='2em' color='white'>
+                                    Экономия времени
+                                </Typography>
+                                <Typography color='white'>
+                                    Вам больше не нужно тратить время на поиски попутчиков или водителей, чтобы дораться до желаемого места,
+                                    вам просто достаточно ввести данные о поездке в форму поиска и нажать на кнопку - вам сразу отобразится
+                                    список со всеми актуальными объявлениями как от водителей, желающих найти попутчиков, так и от клиентов,
+                                    желающих найти водителя.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <img src='/images/HomeInfo19.jpg' width='100%' />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <img src='/images/HomeInfo12.jpg' width='100%' />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box style={{ textAlign: 'justify' }}>
+                                <Typography fontSize='2em' color='white'>
+                                    Гарантия безопасности
+                                </Typography>
+                                <Typography color='white'>
+                                    Вам не стоит беспокоится о качестве поездки, ведь техническое состояние автомобилей и все документы,
+                                    необходимые для установления соответствия всех данных водителя и его авто строго проверяются нашим сервисом.
+                                    Для регистрации своего авто в приложении необходимо предоставить реальную фотографию прав, документы на автомобиль,
+                                    включая номер авто и последнюю дату ТО, а также фотографии своего автомобиля с разных ракурсов. В случае, если
+                                    хоть одно из требований не будет выполнено, регистрация транспортного средства не будет осуществлена.
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box style={{ textAlign: 'justify' }}>
+                                <Typography fontSize='2em' color='white'>
+                                    Почему стоит выбрать нас
+                                </Typography>
+                                <Typography color='white'>
+                                    Мы гарантируем безопасноить и конфиденциальность наших клиентов и держим обраную связь с каждым, кому
+                                    необходима консультация или помощь в решении какого-либо вопроса, касаемого нашего сервиса. Вы просто можете написать нам - а мы ответим вам.
+                                    Наш сервис имеет свою уникальность, чего достаточно трудно добится в настоящее время. В заключении мы скажем следующее:
+                                    всегда можно попробовать что-то новое - только так вы узнаете, подходит ли это вам. Выбор за вами...
+                                </Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <img src='/images/HomeInfo2.jpg' width='100%' />
                         </Grid>
                     </Grid>
                 </Container>
