@@ -1,7 +1,7 @@
 // import React from 'react';
 // import { Route, Routes as Switch, BrowserRouter as Router } from 'react-router-dom';
-import React from 'react'
 import { Route, Routes as Switch, BrowserRouter as Router} from 'react-router-dom';
+
 
 const SwitchRouter = ({ routes }) => (
     <Router>

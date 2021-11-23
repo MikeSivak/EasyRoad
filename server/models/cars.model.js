@@ -1,7 +1,7 @@
-const { users } = require('../models');
+const { users } = require('.');
 
 module.exports = (sequelize, Sequelize) =>{
-    const cars = sequelize.define('cars', {
+    const Cars = sequelize.define('Cars', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -9,43 +9,43 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'id'
         },
-        car_brand: {
+        carBrand: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'car_brand',
+            field: 'carBrand',
         },
-        car_model: {
+        carModel: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'car_model'
+            field: 'carModel'
         },
-        fuel_type: {
+        fuelType: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'fuel_type'
+            field: 'fuelType'
         },
-        car_photo_link:{
+        carPhotoLink:{
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'car_photo_link'
+            field: 'carPhotoLink'
         },
-        id_user: {
+        userId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: users,
             referencesKey: 'id',
-            field: 'id_user'
+            field: 'userId'
         },
-        fuel_consumption:{
+        fuelConsumption:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            field: 'fuel_consumption'
+            field: 'fuelConsumption'
         }
     },{
-        modelName: 'cars',
-        tableName: 'cars',
+        modelName: 'Cars',
+        tableName: 'Cars',
         timestamps: false
     });
     
-    return cars;
+    return Cars;
 }

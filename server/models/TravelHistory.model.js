@@ -1,9 +1,9 @@
-const db = require('../models');
+const db = require('.');
 const users = db.users;
 const cities = db.cities;
 
 module.exports = (sequelize, Sequelize) =>{
-    const travel_history = sequelize.define('travel_history', {
+    const TravelHistory = sequelize.define('TravelHistory', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -11,57 +11,55 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'id'
         },
-        id_driver: {
+        driverId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: users,
             referencesKey: 'id',
-            field: 'id_driver'
+            field: 'driverId'
         },
-        id_passenger: {
+        passengerId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: users,
             referencesKey: 'id',
-            field: 'id_passenger'
+            field: 'passengerId'
         },
-        id_city: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: cities,
-            referencesKey: 'id',
-            field: 'id_city'
-        },
-        dep_address: {
+        country:{
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'dep_address'
+            field: 'country'
         },
-        arr_address: {
+        city: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'arr_address'
+            field: 'city'
         },
-        travel_date: {
+        startAddress: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'startAddress'
+        },
+        finishAddress: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'finishAddress'
+        },
+        travelDate: {
             type: Sequelize.DATE,
             allowNull: false,
-            field: 'travel_date'
+            field: 'travelDate'
         },
         price: {
             type: Sequelize.INTEGER,
             allowNull: true,
             field: 'price'
-        },
-        distance:{
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            field: 'distance'
         }
     },{
-        modelName: 'travel_history',
-        tableName: 'travel_history',
+        modelName: 'TravelHistory',
+        tableName: 'TravelHistory',
         timestamps: false
     });
     
-    return travel_history;
+    return TravelHistory;
 }

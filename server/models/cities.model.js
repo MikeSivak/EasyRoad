@@ -1,7 +1,7 @@
-const { countries } = require('../models');
+const { countries } = require('.');
 
 module.exports = (sequelize, Sequelize) => {
-    const cities = sequelize.define('cities', {
+    const Cities = sequelize.define('Cities', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -9,23 +9,23 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'id'
         },
-        id_country: {
+        countryId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: countries,
             referencesKey: 'id',
-            field: 'id_country'
+            field: 'countryId'
         },
-        city_name: {
+        cityName: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'city_name'
+            field: 'cityName'
         }
     }, {
-        modelName: 'cities',
-        tableName: 'cities',
+        modelName: 'Cities',
+        tableName: 'Cities',
         timestamps: false
     });
 
-    return cities;
+    return Cities;
 }

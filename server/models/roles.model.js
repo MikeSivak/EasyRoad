@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) =>{
-    const roles = sequelize.define('roles', {
+    const Roles = sequelize.define('Roles', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -7,16 +7,16 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'id'
         },
-        role_name: {
+        roleName: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'role_name'
+            field: 'roleName'
         }
     },{
-        modelName: 'roles',
-        tableName: 'roles',
+        modelName: 'Roles',
+        tableName: 'Roles',
         timestamps: false
     });
     
-    return roles;
+    return Roles;
 }

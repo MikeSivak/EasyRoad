@@ -12,7 +12,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Button } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 import { Link } from '@material-ui/core';
 import { Modal } from '@material-ui/core';
 
@@ -33,7 +33,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 300,
+  maxWidth: 400,
+  minWidth: 300,
   bgcolor: 'background.paper',
   border: 'none',
   boxShadow: 24,
@@ -196,18 +197,19 @@ export default function Header() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h1">
+          <Typography id="modal-modal-title" variant="h5" sx={{ mb: '2rem' }} component="h1">
             Вход
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
+          <Divider />
+          <Box sx={{ mt: '1rem' }}>
+            <FormControl sx={{ mt: '2rem', width: '28ch' }} variant='outlined'>
               <TextField
                 type={'email'}
                 id="outlined-required"
                 label="Email"
               />
             </FormControl>
-            <FormControl sx={{ m: 1, width: '28ch' }} variant="outlined">
+            <FormControl sx={{ mt: '2rem', width: '28ch' }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 required
@@ -230,19 +232,19 @@ export default function Header() {
                 label="Password"
               />
             </FormControl>
-            <FormControl sx={{ m: 2, width: '28ch' }} variant='outlined'>
+            <FormControl sx={{ mt: "3rem", width: '28ch' }} variant='outlined'>
               <Button variant="contained" sx={{ width: '140px', height: '50px', borderRadius: '8px', margin: '0 auto' }}>Войти</Button>
             </FormControl>
             {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
-            <FormControl sx={{ m: 0, width: '28ch' }} variant='outlined'>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
               <Button variant="text"
-                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '14px', textTransform: 'none' }}
-                onClick={()=>{registerOpen(); loginClose();}}
+                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '16px', textTransform: 'none' }}
+                onClick={() => { registerOpen(); loginClose(); }}
               >
                 Зарегистрироваться
               </Button>
             </FormControl>
-          </Typography>
+          </Box>
         </Box>
       </Modal>
 
@@ -253,18 +255,19 @@ export default function Header() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h1">
+          <Typography id="modal-modal-title" variant="h5" sx={{ mb: '2rem' }} component="h1">
             Регистрация
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
+          <Divider />
+          <Box sx={{ mt: '1rem' }}>
+            <FormControl sx={{ mt: "2rem", width: '28ch' }} variant='outlined'>
               <TextField
                 type={'email'}
                 id="outlined-required"
                 label="Email"
               />
             </FormControl>
-            <FormControl sx={{ m: 1, width: '28ch' }} variant="outlined">
+            <FormControl sx={{ mt: "2rem", width: '28ch' }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 required
@@ -287,26 +290,26 @@ export default function Header() {
                 label="Password"
               />
             </FormControl>
-            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
+            <FormControl sx={{ mt: "2rem", width: '28ch' }} variant='outlined'>
               <TextField
                 type={'phone'}
                 id="outlined-required"
                 label="Phone"
               />
             </FormControl>
-            <FormControl sx={{ m: 2, width: '28ch' }} variant='outlined'>
+            <FormControl sx={{ mt: "3rem", width: '28ch' }} variant='outlined'>
               <Button variant="contained" sx={{ height: '50px', borderRadius: '8px', margin: '0 auto' }}>Зарегистрироваться</Button>
             </FormControl>
             {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
-            <FormControl sx={{ m: 0, width: '28ch' }} variant='outlined'>
+            <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
               <Button variant="text"
-                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '14px', textTransform: 'none' }}
-                onClick={()=>{loginOpen(); registerClose();}}
+                style={{ borderRadius: '8px', margin: '0 auto', fontSize: '16px', textTransform: 'none' }}
+                onClick={() => { loginOpen(); registerClose(); }}
               >
                 Войти
               </Button>
             </FormControl>
-          </Typography>
+          </Box>
         </Box>
       </Modal>
 
@@ -331,7 +334,17 @@ export default function Header() {
               Easy Road
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ flexGrow: 2 }}>
+              <Button variant='success' href='/'>Главная</Button>
+              <Button variant='success'>О нас</Button>
+              <Button variant='success'>Портфолио</Button>
+              <Button variant='success'>Блог</Button>
+              <Button variant='success' href='/ads'>Выбрать поездку</Button>
+              <Button variant='success' href='/newad'>Предложить поездку</Button>
+            </Box>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {/* <Button variant='success'>Выбрать поездку</Button>
+            <Button variant='success'>Предложить поездку</Button> */}
               <Button variant='success' onClick={loginOpen}>Войти</Button>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">

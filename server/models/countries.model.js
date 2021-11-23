@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) =>{
-    const countries = sequelize.define('countries', {
+    const Countries = sequelize.define('Countries', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -7,16 +7,16 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'id'
         },
-        country_name: {
+        countryName: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'country_name'
+            field: 'countryName'
         }
     },{
-        modelName: 'countries',
-        tableName: 'countries',
+        modelName: 'Countries',
+        tableName: 'Countries',
         timestamps: false
     });
     
-    return countries;
+    return Countries;
 }

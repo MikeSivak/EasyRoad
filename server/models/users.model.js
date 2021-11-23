@@ -1,8 +1,8 @@
-const db = require('../models');
+const db = require('.');
 const roles = db.roles;
 
 module.exports = (sequelize, Sequelize) => {
-    const users = sequelize.define('users', {
+    const Users = sequelize.define('Users', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -10,48 +10,48 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'id'
         },
-        user_email: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'user_email'
-        },
-        user_password: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'user_password'
-        },
-        user_number: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'user_number'
-        },
-        id_role: {
+        roleId: {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: roles,
             referencesKey: 'id',
-            field: 'id_role'
+            field: 'roleId'
         },
-        us_name: {
+        userName: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'us_name'
+            field: 'userName'
+        },
+        userPhone: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'userPhone'
+        },
+        userEmail: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'userEmail'
+        },
+        userPassword: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'userPassword'
         },
         gender: {
             type: Sequelize.STRING,
             allowNull: false,
             field: 'gender'
         },
-        user_status: {  //1-unblocked, 2-blocked
+        Userstatus: {  //1-unblocked, 2-blocked
             type: Sequelize.INTEGER,
             allowNull: false,
-            field: 'user_status'    
+            field: 'Userstatus'    
         }
     },{
-        modelName: 'users',
-        tableName: 'users',
+        modelName: 'Users',
+        tableName: 'Users',
         timestamps: false
     });
 
-    return users;
+    return Users;
 }

@@ -3,21 +3,21 @@ const ads = db.ads;
 const users = db.users;
 const cities = db.cities;
 
-cities.hasMany(ads, {
-    foreignKey: 'id_city',
-    sourceKey: 'id'
-});
-ads.belongsTo(cities, {
-    foreignKey: 'id_city'
-});
+// cities.hasMany(ads, {
+//     foreignKey: 'id_city',
+//     sourceKey: 'id'
+// });
+// ads.belongsTo(cities, {
+//     foreignKey: 'id_city'
+// });
 
-users.hasMany(ads, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-ads.belongsTo(users, {
-    foreignKey: 'id_user'
-});
+// users.hasMany(ads, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// ads.belongsTo(users, {
+//     foreignKey: 'id_user'
+// });
 
 exports.createAd = async(req, res) => {
     // const id_car = req.body.id_car;

@@ -8,60 +8,60 @@ const cities = db.cities;
 const countries = db.countries;
 const reviews = db.reviews;
 
-roles.hasOne(users, {
-    foreignKey: 'id_role',
-    sourceKey: 'id'
-});
-users.belongsTo(roles, {
-    foreignKey: 'id_role'
-});
+// roles.hasOne(users, {
+//     foreignKey: 'id_role',
+//     sourceKey: 'id'
+// });
+// users.belongsTo(roles, {
+//     foreignKey: 'id_role'
+// });
 
-users.hasMany(cars, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-cars.belongsTo(users, {
-    foreignKey: 'id_user'
-});
+// users.hasMany(cars, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// cars.belongsTo(users, {
+//     foreignKey: 'id_user'
+// });
 
-users.hasMany(ads, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-ads.belongsTo(users, {
-    foreignKey: 'id_user'
-});
+// users.hasMany(ads, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// ads.belongsTo(users, {
+//     foreignKey: 'id_user'
+// });
 
-countries.hasMany(cities, {
-    foreignKey: 'id_country',
-    sourceKey: 'id'
-});
-cities.belongsTo(countries, {
-    foreignKey:'id_country'
-})
+// countries.hasMany(cities, {
+//     foreignKey: 'id_country',
+//     sourceKey: 'id'
+// });
+// cities.belongsTo(countries, {
+//     foreignKey:'id_country'
+// })
 
-users.hasMany(reviews, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-reviews.belongsTo(users, {
-    foreignKey: 'id_user'
-})
+// users.hasMany(reviews, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// reviews.belongsTo(users, {
+//     foreignKey: 'id_user'
+// })
 
-users.hasMany(travel_history, {
-    foreignKey: 'id_driver',
-    sourceKey: 'id'
-});
-users.hasMany(travel_history, {
-    foreignKey: 'id_passenger',
-    sourceKey: 'id'
-});
-travel_history.belongsTo(users, {
-    foreignKey: 'id_driver'
-});
-travel_history.belongsTo(users, {
-    foreignKey: 'id_passenger'
-});
+// users.hasMany(travel_history, {
+//     foreignKey: 'id_driver',
+//     sourceKey: 'id'
+// });
+// users.hasMany(travel_history, {
+//     foreignKey: 'id_passenger',
+//     sourceKey: 'id'
+// });
+// travel_history.belongsTo(users, {
+//     foreignKey: 'id_driver'
+// });
+// travel_history.belongsTo(users, {
+//     foreignKey: 'id_passenger'
+// });
 
 exports.getAdminProfile = async (req, res) => {
     try {

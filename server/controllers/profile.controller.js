@@ -6,36 +6,36 @@ const travel_history = db.travel_history;
 
 const bcrypt = require('bcryptjs');
 
-users.hasMany(cars, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-cars.belongsTo(users, {
-    foreignKey: 'id_user'
-});
+// users.hasMany(cars, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// cars.belongsTo(users, {
+//     foreignKey: 'id_user'
+// });
 
-users.hasMany(ads, {
-    foreignKey: 'id_user',
-    sourceKey: 'id'
-});
-ads.belongsTo(users, {
-    foreignKey: 'id_user'
-});
+// users.hasMany(ads, {
+//     foreignKey: 'id_user',
+//     sourceKey: 'id'
+// });
+// ads.belongsTo(users, {
+//     foreignKey: 'id_user'
+// });
 
-users.hasMany(travel_history, {
-    foreignKey: 'id_driver',
-    sourceKey: 'id'
-});
-users.hasMany(travel_history, {
-    foreignKey: 'id_passenger',
-    sourceKey: 'id'
-});
-travel_history.belongsTo(users, {
-    foreignKey: 'id_driver'
-});
-travel_history.belongsTo(users, {
-    foreignKey: 'id_passenger'
-});
+// users.hasMany(travel_history, {
+//     foreignKey: 'id_driver',
+//     sourceKey: 'id'
+// });
+// users.hasMany(travel_history, {
+//     foreignKey: 'id_passenger',
+//     sourceKey: 'id'
+// });
+// travel_history.belongsTo(users, {
+//     foreignKey: 'id_driver'
+// });
+// travel_history.belongsTo(users, {
+//     foreignKey: 'id_passenger'
+// });
 
 exports.getProfileInfo = async (req, res) => {
     // const brands = await car_brand
