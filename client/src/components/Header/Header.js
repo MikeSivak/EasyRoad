@@ -131,8 +131,10 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link sx={{textDecoration:'none'}} href="/profile">My profile</Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>
   );
 
@@ -225,7 +227,7 @@ export default function Header() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {passLoginInput.showPassword ? <Visibility /> : <VisibilityOff />}
+                      {passLoginInput.showPassword ?  <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -283,7 +285,7 @@ export default function Header() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {passRegisterInput.showPassword ? <Visibility /> : <VisibilityOff />}
+                      {passRegisterInput.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }

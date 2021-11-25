@@ -1,23 +1,29 @@
 import Ads from '../components/Ads/Ads';
 import Home from '../components/Home/Home'
 import NewAd from '../components/NewAd/NewAd';
+import Profile from '../components/Profile/Profile';
 
 const routes = [
     {
         path: '/',
-        component: <Home/>,
+        component: <Home />,
         exact: true,
         id: 0
     },
     {
         path: '/ads',
-        component: <Ads/>,
+        component: <Ads />,
         id: 1
     },
     {
-        path:'/newad',
-        component: <NewAd/>,
+        path: '/newad',
+        component: <NewAd />,
         id: 2
+    },
+    {
+        path: '/profile',
+        component: <Profile />,
+        id: 3
     }
 ]
 

@@ -42,10 +42,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'gender'
         },
-        Userstatus: {  //1-unblocked, 2-blocked
+        userStatus: {  //1-unblocked, 2-blocked
             type: Sequelize.INTEGER,
             allowNull: false,
-            field: 'Userstatus'    
+            field: 'userStatus'    
         }
     },{
         modelName: 'Users',
