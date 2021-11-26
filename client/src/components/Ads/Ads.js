@@ -1,4 +1,4 @@
-import { Container, Grid, Box, Card, FormGroup } from "@material-ui/core";
+import { Container, Grid, Box, Card, FormGroup, Divider, Button } from "@material-ui/core";
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
 // import Card from '@mui/material/Card';
@@ -15,6 +15,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { maxWidth } from "@material-ui/system";
 
 let stylesAds = {
     mainContainer: {
@@ -42,15 +44,15 @@ export default function Ads() {
 
     return (
         <>
-            <Box style={{backgroundColor:'white'}}>
+            <Box style={{ backgroundColor: '#222222'}}>
                 <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                     <Grid container xs={12} spacing={0}>
                         {Array.from({ length: 12 }).map(() => (
                             <Grid item xs>
-                                <Card sx={{ maxWidth: 500, mx:'2rem', mt:'2rem', minWidth: 300 }}>
+                                <Card sx={{ maxWidth: 500, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                     <CardHeader
                                         avatar={
-                                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                            <Avatar sx={{ bgcolor: 'darkred' }} aria-label="recipe">
                                                 R
                                             </Avatar>
                                         }
@@ -61,25 +63,61 @@ export default function Ads() {
                                         }
                                         title="Имя водителя"
                                         subheader="Дата поездки"
+                                        style={{ backgroundColor: '#E8E8E8' }}
                                     />
-                                    <CardMedia
+                                    {/* <CardMedia
                                         component="img"
                                         height="194"
                                         image="/images/HomeInfo19.jpg"
                                         alt="Paella dish"
-                                    />
+                                    /> */}
+                                    <CardMedia>
+                                        <Box style={{ padding: '2em 0' }}>
+                                            <Grid container xs={12}>
+                                                <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
+                                                <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Откуда едем? Полный адрес откуда едем</Grid>
+                                            </Grid>
+                                            <Grid container xs={12}>
+                                                <Grid item xs={3}>
+                                                    <img src='/images/line.svg' />
+                                                </Grid>
+                                                <Grid item xs={7} style={{ placeSelf: 'center' }}>
+                                                    <Typography style={{ fontSize: '2em' }}>1.3 км.</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container xs={12}>
+                                                <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
+                                                <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Куда едем? Полный путь куда едем</Grid>
+                                            </Grid>
+                                        </Box>
+                                        <Divider />
+                                        <Box style={{ padding: '2em 0 0 0' }}>
+                                            <Grid container xs={12}>
+                                                <Grid item xs style={{ placeSelf: 'center' }}>
+                                                    <Box style={{padding:'0 1em'}}>
+                                                        <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding:'0.3em 0', borderRadius:'8px' }}>Цена: 5 руб.</Typography>
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item xs>
+                                                    <Button variant="contained" color="success" sx={{ textTransform: 'none', fontSize: '1em' }} startIcon={<DirectionsCarIcon />}>
+                                                        Поехали!
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
+                                    </CardMedia>
                                     <CardContent>
                                         <Typography variant="body2" color="text.secondary">
                                             <Grid container xs={12}>
                                                 <Grid item xs>
                                                     <FormGroup>
-                                                        
+
                                                     </FormGroup>
                                                 </Grid>
                                             </Grid>
                                         </Typography>
                                     </CardContent>
-                                    <CardActions disableSpacing>
+                                    <CardActions disableSpacing style={{ backgroundColor: '#E8E8E8' }}>
                                         <IconButton aria-label="add to favorites">
                                             <FavoriteIcon />
                                         </IconButton>
