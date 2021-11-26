@@ -1,8 +1,7 @@
-const { INTEGER } = require("sequelize/types");
-const { sequelize, Sequelize, addresses } = require(".");
+const { sequelize, Sequelize, Users, Cars, Addresses } = require(".");
 
 module.exports = (sequelize, Sequelize) => {
-    const DriverAds = sequelize.define('DriverAds', {
+    const Ads = sequelize.define('Ads', {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -10,32 +9,39 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'id'
         },
-        driverId: {
+        userId: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
-            field: 'driverId'
+            field: 'userId'
         },
-        country: {
+        // for get list of ads by role (driver/passenger)
+        role: {
             type: Sequelize.STRING,
             allowNull: false,
-            field: 'country'
+            field: 'role'
         },
-        city: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'city'
+        carId: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            references: Cars,
+            referencesKey: 'id',
+            field: 'carId'
         },
-        startAddress: {
-            type: Sequelize.STRING,
+        startAddressId: {
+            type: Sequelize.INTEGER,
             allowNull: false,
-            field: 'startAddress'
+            references: Addresses,
+            referencesKey: 'id',
+            field: 'startAddressId',
         },
-        finishAddress: {
-            type: Sequelize.STRING,
+        finishAddressId: {
+            type: Sequelize.INTEGER,
             allowNull: false,
-            field: 'finishAddress'
+            references: Addresses,
+            referencesKey: 'id',
+            field: 'finishAddressesId'
         },
         startDate: {
             type: Sequelize.DATE,
@@ -44,7 +50,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         startTime: {
             type: Sequelize.TIME,
-            allowNull: false,
+            allowNull: true,
             field: 'startTime'
         },
         finishTime: {
@@ -52,21 +58,21 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'finishTime'
         },
+        // driver or passenger set seats count for trip
         seatsCount: {
             type: Sequelize.INTEGER,
             allowNull: false,
             field: 'seatsCount'
         },
+        // driver or passenger set a price for trip
         price: {
             type: Sequelize.INTEGER,
             allowNull: false,
             field: 'price'
-        }
+        },
     }, {
-        modelName: 'DriverAds',
-        tableName: 'DriverAds',
+        modelName: 'Ads',
+        tableName: 'Ads',
         timestamps: false
-    });
-
-    return DriverAds;
+    })
 }

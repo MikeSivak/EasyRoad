@@ -42,6 +42,9 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'gender'
         },
+        userPhoto:{
+
+        },
         userStatus: {  //1-unblocked, 2-blocked
             type: Sequelize.INTEGER,
             allowNull: false,

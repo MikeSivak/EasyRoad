@@ -1,4 +1,4 @@
-const { sequelize, Sequelize, users } = require(".");
+const { sequelize, Sequelize, Users, Ads } = require(".");
 
 module.exports = (sequelize, Sequelize) =>{
     const Orders = sequelize.define('Orders', {
@@ -12,21 +12,33 @@ module.exports = (sequelize, Sequelize) =>{
         driverId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
             field: 'driverId'
         },
         passengerId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
             field:'passengerId'
         },
         adId:{
             type: Sequelize.INTEGER,
             allowNull:false,
+            references: Ads,
+            referencesKey:'id',
             field: 'adId'
+        },
+        seatsCount:{
+            type:Sequelize.INTEGER,
+            allowNull:false,
+            field:'seatsCount'
+        },
+        totalPrice:{
+            type:Sequelize.INTEGER,
+            allowNull:false,
+            field:'totalPrice'
         }
     },{
         modelName: 'Orders',

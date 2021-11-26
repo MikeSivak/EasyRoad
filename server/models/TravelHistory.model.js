@@ -1,6 +1,4 @@
-const db = require('.');
-const users = db.users;
-const cities = db.cities;
+const { Users, Cars, Addresses } = require('.');
 
 module.exports = (sequelize, Sequelize) =>{
     const TravelHistory = sequelize.define('TravelHistory', {
@@ -11,50 +9,72 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'id'
         },
-        driverId: {
+        // driverId get from orders table
+        driverId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
             field: 'driverId'
         },
-        passengerId: {
+        // passengerId get from orders table
+        passengerId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
-            field: 'passengerId'
+            field:'passengerId'
         },
-        country:{
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'country'
-        },
-        city: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'city'
-        },
-        startAddress: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'startAddress'
-        },
-        finishAddress: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'finishAddress'
-        },
-        travelDate: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            field: 'travelDate'
-        },
-        price: {
+        // carId get from Ad (if ad was created by driver)
+        carId: {
             type: Sequelize.INTEGER,
             allowNull: true,
-            field: 'price'
-        }
+            references: Cars,
+            referencesKey: 'id',
+            field: 'carId'
+        },
+        // get from Ad
+        startAddressId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: Addresses,
+            referencesKey: 'id',
+            field: 'startAddressId',
+        },
+        finishAddressId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: Addresses,
+            referencesKey: 'id',
+            field: 'finishAddressesId'
+        },
+        startDate: {
+            type: Sequelize.DATE,
+            allowNull: false,
+            field: 'startDate'
+        },
+        startTime: {
+            type: Sequelize.TIME,
+            allowNull: true,
+            field: 'startTime'
+        },
+        finishTime: {
+            type: Sequelize.TIME,
+            allowNull: false,
+            field: 'finishTime'
+        },
+        // get from orders
+        seatsCount: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            field: 'seatsCount'
+        },
+        // get from orders
+        totalPrice: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            field: 'totalPrice'
+        },
     },{
         modelName: 'TravelHistory',
         tableName: 'TravelHistory',

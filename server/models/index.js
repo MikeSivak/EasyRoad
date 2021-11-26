@@ -16,16 +16,14 @@ const db = {}
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.roles = require('./Roles.model.js')(sequelize, Sequelize);
-db.users = require('./Users.model.js')(sequelize, Sequelize);
-db.countries = require('./Countries.model')(sequelize, Sequelize);
-db.cities = require('./Cities.model.js')(sequelize, Sequelize);
-db.addresses = require('./Addresses.model.js')(sequelize, Sequelize);
-db.cars = require('./Cars.model.js')(sequelize, Sequelize);
-db.drivers_ads = require('./DriverAds.model.js')(sequelize, Sequelize);
-db.passengers_ads = require('./PassengerAds.model.js')(sequelize, Sequelize);
-db.travel_history = require('./TravelHistory.model.js')(sequelize, Sequelize);
-db.reviews = require('./Reviews.model.js')(sequelize, Sequelize);
+db.Roles = require('./Roles.model.js')(sequelize, Sequelize);
+db.Users = require('./Users.model.js')(sequelize, Sequelize);
+db.Addresses = require('./Addresses.model.js')(sequelize,Sequelize);
+db.Cars = require('./Cars.model.js')(sequelize, Sequelize);
+db.Ads = require('./Ads.model.js')(sequelize, Sequelize);
+db.Orders = require('./Orders.model.js')(sequelize, Sequelize);
+db.TravelHistory = require('./TravelHistory.model.js')(sequelize, Sequelize);
+db.Reviews = require('./Reviews.model.js')(sequelize, Sequelize);
 
 
 // -- relationships between tables --

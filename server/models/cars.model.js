@@ -19,10 +19,10 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             field: 'carModel'
         },
-        fuelType: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            field: 'fuelType'
+        carNumber:{
+            type:Sequelize.STRING,
+            allowNull:false,
+            field: 'carNumber'
         },
         carPhotoLink:{
             type: Sequelize.STRING,
@@ -32,15 +32,10 @@ module.exports = (sequelize, Sequelize) =>{
         userId: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
             field: 'userId'
         },
-        fuelConsumption:{
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            field: 'fuelConsumption'
-        }
     },{
         modelName: 'Cars',
         tableName: 'Cars',
