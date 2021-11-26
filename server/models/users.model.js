@@ -1,5 +1,4 @@
-const db = require('.');
-const roles = db.roles;
+const { Roles } = require(".");
 
 module.exports = (sequelize, Sequelize) => {
     const Users = sequelize.define('Users', {
@@ -13,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
         roleId: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: roles,
+            references: Roles,
             referencesKey: 'id',
             field: 'roleId'
         },
@@ -43,7 +42,9 @@ module.exports = (sequelize, Sequelize) => {
             field: 'gender'
         },
         userPhoto:{
-
+            type:Sequelize.STRING,
+            allowNull:true,
+            field:'userPhoto'
         },
         userStatus: {  //1-unblocked, 2-blocked
             type: Sequelize.INTEGER,

@@ -1,4 +1,4 @@
-const { users } = require('.');
+const { Users } = require(".");
 
 module.exports = (sequelize, Sequelize) => {
     const Reviews = sequelize.define('Reviews', {
@@ -9,19 +9,19 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             field: 'id'
         },
-        driverId: {
+        driverId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
-            field: 'userId'
+            field: 'driverId'
         },
-        passengerId: {
+        passengerId:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: users,
+            references: Users,
             referencesKey: 'id',
-            field: 'userId'
+            field:'passengerId'
         },
         rate: {
             type: Sequelize.INTEGER,

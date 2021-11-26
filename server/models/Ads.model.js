@@ -74,5 +74,7 @@ module.exports = (sequelize, Sequelize) => {
         modelName: 'Ads',
         tableName: 'Ads',
         timestamps: false
-    })
+    });
+
+    return Ads;
 }

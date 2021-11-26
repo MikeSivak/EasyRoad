@@ -1,4 +1,4 @@
-const { users } = require('.');
+const { Users } = require(".");
 
 module.exports = (sequelize, Sequelize) =>{
     const Cars = sequelize.define('Cars', {
