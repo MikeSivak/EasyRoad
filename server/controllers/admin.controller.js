@@ -68,24 +68,23 @@ exports.getAdminProfile = async (req, res) => {
         await users //добавить в секцию include необходимые таблицы
             .findOne({
                 include: [
-                    { model: roles },
-                    { model: cars },
-                    { model: ads },
-                    { model: travel_history }
+                    { model: Roles },
+                    { model: Cars },
+                    { model: Ads },
+                    { model: TravelHistory }
                 ],
                 raw: true
             },
                 {
                     where: {
-                        // id: 1,
-                        id_role: 3
+                        roleId: 1
                     }
                 },
             ).then(user => {
                 res.send('Админ\n' +
-                    'Имя: ' + user['us_name'] +
-                    '\nEmail: ' + user['user_email'] +
-                    '\nНомер: ' + user['user_number'])
+                    'Имя: ' + user['userName'] +
+                    '\nEmail: ' + user['userEmail'] +
+                    '\nНомер: ' + user['userPhone'])
             })
     } catch (e) {
         res.status(500).json({

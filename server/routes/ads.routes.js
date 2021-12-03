@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const ads_controller = require('../controllers/ads.controller.js');
 const ads_router = Router();
-const auth = require('../middleware/auth');
 
 ads_router.get('/newad',
     // auth,
