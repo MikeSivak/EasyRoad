@@ -1,71 +1,15 @@
 const db = require('../models');
-const users = db.users;
-const cars = db.cars;
-const ads = db.ads;
-const travel_history = db.travel_history;
-const roles = db.roles;
-const cities = db.cities;
-const countries = db.countries;
-const reviews = db.reviews;
-
-// roles.hasOne(users, {
-//     foreignKey: 'id_role',
-//     sourceKey: 'id'
-// });
-// users.belongsTo(roles, {
-//     foreignKey: 'id_role'
-// });
-
-// users.hasMany(cars, {
-//     foreignKey: 'id_user',
-//     sourceKey: 'id'
-// });
-// cars.belongsTo(users, {
-//     foreignKey: 'id_user'
-// });
-
-// users.hasMany(ads, {
-//     foreignKey: 'id_user',
-//     sourceKey: 'id'
-// });
-// ads.belongsTo(users, {
-//     foreignKey: 'id_user'
-// });
-
-// countries.hasMany(cities, {
-//     foreignKey: 'id_country',
-//     sourceKey: 'id'
-// });
-// cities.belongsTo(countries, {
-//     foreignKey:'id_country'
-// })
-
-// users.hasMany(reviews, {
-//     foreignKey: 'id_user',
-//     sourceKey: 'id'
-// });
-// reviews.belongsTo(users, {
-//     foreignKey: 'id_user'
-// })
-
-// users.hasMany(travel_history, {
-//     foreignKey: 'id_driver',
-//     sourceKey: 'id'
-// });
-// users.hasMany(travel_history, {
-//     foreignKey: 'id_passenger',
-//     sourceKey: 'id'
-// });
-// travel_history.belongsTo(users, {
-//     foreignKey: 'id_driver'
-// });
-// travel_history.belongsTo(users, {
-//     foreignKey: 'id_passenger'
-// });
+const Users = db.Users;
+const Cars = db.Cars;
+const Ads = db.Ads;
+const TravelHistory = db.TravelHistory;
+const Roles = db.Roles;
+const Addresses = db.Addresses;
+const Reviews = db.Reviews;
 
 exports.getAdminProfile = async (req, res) => {
     try {
-        await users //добавить в секцию include необходимые таблицы
+        await Users //добавить в секцию include необходимые таблицы
             .findOne({
                 include: [
                     { model: Roles },
@@ -130,35 +74,36 @@ exports.updateAdminProfile = async (req, res) => {
 
 exports.getAllAds = async (req, res) => {
     try {
-        await ads
+        await Ads
             .findAll({
                 include: [
-                    { model: users },
-                    { model: cities }
+                    { model: Users },
+                    { model: Addresses }
                 ],
                 raw: true
             }).then(ads => {
                 ads.forEach(
                     element =>
-                    console.log(
-                        element
-                        // `id_user: ${element['id_user']}
-                        // us_name: ${element['user.us_name']}
-                        // user_email: ${element['user.user_email']}
-                        // user_number: ${element['user.user_number']}
-                        // id_city: ${element['id_city']}
-                        // city_name: ${element['city.city_name']}
-                        // dep_address: ${element['dep_address']}
-                        // arr_address: ${element['arr_address']}
-                        // dep_date: ${element['dep_date']}
-                        // dep_time: ${element['dep_time']}
-                        // arr_time: ${element['arr_time']}
-                        // seats_number: ${element['seats_number']}
-                        // price: ${element['price']}
-                        // radius: ${element['radius']}
-                        // distance: ${element['distance']}`
-                    )
+                        console.log(
+                            element
+                            // `id_user: ${element['id_user']}
+                            // us_name: ${element['user.us_name']}
+                            // user_email: ${element['user.user_email']}
+                            // user_number: ${element['user.user_number']}
+                            // id_city: ${element['id_city']}
+                            // city_name: ${element['city.city_name']}
+                            // dep_address: ${element['dep_address']}
+                            // arr_address: ${element['arr_address']}
+                            // dep_date: ${element['dep_date']}
+                            // dep_time: ${element['dep_time']}
+                            // arr_time: ${element['arr_time']}
+                            // seats_number: ${element['seats_number']}
+                            // price: ${element['price']}
+                            // radius: ${element['radius']}
+                            // distance: ${element['distance']}`
+                        )
                 )
+                res.send(ads)
             })
     }
     catch (e) {
@@ -170,19 +115,20 @@ exports.getAllAds = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        await users
+        await Users
             .findAll({
                 include: [
-                    { model: roles },
+                    { model: Roles },
                 ],
                 raw: true
             }).then(users => {
                 users.forEach(
                     element =>
-                    console.log(
-                        element
-                    )
+                        console.log(
+                            element
+                        )
                 )
+                res.send(users);
             })
     }
     catch (e) {
@@ -192,21 +138,21 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
-exports.deleteAd = async (req,res) =>{
-    let id_ad = req.body.id_ad;
+exports.deleteAd = async (req, res) => {
+    let id = req.body.id;
 
-    try{
-        ads 
-        .destroy(
-            {
-                where:{
-                    id: id_ad
+    try {
+        Ads
+            .destroy(
+                {
+                    where: {
+                        id: id
+                    }
                 }
-            }
-        )
-        .then(
-            res.send('(' + id_ad + ')' + ' ad deleted')
-        )
+            )
+            .then(
+                res.send('(' + id + ')' + ' ad deleted')
+            )
     }
     catch (e) {
         res.status(500).json({
@@ -215,21 +161,21 @@ exports.deleteAd = async (req,res) =>{
     }
 }
 
-exports.blockUser = async(req,res)=>{
+exports.blockUser = async (req, res) => {
     const id = req.body.id;
-    try{
-        await users
-        .update({
-            user_status: 2
-        },
-        {
-            where:{
-                id:id
-            }
-        })
-        .then(
-            res.send('(' + id + ')' + ' user blocked')
-        )
+    try {
+        await Users
+            .update({
+                userStatus: 2
+            },
+                {
+                    where: {
+                        id: id
+                    }
+                })
+            .then(
+                res.send('(' + id + ')' + ' user blocked')
+            )
     }
     catch (e) {
         res.status(500).json({
@@ -238,21 +184,21 @@ exports.blockUser = async(req,res)=>{
     }
 }
 
-exports.unblockUser = async(req,res)=>{
+exports.unblockUser = async (req, res) => {
     const id = req.body.id;
-    try{
-        await users
-        .update({
-            user_status: 1
-        },
-        {
-            where:{
-                id:id
-            }
-        })
-        .then(
-            res.send('(' + id + ')' + ' user unblocked')
-        )
+    try {
+        await Users
+            .update({
+                userStatus: 1
+            },
+                {
+                    where: {
+                        id: id
+                    }
+                })
+            .then(
+                res.send('(' + id + ')' + ' user unblocked')
+            )
     }
     catch (e) {
         res.status(500).json({
@@ -261,20 +207,20 @@ exports.unblockUser = async(req,res)=>{
     }
 }
 
-exports.deleteUser = async (req,res) =>{
+exports.deleteUser = async (req, res) => {
     let id = req.body.id;
-    try{
-        users 
-        .destroy(
-            {
-                where:{
-                    id: id
+    try {
+        Users
+            .destroy(
+                {
+                    where: {
+                        id: id
+                    }
                 }
-            }
-        )
-        .then(
-            res.send('(' + id + ')' + ' user deleted')
-        )
+            )
+            .then(
+                res.send('(' + id + ')' + ' user deleted')
+            )
     }
     catch (e) {
         res.status(500).json({

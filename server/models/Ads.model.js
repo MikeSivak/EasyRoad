@@ -41,7 +41,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             references: Addresses,
             referencesKey: 'id',
-            field: 'finishAddressesId'
+            field: 'finishAddressId'
         },
         startDate: {
             type: Sequelize.DATE,

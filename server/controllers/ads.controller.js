@@ -1,7 +1,7 @@
 const db = require('../models');
-const ads = db.ads;
-const users = db.users;
-const cities = db.cities;
+const Ads = db.Ads;
+const Users = db.Users;
+const Addresses = db.Addresses;
 
 // cities.hasMany(ads, {
 //     foreignKey: 'id_city',
@@ -24,24 +24,23 @@ exports.createAd = async(req, res) => {
     // const id_user = req.user.id;
     // const id_city = req.body.id_city;
     try {
-        ads
+        Ads
             .create({
-                id_user: 1, //id_user,   
-                id_city: 1, //id_city,               //get id_city from cites table before this
-                dep_address: "A", //dep_address,       //enter from keybord
-                arr_address: "B", //arr_address,       //enter from keybord
-                dep_date: "2021-01-07", //dep_date,             //chose date from select field
-                dep_time: "12:00:00", //dep_time,             //chose date from select field
-                arr_time: "13:00:00", //arr_time,             //chose date from select field
-                seats_number: 2, //seats_number,     //enter from keybord
+                userId: 1, //id_user,  
+                role: 'driver', 
+                startAddressId: 1, //dep_address,       //enter from keybord
+                finishAddressId: 2, //arr_address,       //enter from keybord
+                startDate: "2021-01-07", //dep_date,             //chose date from select field
+                startTime: "12:00:00", //dep_time,             //chose date from select field
+                finishTime: "13:00:00", //arr_time,             //chose date from select field
+                seatsCount: 2, //seats_number,     //enter from keybord
                 price: 12, //price,                   //enter from keybord
-                radius: 200, //radius,                 //future feauture
-                distance: 10000 //distance              //calculate from km. and 
             })
             .then(
                 // res.redirect('http://localhost:5000/content')
                 // res.render('adsList')
-                res.redirect('/ads/adsList')
+                // res.redirect('/ads/adsList')
+                res.send("Ad created successfully!")
             );
     } catch (e) {
         res.status(500).json({

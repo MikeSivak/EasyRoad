@@ -12,15 +12,15 @@ module.exports = function(app) {
 
   app.get("/guest", controller.allAccess);
 
-  app.get(
+  app.use(
     "/user",
     [authJwt.verifyToken, authJwt.isUser],
     controller.userBoard
   );
 
-  app.get(
+  app.use(
     "/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
+    require('./admin.routes')
   );
 };
