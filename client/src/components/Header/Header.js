@@ -27,6 +27,11 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import FemaleIcon from '@mui/icons-material/Female';
+import TransgenderIcon from '@mui/icons-material/Transgender';
+import MaleIcon from '@mui/icons-material/Male';
+import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -44,6 +49,84 @@ const style = {
 };
 
 export default function Header() {
+  const isLoggedIn = localStorage.getItem('x-access-token')
+  const [userName, setUserName] = React.useState('');
+  const [userEmail, setUserEmail] = React.useState('');
+  const [userPhone, setUserPhone] = React.useState('');
+  const [gender, setGender] = React.useState('male');
+  const [checkFields, setCheckFields] = React.useState('none');
+
+  const handleUserName = (event) => {
+    setUserName(event.currentTarget.value);
+  }
+  const handleUserEmail = (event) => {
+    setUserEmail(event.currentTarget.value)
+  }
+  const handleUserPhone = (event) => {
+    setUserPhone(event.currentTarget.value)    
+  }
+  const handleGender = (event) => {
+    setGender(event.currentTarget.value)
+  }
+
+  function signUp() {
+    if (userName == '' || userEmail == '' || passRegisterInput.password == '' || userPhone == '') {
+      setCheckFields('block')
+      console.log(checkFields)
+    }
+    else {
+      setCheckFields('none')
+      axios
+        .post('http://localhost:3001/auth/signup', {
+          userName: userName,
+          userEmail: userEmail,
+          userPassword: passRegisterInput.password,
+          userPhone: userPhone,
+          gender: gender
+        })
+        .then((res) => {
+          console.log(res.data)
+          setLoginForm(true)
+          setRegisterForm(false)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
+  function signIn() {
+    if (userEmail == '' || passLoginInput.password == '') {
+      setCheckFields('block')
+      console.log(checkFields)
+    }
+    else {
+      setCheckFields('none')
+      axios
+        .post('http://localhost:3001/auth/signin', {
+          userEmail: userEmail,
+          userPassword: passLoginInput.password,
+        })
+        .then((res) => {
+          console.log(res.data)
+          localStorage.setItem('x-access-token', res.data.accessToken)
+          localStorage.setItem('x-user-id', res.data.id)
+          localStorage.setItem('x-role-id', res.data.role)
+          localStorage.setItem('x-username', res.data.username)
+          window.location = '/'
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location = '/'
+  }
+
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -84,14 +167,20 @@ export default function Header() {
   };
 
   const [loginForm, setLoginForm] = React.useState(false);
-  const loginOpen = () => setLoginForm(true);
+  const loginOpen = () => {
+    setLoginForm(true)
+    setCheckFields('none')
+  };
   const loginClose = () => setLoginForm(false);
 
   const [registerForm, setRegisterForm] = React.useState(false);
-  const registerOpen = () => setRegisterForm(true);
+  const registerOpen = () => {
+    setRegisterForm(true)
+    setCheckFields('none')
+  };
   const registerClose = () => setRegisterForm(false);
 
-  const handleClickShowPassword = () => {
+  const handleClickShowPassword = (event) => {
     setPassLoginInput({
       ...passLoginInput,
       showPassword: !passLoginInput.showPassword,
@@ -119,8 +208,8 @@ export default function Header() {
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: 'bottom',
+        horizontal: 'center',
       }}
       id={menuId}
       keepMounted
@@ -131,10 +220,16 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
-        <Link sx={{textDecoration:'none'}} href="/profile">My profile</Link>
+      <MenuItem onClick={handleMenuClose} style={{ fontSize: '1.2em' }}>
+        {
+          !isLoggedIn ? <Link sx={{ textDecoration: 'none' }} onClick={loginOpen}>Мой профиль</Link>
+            : <Link sx={{ textDecoration: 'none' }} href="/profile" >Мой профиль</Link>
+        }
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      {
+        isLoggedIn ? <MenuItem onClick={logout} style={{ fontSize: '1.2em', color: '#1976d2' }}>Выйти</MenuItem> : <span></span>
+      }
+
     </Menu>
   );
 
@@ -155,27 +250,33 @@ export default function Header() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      {
+        isLoggedIn ?
+          <>
+            <MenuItem>
+              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={4} color="error">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              <p>Messages</p>
+            </MenuItem>
+            <MenuItem>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={17} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <p>Notifications</p>
+            </MenuItem>
+          </>
+          : <span></span>
+      }
+      <MenuItem >
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -183,9 +284,12 @@ export default function Header() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <AccountCircle fontSize="large" />
         </IconButton>
-        <p>Profile</p>
+        {
+          !isLoggedIn ? <Link sx={{ textDecoration: 'none' }} onClick={loginOpen} >Мой профиль</Link>
+            : <Link sx={{ textDecoration: 'none' }} href="/profile" >Мой профиль</Link>
+        }
       </MenuItem>
     </Menu>
   );
@@ -209,6 +313,7 @@ export default function Header() {
                 type={'email'}
                 id="outlined-required"
                 label="Email"
+                onChange={handleUserEmail}
               />
             </FormControl>
             <FormControl sx={{ mt: '2rem', width: '28ch' }} variant="outlined">
@@ -227,15 +332,17 @@ export default function Header() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {passLoginInput.showPassword ?  <VisibilityOff /> : <Visibility />}
+                      {passLoginInput.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
                 label="Password"
               />
             </FormControl>
+            <span style={{ color: 'red', display: checkFields }}>Заполните все поля</span>
             <FormControl sx={{ mt: "3rem", width: '28ch' }} variant='outlined'>
-              <Button variant="contained" sx={{ width: '140px', height: '50px', borderRadius: '8px', margin: '0 auto' }}>Войти</Button>
+              <Button variant="contained" sx={{ width: '140px', height: '50px', borderRadius: '8px', margin: '0 auto' }}
+                onClick={signIn}>Войти</Button>
             </FormControl>
             {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
             <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
@@ -264,9 +371,18 @@ export default function Header() {
           <Box sx={{ mt: '1rem' }}>
             <FormControl sx={{ mt: "2rem", width: '28ch' }} variant='outlined'>
               <TextField
+                type={'text'}
+                id="outlined-required"
+                label="User Name"
+                onChange={handleUserName}
+              />
+            </FormControl>
+            <FormControl sx={{ mt: "2rem", width: '28ch' }} variant='outlined'>
+              <TextField
                 type={'email'}
                 id="outlined-required"
                 label="Email"
+                onChange={handleUserEmail}
               />
             </FormControl>
             <FormControl sx={{ mt: "2rem", width: '28ch' }} variant="outlined">
@@ -297,10 +413,25 @@ export default function Header() {
                 type={'phone'}
                 id="outlined-required"
                 label="Phone"
+                onChange={handleUserPhone}
               />
             </FormControl>
-            <FormControl sx={{ mt: "3rem", width: '28ch' }} variant='outlined'>
-              <Button variant="contained" sx={{ height: '50px', borderRadius: '8px', margin: '0 auto' }}>Зарегистрироваться</Button>
+            <Box style={{ marginTop: '1em', padding: '1em' }}>
+              <FormControl component="fieldset">
+                {/* <FormLabel component="legend" style={{ fontSize: '1.5em' }}>Gender</FormLabel> */}
+                <FormLabel component="legend" style={{ fontSize: '1.1em', marginTop: '0.5em' }}>Выбрать пол</FormLabel>
+                <RadioGroup row defaultValue="male" aria-label="gender" name="customized-radios" style={{ marginTop: '0.5em' }}
+                  onChange={handleGender}>
+                  <FormControlLabel value="female" control={<Radio />} label={<FemaleIcon fontSize='large' sx={{ color: 'firebrick' }} />} />
+                  <FormControlLabel value="male" control={<Radio />} label={<MaleIcon fontSize='large' sx={{ color: '#1976d2' }} />} />
+                  <FormControlLabel value="other" control={<Radio />} label={<TransgenderIcon fontSize='large' sx={{ color: 'purple' }} />} />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+            <span style={{ color: 'red', display: checkFields }}>Заполните все поля</span>
+            <FormControl sx={{ mt: "1rem", width: '28ch' }} variant='outlined'>
+              <Button variant="contained" sx={{ height: '50px', borderRadius: '8px', margin: '0 auto' }}
+                onClick={signUp}>Зарегистрироваться</Button>
             </FormControl>
             {/* <Link style={{fontSize:'14px'}}>Зарегистрироваться</Link> */}
             <FormControl sx={{ m: 1, width: '28ch' }} variant='outlined'>
@@ -347,21 +478,29 @@ export default function Header() {
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               {/* <Button variant='success'>Выбрать поездку</Button>
             <Button variant='success'>Предложить поездку</Button> */}
-              <Button variant='success' onClick={loginOpen}>Войти</Button>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              {
+                !isLoggedIn ? <Button variant='success' onClick={loginOpen}>Войти</Button> : <span></span>
+              }
+              {
+                isLoggedIn ?
+                  <>
+                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                      <Badge badgeContent={4} color="error">
+                        <MailIcon />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      size="large"
+                      aria-label="show 17 new notifications"
+                      color="inherit"
+                    >
+                      <Badge badgeContent={17} color="error">
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </>
+                  : <span></span>
+              }
 
               <IconButton
                 size="large"
@@ -372,7 +511,7 @@ export default function Header() {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                <AccountCircle fontSize="large" />
               </IconButton>
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

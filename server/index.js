@@ -4,25 +4,48 @@ const db = require('./models');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const bcrypt = require("bcryptjs");
 const { nextTick } = require('process');
+const cors = require("cors");
+const { authJwt } = require("./middleware");
+// const controller = require("./controllers/user.controller");
+const adsRoutes = require('./routes/ads.routes');
+const profileRoutes = require('./routes/profile.routes');
+
 const Role = db.Roles;
 const Users = db.Users;
 const PORT = process.env.PORT || 3001;
+
+// parse application/json
+app.use(cors())
+app.use(bodyParser.json())
 app.use(express.json({
     extended: true
 }));
 app.use(express.urlencoded());
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }))
-const bcrypt = require("bcryptjs");
+app.use(express.static('public'));
+
 
 require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+// require('./routes/user.routes')(app);
 
-// parse application/json
-app.use(bodyParser.json())
+app.use(function (req, res, next) {
+    res.header(
+        "Access-Control-Allow-Headers",
+        "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+});
 
-app.use(express.static('public'));
+app.use(
+    "/admin",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    require('./routes/admin.routes')
+);
+app.use('/ads', [authJwt.verifyToken], adsRoutes);
+app.use('/profile', [authJwt.verifyToken], profileRoutes);
 
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log('Drop and Resync Db');

@@ -10,12 +10,12 @@ admin_router.get('/users', admin_controller.getAllUsers);
 admin_router.post('/user/block', admin_controller.blockUser);
 admin_router.post('/user/unblock', admin_controller.unblockUser);
 admin_router.post('/user/delete', admin_controller.deleteUser);
-admin_router.get('/ads', admin_controller.getAllAds);
+admin_router.get('/ads', ads_controller.getAllAds);
 admin_router.post('/ad/delete', admin_controller.deleteAd);
 //Completed
 
 //Need to update
-// admin_router.post('/ad/create', ads_controller.createAd);
+admin_router.post('/ad/create', ads_controller.createAd);
 admin_router.post('/update', admin_controller.updateAdminProfile);
 
 module.exports = admin_router;

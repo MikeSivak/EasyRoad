@@ -19,14 +19,42 @@ const Addresses = db.Addresses;
 //     foreignKey: 'id_user'
 // });
 
+exports.getAllAds = async (req, res) => {
+    try {
+        await Ads
+            .findAll({
+                include: [
+                    { model: Users },
+                    { model: Addresses }
+                ],
+                raw: true
+            }).then(ads => {
+                ads.forEach(
+                    element =>
+                        console.log(
+                            element
+                            // `id_user: ${element['id_user']} - for example
+                        )
+                )
+                res.send(ads)
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
 exports.createAd = async(req, res) => {
     // const id_car = req.body.id_car;
     // const id_user = req.user.id;
     // const id_city = req.body.id_city;
+    const userId = req.userId;
     try {
         Ads
             .create({
-                userId: 1, //id_user,  
+                userId: userId, //id_user,  
                 role: 'driver', 
                 startAddressId: 1, //dep_address,       //enter from keybord
                 finishAddressId: 2, //arr_address,       //enter from keybord

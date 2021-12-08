@@ -23,29 +23,7 @@ ads_router.get('/newad',
     }
 );
 
-ads_router.get('/adslist',
-
-    (req, res, next) => {
-        const cookie = req.cookies;
-        if (cookie['x-auth-token']) {
-            next();
-        } else {
-            const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-            const obj = {
-                "fullUrl": fullUrl
-            }
-            res.render('login', {
-                urlPath: obj,
-            });
-        }
-    },
-    (req, res) => {
-        res.render('adsList')
-    }
-
-    // (req, res) => { res.render('adsList') }
-
-);
+ads_router.get('/', ads_controller.getAllAds);
 // ads_router.get('/openad', (req, res) => { res.render('ad') });
 ads_router.post('/create', ads_controller.createAd);
 ads_router.post('/update', ads_controller.updateAd);

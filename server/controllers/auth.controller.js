@@ -15,6 +15,12 @@ exports.signup = (req, res) => {
     const userPassword = req.body.userPassword;
     const gender = req.body.gender;
 
+    console.log(`name: ${userName} \n
+    phone: ${userPhone} \n
+    email: ${userEmail} \n
+    password: ${userPassword} \n
+    gender: ${gender} \n`)
+
   // Save User to Database
   User.create({
     userName: userName,

@@ -86,21 +86,7 @@ exports.getAllAds = async (req, res) => {
                     element =>
                         console.log(
                             element
-                            // `id_user: ${element['id_user']}
-                            // us_name: ${element['user.us_name']}
-                            // user_email: ${element['user.user_email']}
-                            // user_number: ${element['user.user_number']}
-                            // id_city: ${element['id_city']}
-                            // city_name: ${element['city.city_name']}
-                            // dep_address: ${element['dep_address']}
-                            // arr_address: ${element['arr_address']}
-                            // dep_date: ${element['dep_date']}
-                            // dep_time: ${element['dep_time']}
-                            // arr_time: ${element['arr_time']}
-                            // seats_number: ${element['seats_number']}
-                            // price: ${element['price']}
-                            // radius: ${element['radius']}
-                            // distance: ${element['distance']}`
+                            // `id_user: ${element['id_user']} - for example
                         )
                 )
                 res.send(ads)
