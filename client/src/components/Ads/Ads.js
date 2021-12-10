@@ -1,5 +1,5 @@
 import { Container, Grid, Box, Card, FormGroup, Divider, Button } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from '@mui/material/styles';
 // import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -17,6 +17,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { maxWidth } from "@material-ui/system";
+
+import axios from 'axios';
 
 let stylesAds = {
     mainContainer: {
@@ -42,19 +44,34 @@ export default function Ads() {
         setExpanded(!expanded);
     };
 
+    const [ads, setAds] = useState([]);
+
+    useEffect(()=>{
+        axios
+        .get('/ads', {headers:{'x-access-token': localStorage.getItem('x-access-token')}})
+        .then((res)=>{
+            setAds(res.data);
+            console.log("------ Ads ------");
+            console.log(res.data)
+            console.log('-----------------')
+        })
+        .catch((e)=>{
+            console.log("ERROR ADS: " + e.message)
+        })
+    }, [])
+
     if (localStorage.getItem('x-access-token')) {
         return (
             <>
                 <Box style={{ backgroundColor: '#222222' }}>
                     <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                         <Grid container xs={12} spacing={0}>
-                            {Array.from({ length: 12 }).map(() => (
+                            {ads.map((ad) => (
                                 <Grid item xs>
                                     <Card sx={{ maxWidth: 500, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                         <CardHeader
                                             avatar={
-                                                <Avatar sx={{ bgcolor: 'darkred' }} aria-label="recipe">
-                                                    R
+                                                <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
                                                 </Avatar>
                                             }
                                             action={
@@ -62,8 +79,8 @@ export default function Ads() {
                                                     <MoreVertIcon />
                                                 </IconButton>
                                             }
-                                            title="Имя водителя"
-                                            subheader="Дата поездки"
+                                            title={ad["User.userName"]}
+                                            subheader={`Дата поездки: ${ad.startDate}`}
                                             style={{ backgroundColor: '#E8E8E8' }}
                                         />
                                         {/* <CardMedia
@@ -76,7 +93,7 @@ export default function Ads() {
                                             <Box style={{ padding: '2em 0' }}>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
-                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Откуда едем? Полный адрес откуда едем</Grid>
+                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Откуда едем: {ad.startAddressId}</Grid>
                                                 </Grid>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}>
@@ -88,7 +105,7 @@ export default function Ads() {
                                                 </Grid>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
-                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Куда едем? Полный путь куда едем</Grid>
+                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Куда едем: {ad.finishAddressId}</Grid>
                                                 </Grid>
                                             </Box>
                                             <Divider />
@@ -96,7 +113,7 @@ export default function Ads() {
                                                 <Grid container xs={12}>
                                                     <Grid item xs style={{ placeSelf: 'center' }}>
                                                         <Box style={{ padding: '0 1em' }}>
-                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0', borderRadius: '8px' }}>Цена: 5 руб.</Typography>
+                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0', borderRadius: '8px' }}>{ad.price} руб.</Typography>
                                                         </Box>
                                                     </Grid>
                                                     <Grid item xs>

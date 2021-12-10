@@ -1,4 +1,5 @@
 import Ads from '../components/Ads/Ads';
+import Unauthorized from '../components/Errors/Unauthorized';
 import Home from '../components/Home/Home'
 import NewAd from '../components/NewAd/NewAd';
 import Profile from '../components/Profile/Profile';
@@ -24,6 +25,10 @@ const routes = [
         path: '/profile',
         component: <Profile />,
         id: 3
+    },
+    {
+        path: '/unauth',
+        component: <Unauthorized />
     }
 ]
 

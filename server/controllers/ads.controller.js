@@ -21,14 +21,20 @@ const Addresses = db.Addresses;
 
 exports.getAllAds = async (req, res) => {
     try {
+
+        await Addresses.findAll().then((address)=>{
+            console.log("{{{{{{{{{{{{{---- ADDRESSES ----}}}}}}}}}}}}}}")
+            console.log(address);
+            console.log("{{{{{{{{{{{{{---- End ----}}}}}}}}}}}}}}")
+        })
         await Ads
             .findAll({
                 include: [
                     { model: Users },
-                    { model: Addresses }
+                    { model: Addresses }    
                 ],
                 raw: true
-            }).then(ads => {
+            }).then((ads) => {
                 ads.forEach(
                     element =>
                         console.log(

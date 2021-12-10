@@ -11,7 +11,7 @@ const { authJwt } = require("./middleware");
 // const controller = require("./controllers/user.controller");
 const adsRoutes = require('./routes/ads.routes');
 const profileRoutes = require('./routes/profile.routes');
-
+const multer = require('multer');
 const Role = db.Roles;
 const Users = db.Users;
 const PORT = process.env.PORT || 3001;
@@ -27,9 +27,42 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'));
 
-
 require('./routes/auth.routes')(app);
-// require('./routes/user.routes')(app);
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+const upload = multer({ storage: storage }).single('file')
+
+app.post('/upload', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            res.sendStatus(500);
+        }
+        // ---------------------------------------
+        const userId = req.headers['x-user-id'];
+        console.log("userID: " + userId)
+        updatePhoto(userId, req.file.filename);
+        res.send(req.file);
+    });
+});
+
+function updatePhoto(userId, userPhoto){
+    console.log("user ID: " + userId)
+    console.log("user Photo: " + userPhoto)
+    Users
+    .update({userPhoto: userPhoto}, {
+        where:{
+            id: userId
+        }
+    });
+}
 
 app.use(function (req, res, next) {
     res.header(

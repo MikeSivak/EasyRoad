@@ -14,7 +14,23 @@ exports.getProfileInfo = async (req, res) => {
     console.log('USER ID: ' + userId);
 
     try {
-        await Users //добавить в секцию include необходимые таблицы
+        const userCar = await
+            Cars
+                .findAll(
+                    {
+                        include: [
+                            { model: Users }
+                        ],
+                        raw: true
+                    },
+                    {
+                        where: {
+                            userId: userId
+                        }
+                    }
+                )
+
+        await Users
             .findOne(
                 {
                     where: {
@@ -22,7 +38,15 @@ exports.getProfileInfo = async (req, res) => {
                     }
                 },
             ).then(user => {
-                res.status(200).send(user)
+                res.status(200).send(
+                    {
+                        data:
+                        {
+                            user: user,
+                            cars: userCar
+                        }
+                    }
+                )
             })
     } catch (e) {
         res.status(500).json({
