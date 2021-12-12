@@ -25,23 +25,41 @@ module.exports = (sequelize, Sequelize) => {
         carId: {
             type: Sequelize.INTEGER,
             allowNull: true,
-            references: Cars,
-            referencesKey: 'id',
             field: 'carId'
         },
-        startAddressId: {
-            type: Sequelize.INTEGER,
+        // startAddressId: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: false,
+        //     references: Addresses,
+        //     referencesKey: 'id',
+        //     field: 'startAddressId',
+        // },
+        // finishAddressId: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: false,
+        //     references: Addresses,
+        //     referencesKey: 'id',
+        //     field: 'finishAddressId'
+        // },
+        country: {
+            type: Sequelize.STRING,
             allowNull: false,
-            references: Addresses,
-            referencesKey: 'id',
-            field: 'startAddressId',
+            field: 'country'
         },
-        finishAddressId: {
-            type: Sequelize.INTEGER,
+        city: {
+            type: Sequelize.STRING,
             allowNull: false,
-            references: Addresses,
-            referencesKey: 'id',
-            field: 'finishAddressId'
+            field: 'city'
+        },
+        startAddress: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'startAddress'
+        },
+        finishAddress: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            field: 'finishAddress'
         },
         startDate: {
             type: Sequelize.DATE,

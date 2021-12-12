@@ -7,15 +7,16 @@ const Op = db.Sequelize.Op;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { Cars } = require("../models");
 
 exports.signup = (req, res) => {
-    const userName = req.body.userName;
-    const userPhone = req.body.userPhone;
-    const userEmail = req.body.userEmail;
-    const userPassword = req.body.userPassword;
-    const gender = req.body.gender;
+  const userName = req.body.userName;
+  const userPhone = req.body.userPhone;
+  const userEmail = req.body.userEmail;
+  const userPassword = req.body.userPassword;
+  const gender = req.body.gender;
 
-    console.log(`name: ${userName} \n
+  console.log(`name: ${userName} \n
     phone: ${userPhone} \n
     email: ${userEmail} \n
     password: ${userPassword} \n
@@ -32,7 +33,7 @@ exports.signup = (req, res) => {
     userStatus: 1,
   })
     .then(() => {
-          res.send({ message: "User was registered successfully!" });
+      res.send({ message: "User was registered successfully!" });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -40,14 +41,14 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-    const userEmail = req.body.userEmail;
-    const userPassword = req.body.userPassword
+  const userEmail = req.body.userEmail;
+  const userPassword = req.body.userPassword
   User.findOne({
     where: {
       userEmail: userEmail
     }
   })
-    .then(user => {
+    .then(async user => {
       if (!user) {
         return res.status(404).send({ message: "User Not found." });
       }
@@ -68,16 +69,17 @@ exports.signin = (req, res) => {
         expiresIn: 86400 // 24 hours
       });
 
-      const authorities = [];
-      // user.getRoles().then(roles => {
-        res.status(200).send({
-          id: user.id,
-          role: user.roleId,
-          username: user.userName,
-          email: user.userEmail,  
-          accessToken: token
-        });
-      // });
+      const cars = await Cars
+        .findAll({ where: { userId: user.id }, raw: true })
+
+      res.status(200).send({
+        id: user.id,
+        role: user.roleId,
+        username: user.userName,
+        email: user.userEmail,
+        accessToken: token,
+        cars: cars
+      });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });

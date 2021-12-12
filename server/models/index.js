@@ -89,19 +89,19 @@ db.Ads.belongsTo(db.Users, {
 db.Users.hasMany(db.Ads);
 
 //between Ads and Cars
-db.Ads.belongsTo(db.Cars, {
-    foreignKey:'carId'
-});
-db.Cars.hasMany(db.Ads);
+// db.Ads.belongsTo(db.Cars, {
+//     foreignKey:'carId'
+// });
+// db.Cars.hasMany(db.Ads);
 
-//between Ads and Addresses
-db.Ads.belongsTo(db.Addresses, {
-    foreignKey:'startAddressId'
-});
-db.Ads.belongsTo(db.Addresses, {
-    foreignKey:'finishAddressesId'
-});
-db.Addresses.hasMany(db.Ads);
+// //between Ads and Addresses
+// db.Ads.belongsTo(db.Addresses, {
+//     foreignKey:'startAddressId'
+// });
+// db.Ads.belongsTo(db.Addresses, {
+//     foreignKey:'finishAddressesId'
+// });
+// db.Addresses.hasMany(db.Ads);
 
 //between Users and Cars
 db.Cars.belongsTo(db.Users, {

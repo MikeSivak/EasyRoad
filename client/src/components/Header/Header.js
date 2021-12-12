@@ -113,6 +113,7 @@ export default function Header() {
           localStorage.setItem('x-user-id', res.data.id)
           localStorage.setItem('x-role-id', res.data.role)
           localStorage.setItem('x-username', res.data.username)
+          localStorage.setItem('x-user-cars', res.data.cars)
           window.location = '/'
         })
         .catch((err) => {

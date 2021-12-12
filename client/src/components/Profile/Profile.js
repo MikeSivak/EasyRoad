@@ -100,7 +100,6 @@ export default function Profile() {
     const profileData = async () => {
         await axios.get('/profile', { headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
             .then((res) => {
-                // console.log(res.data['data']['user'])
                 setUser(res.data['data']['user'])
                 setCars(res.data['data']['cars'])
             })

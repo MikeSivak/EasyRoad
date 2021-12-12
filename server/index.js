@@ -131,19 +131,5 @@ app.get('/', (req, res) => {
     res.json({ message: 'Home page' })
 });
 
-//test api
-app.use('/test', (req, res) => {
-    res.json({ message: "Hello from server!" });
-})
-
-//  for users/admins
-// app.use('/ads', require('./routes/ads.route.js'));
-
-//  for users
-// app.use('/profile', require('./routes/profile.route.js'));
-
-//  for admins
-// app.use('/admin', require('./routes/admin.route.js'));
-
 app.listen(PORT);
 console.log(`server was started on port: ${PORT} ...`);

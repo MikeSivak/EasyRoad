@@ -19,10 +19,70 @@ const Addresses = db.Addresses;
 //     foreignKey: 'id_user'
 // });
 
+exports.getCountries = async (req, res) => {
+    try {
+        Addresses
+            .findAll({ attributes: ['country'], group: ['country'] })
+            .then((countries) => {
+                console.log('_____________________')
+                console.log(countries);
+                res.send(countries)
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.getCities = async (req, res) => {
+    const country = req.params.country;
+    try {
+        Addresses
+            .findAll({ attributes: ['city'], group: ['city'], where: { country: country } })
+            .then((cities) => {
+                console.log(cities);
+                res.send(cities)
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.getAddresses = async (req, res) => {
+    const city = req.params.city;
+    try {
+        Addresses
+            .findAll({ attributes: ['street', 'streetNum'], where: {city: city} })
+            .then((addresses) => {
+                console.log(addresses);
+                res.send(addresses);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
 exports.getAllAds = async (req, res) => {
     try {
 
-        await Addresses.findAll().then((address)=>{
+        await Addresses.findAll().then((address) => {
             console.log("{{{{{{{{{{{{{---- ADDRESSES ----}}}}}}}}}}}}}}")
             console.log(address);
             console.log("{{{{{{{{{{{{{---- End ----}}}}}}}}}}}}}}")
@@ -31,7 +91,7 @@ exports.getAllAds = async (req, res) => {
             .findAll({
                 include: [
                     { model: Users },
-                    { model: Addresses }    
+                    // { model: Addresses }    
                 ],
                 raw: true
             }).then((ads) => {
@@ -52,23 +112,37 @@ exports.getAllAds = async (req, res) => {
     }
 }
 
-exports.createAd = async(req, res) => {
-    // const id_car = req.body.id_car;
-    // const id_user = req.user.id;
-    // const id_city = req.body.id_city;
-    const userId = req.userId;
+exports.createAd = async (req, res) => {
+
+    const userId = req.body.userId;
+    const role = req.body.role;
+    const carId = req.body.carId;
+    const country = req.body.country;
+    const city = req.body.city;
+    const startAddress = req.body.startAddress;
+    const finishAddress = req.body.finishAddress;
+    const startDate = req.body.startDate;
+    const startTime = req.body.startTime;
+    const finishTime = req.body.finishTime;
+    const seatsCount = req.body.seatsCount;
+    const price = req.body.price;
+
+
     try {
         Ads
             .create({
                 userId: userId, //id_user,  
-                role: 'driver', 
-                startAddressId: 1, //dep_address,       //enter from keybord
-                finishAddressId: 2, //arr_address,       //enter from keybord
-                startDate: "2021-01-07", //dep_date,             //chose date from select field
-                startTime: "12:00:00", //dep_time,             //chose date from select field
-                finishTime: "13:00:00", //arr_time,             //chose date from select field
-                seatsCount: 2, //seats_number,     //enter from keybord
-                price: 12, //price,                   //enter from keybord
+                role: role,
+                carId: carId,
+                country: country,
+                city: city,
+                startAddress: startAddress,
+                finishAddress: finishAddress,
+                startDate: startDate,
+                startTime: startTime,
+                finishTime: finishTime,
+                seatsCount: seatsCount,
+                price: price
             })
             .then(
                 // res.redirect('http://localhost:5000/content')
@@ -83,7 +157,7 @@ exports.createAd = async(req, res) => {
     }
 }
 
-exports.deleteAd = async(req, res) => {
+exports.deleteAd = async (req, res) => {
     let id_ad = req.body.id_ad;
 
     try {
@@ -103,7 +177,7 @@ exports.deleteAd = async(req, res) => {
     }
 }
 
-exports.updateAd = async(req, res) => {
+exports.updateAd = async (req, res) => {
     let id = req.body.id;
     let city_name = req.body.city_name;
     let dep_address = req.body.dep_address;

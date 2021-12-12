@@ -16,7 +16,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import { maxWidth } from "@material-ui/system";
+import { fontWeight, maxWidth } from "@material-ui/system";
 
 import axios from 'axios';
 
@@ -26,38 +26,22 @@ let stylesAds = {
     }
 }
 
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
-
 export default function Ads() {
-    const [expanded, setExpanded] = useState(false);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
 
     const [ads, setAds] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         axios
-        .get('/ads', {headers:{'x-access-token': localStorage.getItem('x-access-token')}})
-        .then((res)=>{
-            setAds(res.data);
-            console.log("------ Ads ------");
-            console.log(res.data)
-            console.log('-----------------')
-        })
-        .catch((e)=>{
-            console.log("ERROR ADS: " + e.message)
-        })
+            .get('/ads', { headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
+            .then((res) => {
+                setAds(res.data);
+                console.log("------ Ads ------");
+                console.log(res.data)
+                console.log('-----------------')
+            })
+            .catch((e) => {
+                console.log("ERROR ADS: " + e.message)
+            })
     }, [])
 
     if (localStorage.getItem('x-access-token')) {
@@ -67,8 +51,8 @@ export default function Ads() {
                     <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                         <Grid container xs={12} spacing={0}>
                             {ads.map((ad) => (
-                                <Grid item xs>
-                                    <Card sx={{ maxWidth: 500, mx: '1rem', mt: '2rem', minWidth: 300 }}>
+                                <Grid item xs style={{textAlign:'-webkit-center'}}>
+                                    <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                         <CardHeader
                                             avatar={
                                                 <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
@@ -93,19 +77,19 @@ export default function Ads() {
                                             <Box style={{ padding: '2em 0' }}>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
-                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Откуда едем: {ad.startAddressId}</Grid>
+                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}><span style={{ fontWeight: 'bold' }}>Адрес отправления:</span><br /> г. {ad.city} - ул. {ad.startAddress}</Grid>
                                                 </Grid>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}>
                                                         <img src='/images/line.svg' />
                                                     </Grid>
                                                     <Grid item xs={7} style={{ placeSelf: 'center' }}>
-                                                        <Typography style={{ fontSize: '2em' }}>1.3 км.</Typography>
+                                                        <Typography style={{ fontSize: '2em' }}><span style={{ fontWeight: 'bold' }}>1.3 км.</span></Typography>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container xs={12}>
                                                     <Grid item xs={3}><img width="50px" src="/images/finish.svg" /></Grid>
-                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}>Куда едем: {ad.finishAddressId}</Grid>
+                                                    <Grid item xs={7} style={{ placeSelf: 'center', fontSize: '18px' }}><span style={{ fontWeight: 'bold' }}>Адрес прибытия:</span><br /> г. {ad.city} - ул. {ad.finishAddress}</Grid>
                                                 </Grid>
                                             </Box>
                                             <Divider />
@@ -142,44 +126,7 @@ export default function Ads() {
                                             <IconButton aria-label="share">
                                                 <ShareIcon />
                                             </IconButton>
-                                            <ExpandMore
-                                                expand={expanded}
-                                                onClick={handleExpandClick}
-                                                aria-expanded={expanded}
-                                                aria-label="show more"
-                                            >
-                                                <ExpandMoreIcon />
-                                            </ExpandMore>
                                         </CardActions>
-                                        <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                            <CardContent>
-                                                <Typography paragraph>Method:</Typography>
-                                                <Typography paragraph>
-                                                    Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                                                    aside for 10 minutes.
-                                                </Typography>
-                                                <Typography paragraph>
-                                                    Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                                                    medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                                                    occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                                                    large plate and set aside, leaving chicken and chorizo in the pan. Add
-                                                    pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                                                    stirring often until thickened and fragrant, about 10 minutes. Add
-                                                    saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                                                </Typography>
-                                                <Typography paragraph>
-                                                    Add rice and stir very gently to distribute. Top with artichokes and
-                                                    peppers, and cook without stirring, until most of the liquid is absorbed,
-                                                    15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                                                    mussels, tucking them down into the rice, and cook again without
-                                                    stirring, until mussels have opened and rice is just tender, 5 to 7
-                                                    minutes more. (Discard any mussels that don’t open.)
-                                                </Typography>
-                                                <Typography>
-                                                    Set aside off of the heat to let rest for 10 minutes, and then serve.
-                                                </Typography>
-                                            </CardContent>
-                                        </Collapse>
                                     </Card>
                                 </Grid>
                             ))}
@@ -189,7 +136,7 @@ export default function Ads() {
             </>
         );
     }
-    else{
+    else {
         window.location = '/'
     }
 }
