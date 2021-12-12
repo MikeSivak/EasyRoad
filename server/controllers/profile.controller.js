@@ -10,25 +10,15 @@ const TravelHistory = db.TravelHistory;
 const bcrypt = require('bcryptjs');
 
 exports.getProfileInfo = async (req, res) => {
-    const userId = req.userId;
+    const userId = req.headers['x-user-id'];
     console.log('USER ID: ' + userId);
 
     try {
         const userCar = await
             Cars
-                .findAll(
-                    {
-                        include: [
-                            { model: Users }
-                        ],
-                        raw: true
-                    },
-                    {
-                        where: {
-                            userId: userId
-                        }
-                    }
-                )
+                .findAll({
+                    where: { userId: userId }
+                })
 
         await Users
             .findOne(
@@ -72,10 +62,10 @@ exports.addCar = async (req, res) => {
             carPhotoLink: carPhoto,
             userId: userId
         })
-        .then((car)=>{
+        .then((car) => {
             res.send(car)
         })
-        .catch((e)=>{
+        .catch((e) => {
             res.status(500).json({
                 mesage: 'Something went wrong, try again: ' + e.mesage
             })

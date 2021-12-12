@@ -43,6 +43,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
 
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
@@ -98,7 +99,13 @@ export default function Profile() {
 
     let navigate = useNavigate();
     const profileData = async () => {
-        await axios.get('/profile', { headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
+        await axios.get('/profile', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        }
+        )
             .then((res) => {
                 setUser(res.data['data']['user'])
                 setCars(res.data['data']['cars'])
@@ -171,6 +178,7 @@ export default function Profile() {
                 console.log(res.data)
                 localStorage.setItem('x-user-cars', res.data)
                 console.log("==============================")
+                window.location.reload()
             })
             .catch((err) => {
                 console.log("===== CREATE CAR ERROR =====")
@@ -189,9 +197,11 @@ export default function Profile() {
                 <Box style={{ padding: '1em 1em 1em 1em', backgroundColor: '#CFCFCF', maxWidth: 400, minWidth: 300, margin: '0 auto' }}>
                     <Box style={{ backgroundColor: '#E8E8E8', padding: '4em 0' }}>
                         {
-                            <img style={{ borderRadius: '50%', width: 200, height: 200 }} src={`http://localhost:3001/${user.userPhoto}`} alt="photo" />
+                            // <img style={{ borderRadius: '50%', width: 200, height: 200 }} src={`http://localhost:3001/${user.userPhoto}`} alt="photo" />
                         }
-                        <Box style={{ display: loadPhoto }}>
+                        <Avatar style={{ borderRadius: '50%', width: 240, height: 240, margin: '0 auto' }} src={`http://localhost:3001/${user.userPhoto}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
+                        </Avatar>
+                        <Box style={{ display: loadPhoto, marginTop: '20px' }}>
                             <FormControl variant="standard" >
                                 <label htmlFor="icon-button-file">
                                     <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadHandler} id="icon-button-file" type="file" name='file' />
