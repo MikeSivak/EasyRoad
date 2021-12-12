@@ -45,10 +45,19 @@ app.post('/upload', (req, res) => {
         if (err) {
             res.sendStatus(500);
         }
-        // ---------------------------------------
         const userId = req.headers['x-user-id'];
         console.log("userID: " + userId)
         updatePhoto(userId, req.file.filename);
+        res.send(req.file);
+    });
+});
+
+app.post('/uploadcarphoto', (req, res) => {
+    upload(req, res, (err) => {
+        if (err) {
+            res.sendStatus(500);
+        }
+        // const userId = req.headers['x-user-id'];
         res.send(req.file);
     });
 });

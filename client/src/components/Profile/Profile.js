@@ -122,6 +122,21 @@ export default function Profile() {
             })
     }
 
+    const [carPhoto, setCarPhoto] = useState({});
+
+    function uploadCarPhoto(event) {
+        const data = new FormData();
+        data.append('file', event.target.files[0]);
+        axios.post('http://localhost:3001/uploadcarphoto', data)
+            .then((res) => {
+                console.log("CAR PHOTO: " + res.data.filename);
+                setCarPhoto(res.data.filename)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })
+    }
+
     React.useEffect(() => {
         profileData();
     }, [])
@@ -134,7 +149,7 @@ export default function Profile() {
                         {
                             <img style={{ borderRadius: '50%', width: 200, height: 200 }} src={`http://localhost:3001/${user.userPhoto}`} alt="photo" />
                         }
-                        <Box style={{display:loadPhoto}}>
+                        <Box style={{ display: loadPhoto }}>
                             <FormControl variant="standard" >
                                 <label htmlFor="icon-button-file">
                                     <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadHandler} id="icon-button-file" type="file" name='file' />
@@ -299,26 +314,29 @@ export default function Profile() {
                                             placeholder='Введите номер авто'
                                         />
                                     </FormControl>
-                                    <FormControl variant="standard" style={{ width: '100%' }}>
-                                        {/* <InputLabel htmlFor="icon-button-file" style={{ fontSize: '1.1em' }}>
-                                                Фото автомобиля
-                                            </InputLabel> */}
+                                    {/* <FormControl variant="standard" style={{ width: '100%' }}>
                                         <Stack direction="row" alignItems="center" spacing={2}>
-                                            {/* <label htmlFor="contained-button-file">
-                                                    <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                                                    <Button variant="contained" component="span">
-                                                        Upload
-                                                    </Button>
-                                                </label> */}
                                             <label htmlFor="icon-button-file">
-                                                <Input sx={{ display: 'none' }} accept="image/*" id="icon-button-file" type="file" />
+                                                <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadCarPhoto} name="file" id="icon-button-file" type="file" />
+                                                <IconButton color="primary" aria-label="upload picture" component="span">
+                                                    <PhotoCamera />
+                                                </IconButton>
+                                                <img src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                            </label>
+                                        </Stack>
+                                    </FormControl> */}
+
+                                    <Box>
+                                        <FormControl variant="standard" >
+                                            <label htmlFor="icon-button-car-photo-file">
+                                                <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadCarPhoto} id="icon-button-car-photo-file" type="file" name='file' />
                                                 <IconButton color="primary" aria-label="upload picture" component="span">
                                                     <PhotoCamera />
                                                 </IconButton>
                                             </label>
-                                        </Stack>
-                                    </FormControl>
-
+                                        </FormControl>
+                                    </Box>
+                                    <img style={{ width: 300}} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
                                 </Box>
                             </AccordionDetails>
                         </Accordion>

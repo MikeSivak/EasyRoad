@@ -55,39 +55,12 @@ exports.getProfileInfo = async (req, res) => {
     }
 }
 
-// exports.updateProfileInfo = async(req,res)=>{
-//     let id = req.body.id;
-//     let user_email = req.body.user_email;
-//     // let user_password = req.body.user_password;
-//     let user_number = req.body.user_number;
-//     let us_name = req.body.us_name;
-//     let gender = req.body.gender;
-
-//     //get all parameters
-//     try{
-//         await users
-//         .update({
-//             user_email: user_email,
-//             // user_password: user_password,
-//             user_number: user_number,
-//             us_name: us_name,
-//             gender: gender
-//         },
-//         {
-//             where:{
-//                 id:id
-//             }
-//         })
-//         .then(
-//             res.send('(' + id + ')' + ' profile updated')
-//         )
-//     }
-//     catch (e) {
-//         res.status(500).json({
-//             message: 'Something went wrong, try again: ' + e.message
-//         })
-//     }
-// }
+exports.addCar = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    const carBrand = req.body.carBrand;
+    const carModel = req.body.carModel;
+    const carNumber = req.body.carNumber;
+}
 
 exports.updateProfileInfo = async (req, res) => {
     const id = req.body.id;
