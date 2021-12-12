@@ -5,7 +5,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TimePicker from '@mui/lab/TimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { useEffect, useState } from 'react';
-import { getHours } from "date-fns";
+import { getHours, set } from "date-fns";
 import { ru } from "date-fns/locale";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
@@ -67,6 +67,7 @@ export default function NewAd() {
     const [cars, setCars] = useState([]);
 
     const [carField, setCarField] = useState('none');
+    const [carId, setCarId] = useState(undefined);
 
     const dateChange = (newValue) => {
         setDate(newValue);
@@ -79,10 +80,18 @@ export default function NewAd() {
                 handleOpen()
                 setRole('passenger')
             }
+            else {
+                getCars();
+                setCarField('block')
+            }
         }
         else {
             setCarField('none')
         }
+    }
+
+    const handleCarIdChange = (event) => {
+        setCarId(event.target.value);
     }
 
     const handleCountryChange = (event) => {
@@ -141,6 +150,24 @@ export default function NewAd() {
             })
     }
 
+    const getCars = () => {
+        axios.get(`/ads/cars`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        })
+            .then((res) => {
+                setCars(res.data)
+                console.log('----- CARS LIST -----')
+                console.log(res.data)
+                console.log('---------------------')
+            })
+            .catch((e) => {
+                console.log(e.message)
+            })
+    }
+
     const createAd = async () => {
         const pad = num => ("0" + num).slice(-2);
 
@@ -157,7 +184,7 @@ export default function NewAd() {
         await axios.post('/ads/create', {
             userId: localStorage.getItem('x-user-id'),
             role: role,
-            carId: 1,
+            carId: carId,
             country: country,
             city: city,
             startAddress: startAddress,
@@ -371,16 +398,18 @@ export default function NewAd() {
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs style={{ display: carField }}>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }}>
+                                    <FormControl sx={{ mx: '1rem', pb: '2em', maxWidth: 800, minWidth: 300 }}>
                                         <InputLabel id="demo-simple-select-label">Выбрать авто</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
-                                            // value={car}
+                                            value={carId}
                                             label="Выбрать авто"
-                                        // onChange={handleCarChange}
+                                            onChange={handleCarIdChange}
                                         >
-
+                                            {cars.map((car) => (
+                                                <MenuItem value={car.id}>{car.carBrand} {car.carModel} {car.carNumber}</MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>

@@ -2,6 +2,7 @@ const db = require('../models');
 const Ads = db.Ads;
 const Users = db.Users;
 const Addresses = db.Addresses;
+const Cars = db.Cars;
 
 // cities.hasMany(ads, {
 //     foreignKey: 'id_city',
@@ -63,10 +64,30 @@ exports.getAddresses = async (req, res) => {
     const city = req.params.city;
     try {
         Addresses
-            .findAll({ attributes: ['street', 'streetNum'], where: {city: city} })
+            .findAll({ attributes: ['street', 'streetNum'], where: { city: city } })
             .then((addresses) => {
                 console.log(addresses);
                 res.send(addresses);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.getCars = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    try {
+        Cars
+            .findAll({ where: { userId: userId } })
+            .then((cars) => {
+                console.log(cars);
+                res.send(cars);
             })
             .catch((e) => {
                 console.log(e);
@@ -145,9 +166,6 @@ exports.createAd = async (req, res) => {
                 price: price
             })
             .then(
-                // res.redirect('http://localhost:5000/content')
-                // res.render('adsList')
-                // res.redirect('/ads/adsList')
                 res.send("Ad created successfully!")
             );
     } catch (e) {

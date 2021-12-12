@@ -56,10 +56,30 @@ exports.getProfileInfo = async (req, res) => {
 }
 
 exports.addCar = async (req, res) => {
-    const userId = req.headers['x-user-id'];
+    const userId = req.body.userId;
     const carBrand = req.body.carBrand;
     const carModel = req.body.carModel;
     const carNumber = req.body.carNumber;
+    const carPhoto = req.body.carPhotoLink
+
+    console.log('CAR PHOTO LINK: ' + carPhoto);
+
+    await Cars
+        .create({
+            carBrand: carBrand,
+            carModel: carModel,
+            carNumber: carNumber,
+            carPhotoLink: carPhoto,
+            userId: userId
+        })
+        .then((car)=>{
+            res.send(car)
+        })
+        .catch((e)=>{
+            res.status(500).json({
+                mesage: 'Something went wrong, try again: ' + e.mesage
+            })
+        })
 }
 
 exports.updateProfileInfo = async (req, res) => {
@@ -93,7 +113,7 @@ exports.updateProfileInfo = async (req, res) => {
                 console.log("HASH: " + hash);
                 updateUser.user_password = hash;
 
-                users
+                Users
                     .update({
                         user_email: updateUser.user_email,
                         user_password: updateUser.user_password,
@@ -111,29 +131,5 @@ exports.updateProfileInfo = async (req, res) => {
                     )
             });
         });
-
-        // try {
-        //     await users
-        //         .update({
-        //             user_email: updateUser.user_email,
-        //             user_password: updateUser.user_password,
-        //             user_number: updateUser.user_number,
-        //             us_name: updateUser.us_name,
-        //             gender: updateUser.gender
-        //         },
-        //             {
-        //                 where: {
-        //                     id: id
-        //                 }
-        //             })
-        //         .then(
-        //             res.send('(' + id + ')' + ' profile updated')
-        //         )
-        // }
-        // catch (e) {
-        //     res.status(500).json({
-        //         message: 'Something went wrong, try again: ' + e.message
-        //     })
-        // }
     }
 }

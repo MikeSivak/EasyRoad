@@ -122,18 +122,60 @@ export default function Profile() {
             })
     }
 
-    const [carPhoto, setCarPhoto] = useState({});
+    const [carPhoto, setCarPhoto] = useState('');
 
-    function uploadCarPhoto(event) {
+    async function uploadCarPhoto(event) {
         const data = new FormData();
         data.append('file', event.target.files[0]);
-        axios.post('http://localhost:3001/uploadcarphoto', data)
+        await axios.post('http://localhost:3001/uploadcarphoto', data)
             .then((res) => {
                 console.log("CAR PHOTO: " + res.data.filename);
+                // setCarPhoto(res.data.filename)
                 setCarPhoto(res.data.filename)
             })
             .catch((err) => {
                 console.log(err.message);
+            })
+    }
+
+
+    const [carBrand, setCarBrand] = useState('');
+    const [carModel, setCarModel] = useState('');
+    const [carNumber, setCarNumber] = useState('');
+
+    const handleCarBrandChange = (event) => {
+        setCarBrand(event.target.value)
+        console.log(event.target.value)
+    }
+    const handleCarModelChange = (event) => {
+        setCarModel(event.target.value)
+        console.log(event.target.value)
+    }
+    const handleCarNumberChange = (event) => {
+        setCarNumber(event.target.value)
+        console.log(event.target.value)
+    }
+
+    const addCar = async () => {
+        await axios.post('/profile/addCar', {
+            userId: localStorage.getItem('x-user-id'),
+            carBrand: carBrand,
+            carModel: carModel,
+            carNumber: carNumber,
+            carPhotoLink: carPhoto
+        }, {
+            headers: { 'x-access-token': localStorage.getItem('x-access-token') }
+        })
+            .then((res) => {
+                console.log("===== CREATE CAR RESPONSE =====")
+                console.log(res.data)
+                localStorage.setItem('x-user-cars', res.data)
+                console.log("==============================")
+            })
+            .catch((err) => {
+                console.log("===== CREATE CAR ERROR =====")
+                console.log(err.message)
+                console.log("===========================")
             })
     }
 
@@ -154,7 +196,7 @@ export default function Profile() {
                                 <label htmlFor="icon-button-file">
                                     <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadHandler} id="icon-button-file" type="file" name='file' />
                                     <IconButton color="primary" aria-label="upload picture" component="span">
-                                        <PhotoCamera />
+                                        <PhotoCamera style={{ fontSize: '2em' }} />
                                     </IconButton>
                                 </label>
                             </FormControl>
@@ -288,7 +330,9 @@ export default function Profile() {
                                         <Input
                                             style={{ fontSize: '1.4em' }}
                                             id="input-with-icon-adornment"
+                                            value={carBrand}
                                             defaultValue=''
+                                            onChange={handleCarBrandChange}
                                             placeholder='Введите марку авто'
                                         />
                                     </FormControl>
@@ -299,7 +343,9 @@ export default function Profile() {
                                         <Input
                                             style={{ fontSize: '1.4em' }}
                                             id="input-with-icon-adornment"
+                                            value={carModel}
                                             defaultValue=''
+                                            onChange={handleCarModelChange}
                                             placeholder='Введите модель авто'
                                         />
                                     </FormControl>
@@ -310,33 +356,26 @@ export default function Profile() {
                                         <Input
                                             style={{ fontSize: '1.4em' }}
                                             id="input-with-icon-adornment"
+                                            value={carNumber}
                                             defaultValue=''
+                                            onChange={handleCarNumberChange}
                                             placeholder='Введите номер авто'
                                         />
                                     </FormControl>
-                                    {/* <FormControl variant="standard" style={{ width: '100%' }}>
-                                        <Stack direction="row" alignItems="center" spacing={2}>
-                                            <label htmlFor="icon-button-file">
-                                                <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadCarPhoto} name="file" id="icon-button-file" type="file" />
-                                                <IconButton color="primary" aria-label="upload picture" component="span">
-                                                    <PhotoCamera />
-                                                </IconButton>
-                                                <img src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
-                                            </label>
-                                        </Stack>
-                                    </FormControl> */}
-
                                     <Box>
                                         <FormControl variant="standard" >
                                             <label htmlFor="icon-button-car-photo-file">
                                                 <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadCarPhoto} id="icon-button-car-photo-file" type="file" name='file' />
                                                 <IconButton color="primary" aria-label="upload picture" component="span">
-                                                    <PhotoCamera />
+                                                    <PhotoCamera style={{ fontSize: '2em' }} />
                                                 </IconButton>
                                             </label>
                                         </FormControl>
                                     </Box>
-                                    <img style={{ width: 300}} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                    <img style={{ width: 300 }} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                    <Box style={{ padding: '0 0 0 0' }}>
+                                        <Button variant='contained' size='large' onClick={addCar} >Добавить</Button>
+                                    </Box>
                                 </Box>
                             </AccordionDetails>
                         </Accordion>
@@ -441,7 +480,7 @@ export default function Profile() {
                                             component="img"
                                             height="200"
                                             style={{ width: '300px', margin: '0 auto' }}
-                                            image="/images/portfolio.jpg"
+                                            image={car.carPhotoLink}
                                             alt="car"
                                         />
                                         <Divider style={{ marginTop: '20px' }} />
