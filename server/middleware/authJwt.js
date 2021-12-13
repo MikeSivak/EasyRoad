@@ -32,7 +32,7 @@ isAdmin = (req, res, next) => {
         next();
       }
       else{
-        res.send("You have not access to admin");
+        res.status(403).send("You have not access to admin");
       }
     });
   return;

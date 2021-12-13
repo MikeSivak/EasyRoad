@@ -1,5 +1,6 @@
 import Ads from '../components/Ads/Ads';
 import Unauthorized from '../components/Errors/Unauthorized';
+import NotAccess from '../components/Errors/NotAccess';
 import Home from '../components/Home/Home'
 import NewAd from '../components/NewAd/NewAd';
 import Profile from '../components/Profile/Profile';
@@ -28,7 +29,13 @@ const routes = [
     },
     {
         path: '/unauth',
-        component: <Unauthorized />
+        component: <Unauthorized />,
+        id: 4
+    },
+    {
+        path: '/notaccess',
+        component: <NotAccess />,
+        id: 5
     }
 ]
 

@@ -45,7 +45,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
-
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ImageIcon from '@mui/icons-material/Image';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
 
@@ -169,8 +173,13 @@ export default function Profile() {
                 setUser(res.data['data']['user'])
                 setCars(res.data['data']['cars'])
             })
-            .catch(() => {
-                navigate('/unauth')
+            .catch((reason: AxiosError) => {
+                if (reason.response.status == 401) {
+                    navigate('/unauth')
+                }
+                if(reason.response.status == 403){
+                    navigate('/notaccess')
+                }
             })
     }
 
@@ -233,10 +242,7 @@ export default function Profile() {
             headers: { 'x-access-token': localStorage.getItem('x-access-token') }
         })
             .then((res) => {
-                console.log("===== CREATE CAR RESPONSE =====")
-                console.log(res.data)
                 localStorage.setItem('x-user-cars', res.data)
-                console.log("==============================")
                 window.location.reload()
             })
             .catch((err) => {
@@ -257,24 +263,77 @@ export default function Profile() {
         })
             .then((res) => {
                 setAds(res.data);
-                console.log("------ Ads ------");
-                console.log(res.data)
-                console.log('-----------------')
             })
             .catch((e) => {
                 console.log("ERROR ADS: " + e.message)
             })
     }
 
+    const [usersList, setUsersList] = useState([]);
+
+    const getUsersList = () => {
+        axios.get('/admin/users', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then((res) => {
+                console.log("===== GET USERS LIST =====")
+                console.log(res.data)
+                setUsersList(res.data)
+                console.log("==============================")
+            })
+            .catch((err) => {
+                console.log("===== GET USERS LIST ERROR =====")
+                console.log(err.message)
+                console.log("===========================")
+            })
+    }
+
+    const blockUser = async (id) => {
+        await axios.post('/admin/user/block', {
+            id: id
+        }, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token')
+            }
+        })
+            .then((res) => {
+                console.log("BLOCK USER: " + res.data)
+                getUsersList();
+            })
+            .catch((err) => {
+                console.log("BLOCK USER ERROR: " + err.message)
+            })
+    }
+
+    const unblockUser = async (id) => {
+        await axios.post('/admin/user/unblock', {
+            id: id
+        }, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token')
+            }
+        })
+            .then((res) => {
+                console.log("UNBLOCK USER: " + res.data)
+                getUsersList();
+            })
+            .catch((err) => {
+                console.log("UNBLOCK USER ERROR: " + err.message)
+            })
+    }
+
     React.useEffect(() => {
         profileData();
         getUserAds();
+        getUsersList();
     }, [])
 
     return (
         <>
             <Box style={{ backgroundColor: '#222222', padding: '3em' }}>
-                <Grid container xs={12} spacing={0} style={{ justifyContent: 'center', background:'rgb(39 39 39)', padding:'1em' }}>
+                <Grid container xs={12} spacing={0} style={{ justifyContent: 'center', background: 'rgb(39 39 39)', padding: '1em' }}>
                     <Grid item xs>
                         <Box style={{ padding: '1em', backgroundColor: '#CFCFCF', maxWidth: 400, minWidth: 300, margin: '0 auto' }}>
                             <Box style={{ backgroundColor: '#E8E8E8', padding: '4em 0' }}>
@@ -615,6 +674,7 @@ export default function Profile() {
                                     <Tab label="Объявления" {...a11yProps(0)} />
                                     <Tab label="Заказы" {...a11yProps(1)} />
                                     <Tab label="Отзывы" {...a11yProps(2)} />
+                                    {usersList.length !== 0 ? <Tab label="Пользователи" {...a11yProps(3)} /> : ''}
                                 </Tabs>
                             </AppBar>
                             <SwipeableViews
@@ -709,6 +769,33 @@ export default function Profile() {
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
                                     {/* {reviews.length == 0 ? <span>У вас пока нет отзывов</span> : ''} */}
                                     <span>У вас пока нет отзывов</span>
+                                </TabPanel>
+                                <TabPanel value={tabValue} index={3} dir={theme.direction}>
+                                    <Typography>Список всех пользователей сайта</Typography>
+                                    <List
+                                        sx={{
+                                            width: '100%',
+                                            maxWidth: 900,
+                                            minWidth: 300,
+                                            bgcolor: 'background.paper',
+                                            marginTop: '2em'
+                                        }}
+                                    >
+                                        {usersList.map((user) => (
+                                            <>
+                                                <ListItem>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={`http://localhost:3001/${user.userPhoto}`}>
+                                                            {/* <ImageIcon /> */}
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={user.userName} secondary={`Статус пользователя: ${user.userStatus == 1 ? 'Разблокирован' : 'Заблокирован'}`} />
+                                                    {user.userStatus == 1 ? <Button onClick={() => blockUser(user.id)}>Блокировать</Button> : <Button onClick={() => unblockUser(user.id)} >Разблокировать</Button>}
+                                                </ListItem>
+                                                <Divider variant="inset" component="li" />
+                                            </>
+                                        ))}
+                                    </List>
                                 </TabPanel>
                             </SwipeableViews>
                         </Box>

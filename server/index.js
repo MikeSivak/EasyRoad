@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 const { nextTick } = require('process');
 const cors = require("cors");
 const { authJwt } = require("./middleware");
+const { checkStatus } = require("./middleware/checkStatus")
 // const controller = require("./controllers/user.controller");
 const adsRoutes = require('./routes/ads.routes');
 const profileRoutes = require('./routes/profile.routes');
@@ -57,20 +58,19 @@ app.post('/uploadcarphoto', (req, res) => {
         if (err) {
             res.sendStatus(500);
         }
-        // const userId = req.headers['x-user-id'];
         res.send(req.file);
     });
 });
 
-function updatePhoto(userId, userPhoto){
+function updatePhoto(userId, userPhoto) {
     console.log("user ID: " + userId)
     console.log("user Photo: " + userPhoto)
     Users
-    .update({userPhoto: userPhoto}, {
-        where:{
-            id: userId
-        }
-    });
+        .update({ userPhoto: userPhoto }, {
+            where: {
+                id: userId
+            }
+        });
 }
 
 app.use(function (req, res, next) {
@@ -86,8 +86,8 @@ app.use(
     [authJwt.verifyToken, authJwt.isAdmin],
     require('./routes/admin.routes')
 );
-app.use('/ads', [authJwt.verifyToken], adsRoutes);
-app.use('/profile', [authJwt.verifyToken], profileRoutes);
+app.use('/ads', [authJwt.verifyToken], [checkStatus], adsRoutes);
+app.use('/profile', [authJwt.verifyToken], [checkStatus], profileRoutes);
 
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log('Drop and Resync Db');

@@ -104,7 +104,7 @@ exports.getAllUsers = async (req, res) => {
         await Users
             .findAll({
                 include: [
-                    { model: Roles },
+                    { model: Roles, where: { id: 2 } },
                 ],
                 raw: true
             }).then(users => {

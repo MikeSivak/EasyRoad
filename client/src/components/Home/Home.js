@@ -25,7 +25,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 
 import stylesHome from './styles'
-import { addDays, daysToWeeks } from 'date-fns';
+import { addDays, daysToWeeks, set } from 'date-fns';
 
 export default function Home() {
     const [city, setCity] = useState('');
@@ -111,6 +111,9 @@ export default function Home() {
                 setAds(res.data);
             })
         setDate(null);
+        setCity('');
+        setDepAddress('');
+        setArrAddress('');
     }
 
     useEffect(() => {
