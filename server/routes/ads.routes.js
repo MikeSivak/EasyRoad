@@ -24,6 +24,7 @@ ads_router.get('/newad',
 );
 
 ads_router.get('/', ads_controller.getAllAds);
+ads_router.get('/userAds', ads_controller.getUserAds);
 ads_router.get('/countries', ads_controller.getCountries);
 ads_router.get('/cities/:country', ads_controller.getCities);
 ads_router.get('/addresses/:city', ads_controller.getAddresses);

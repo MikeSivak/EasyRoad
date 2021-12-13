@@ -52,8 +52,6 @@ exports.addCar = async (req, res) => {
     const carNumber = req.body.carNumber;
     const carPhoto = req.body.carPhotoLink
 
-    console.log('CAR PHOTO LINK: ' + carPhoto);
-
     await Cars
         .create({
             carBrand: carBrand,

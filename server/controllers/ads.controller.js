@@ -4,22 +4,6 @@ const Users = db.Users;
 const Addresses = db.Addresses;
 const Cars = db.Cars;
 
-// cities.hasMany(ads, {
-//     foreignKey: 'id_city',
-//     sourceKey: 'id'
-// });
-// ads.belongsTo(cities, {
-//     foreignKey: 'id_city'
-// });
-
-// users.hasMany(ads, {
-//     foreignKey: 'id_user',
-//     sourceKey: 'id'
-// });
-// ads.belongsTo(users, {
-//     foreignKey: 'id_user'
-// });
-
 exports.getCountries = async (req, res) => {
     try {
         Addresses
@@ -124,6 +108,41 @@ exports.getAllAds = async (req, res) => {
                         )
                 )
                 res.send(ads)
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.getUserAds = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    console.log(`===== User Id For Ads: ${userId} =====`)
+
+    try {
+        await Ads
+            .findAll({
+                include: [
+                    { model: Users, where:{id:userId}},
+                ],
+                raw: true
+            }).then((ads) => {
+                ads.forEach(
+                    element =>
+                        console.log(
+                            element
+                            // `id_user: ${element['id_user']} - for example
+                        )
+                )
+                console.log("[[[[[[[[[[[ DATA ]]]]]]]]]]")
+                console.log(ads)
+                console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
+                res.send(ads)
+            })
+            .catch((err)=>{
+                console.log("SOME ERROR HAHAHAHA: " + err.message)
             })
     }
     catch (e) {
