@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const db = require('../models');
 const Ads = db.Ads;
 const Users = db.Users;
@@ -12,6 +14,25 @@ exports.getCountries = async (req, res) => {
                 console.log('_____________________')
                 console.log(countries);
                 res.send(countries)
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.getAllCities = async (req, res) => {
+    try {
+        Addresses
+            .findAll({ attributes: ['city'], group: ['city'] })
+            .then((cities) => {
+                console.log(cities);
+                res.send(cities)
             })
             .catch((e) => {
                 console.log(e);
@@ -48,7 +69,7 @@ exports.getAddresses = async (req, res) => {
     const city = req.params.city;
     try {
         Addresses
-            .findAll({ attributes: ['street', 'streetNum'], where: { city: city } })
+            .findAll({ attributes: ['street', 'streetNum'], group: ['street', 'streetNum'], where: { city: city } })
             .then((addresses) => {
                 console.log(addresses);
                 res.send(addresses);
@@ -96,7 +117,6 @@ exports.getAllAds = async (req, res) => {
             .findAll({
                 include: [
                     { model: Users },
-                    // { model: Addresses }    
                 ],
                 raw: true
             }).then((ads) => {
@@ -104,11 +124,71 @@ exports.getAllAds = async (req, res) => {
                     element =>
                         console.log(
                             element
-                            // `id_user: ${element['id_user']} - for example
                         )
                 )
                 res.send(ads)
             })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.searchAds = async (req, res) => {
+    const city = req.body.city;
+    const startAddress = req.body.startAddress;
+    const finishAddress = req.body.finishAddress;
+    const startDate = req.body.startDate;
+
+    console.log("======= PARMS =========")
+    console.log("City: " + city)
+    console.log('Start Date: ' + startDate)
+    console.log('Start Address: ' + startAddress)
+    console.log('Finish Address: ' + finishAddress)
+    console.log("=======================")
+
+    try {
+        await Ads
+            .findAll(
+                // {
+                //     include: [
+                //         { model: Users },
+                //     ],
+                //     raw: true
+                // },
+                {
+                    where: {
+                        [Op.or]: [{
+                            city: {
+                                [Op.like]: `%${city}%`,
+                            },
+                            startAddress: {
+                                [Op.like]: `%${startAddress}%`,
+                            },
+                            finishAddress: {
+                                [Op.like]: `%${finishAddress}%`,
+                            },
+                            startDate: startAddress
+                        }]
+                        // city: city,
+                        // startAddress: startAddress,
+                        // finishAddress: finishAddress,
+                        // startDate: startDate
+                    }
+                }).then((ads) => {
+                    console.log('==== SEARCH RESULT ====')
+                    ads.forEach(
+                        element =>
+                            console.log(
+                                element
+                            )
+                    )
+                    console.log("LENGTH: " + ads.length)
+                    console.log('==== SEARCH RESULT END ====')
+                    res.send(ads)
+                })
     }
     catch (e) {
         res.status(500).json({
@@ -125,7 +205,7 @@ exports.getUserAds = async (req, res) => {
         await Ads
             .findAll({
                 include: [
-                    { model: Users, where:{id:userId}},
+                    { model: Users, where: { id: userId } },
                 ],
                 raw: true
             }).then((ads) => {
@@ -141,7 +221,7 @@ exports.getUserAds = async (req, res) => {
                 console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
                 res.send(ads)
             })
-            .catch((err)=>{
+            .catch((err) => {
                 console.log("SOME ERROR HAHAHAHA: " + err.message)
             })
     }

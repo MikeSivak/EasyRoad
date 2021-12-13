@@ -1,6 +1,6 @@
 import { Box, Container, Grid, Input, Divider, Typography, FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
 import SearchIcon from "@material-ui/icons/Search";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -11,28 +11,94 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import { height } from '@material-ui/system';
+import Avatar from '@mui/material/Avatar';
+import axios from 'axios'
 
 import stylesHome from './styles'
+import { addDays, daysToWeeks } from 'date-fns';
 
 export default function Home() {
     const [city, setCity] = useState('');
     const [depAddress, setDepAddress] = useState('');
     const [arrAddress, setArrAddress] = useState('');
-
+    const [ads, setAds] = useState([]);
     const [date, setDate] = React.useState(null);
 
     const dateChange = (newValue) => {
         setDate(newValue);
+        console.log("Date: " + newValue)
     };
-    const cityChange = (event) => {
-        setCity(event.target.value);
-    };
+    const handleCityChange = (event) => {
+        setCity(event.target.value)
+        setDate(null)
+        setDepAddress('')
+        setArrAddress('')
+        console.log("City: " + event.target.value)
+        getAddresses(event.target.value)
+    }
     const depAddressChange = (event) => {
         setDepAddress(event.target.value);
+        console.log("Start Address " + event.target.value)
     }
     const arrAddressChange = (event) => {
         setArrAddress(event.target.value);
+        console.log("Finish Address: " + event.target.value)
     }
+
+    const [cities, setCities] = useState([]);
+    const [addresses, setAddresses] = useState([]);
+
+    const getCities = () => {
+        axios.get(`/ads/allcities`, { headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
+            .then((res) => {
+                setCities(res.data);
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+    }
+
+    const getAddresses = (param) => {
+        axios.get(`/ads/addresses/${param}`, { headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
+            .then((res) => {
+                setAddresses(res.data)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+    }
+
+    const searchAds = async () => {
+        const pad = num => ("0" + num).slice(-2);
+
+        const getTimeFromDate = timestamp => {
+            const dt = new Date(timestamp).toISOString();
+            let date = dt.split('T')[0];
+            return date
+        }
+        const startDate = getTimeFromDate(date);
+        console.log('Времечко: ' + startDate);
+
+        await axios.post('/ads/searchAds', {
+            city: city,
+            startAddress: depAddress,
+            finishAddress: arrAddress,
+            startDate: startDate
+        }, {
+            headers: { 'x-access-token': localStorage.getItem('x-access-token') }
+        })
+            .then((res) => {
+                console.log("==== SEARCH RESULT ====")
+                console.log(res.data);
+                console.log("=======================")
+                setAds(res.data);
+            })
+    }
+
+    useEffect(() => {
+        getCities()
+    }, [])
+
     return (
         <>
             <Box style={stylesHome.bannerBoxImage}>
@@ -49,11 +115,11 @@ export default function Home() {
                                     id="demo-simple-select"
                                     value={city}
                                     label="Город"
-                                    onChange={cityChange}
+                                    onChange={handleCityChange}
                                 >
-                                    <MenuItem value={10}>Минск</MenuItem>
-                                    <MenuItem value={20}>Мозырь</MenuItem>
-                                    <MenuItem value={30}>Гомель</MenuItem>
+                                    {cities.map((city) => (
+                                        <MenuItem value={city.city}>{city.city}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -67,9 +133,9 @@ export default function Home() {
                                     label="Адрес отправления"
                                     onChange={depAddressChange}
                                 >
-                                    <MenuItem value={10}>Минск</MenuItem>
-                                    <MenuItem value={20}>Мозырь</MenuItem>
-                                    <MenuItem value={30}>Гомель</MenuItem>
+                                    {addresses.map((address) => (
+                                        <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -83,9 +149,9 @@ export default function Home() {
                                     label="Адрес прибытия"
                                     onChange={arrAddressChange}
                                 >
-                                    <MenuItem value={10}>Минск</MenuItem>
-                                    <MenuItem value={20}>Мозырь</MenuItem>
-                                    <MenuItem value={30}>Гомель</MenuItem>
+                                    {addresses.map((address) => (
+                                        <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -106,11 +172,30 @@ export default function Home() {
                         </Grid>
                         <Grid item xs>
                             <FormControl sx={{ ml: 1, maxWidth: 800, minWidth: 200 }} margin='normal' >
-                                <Button variant="contained" size='large' color='primary'><SearchIcon />Поиск</Button>
+                                <Button variant="contained" size='large' onClick={searchAds} color='primary'><SearchIcon />Поиск</Button>
                             </FormControl>
                         </Grid>
                     </Grid>
                 </Container>
+                <Box maxWidth='lg' style={{ background: 'white', padding: '2em', margin: '20px auto', backgroundColor: 'white', borderRadius: '10px', marginTop: '20px' }}>
+                    {ads.map((ad) => (
+                        <Grid container xs={12}>
+                            <Grid item xs>
+                                <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
+                                </Avatar>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography>{ad.country}</Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography>{ad.city}</Typography>
+                            </Grid>
+                            <Grid item xs>
+                                <Typography>Цена: {ad.price} руб.</Typography>
+                            </Grid>
+                        </Grid>
+                    ))}
+                </Box>
             </Box>
             <Box style={{ backgroundColor: '#282828', padding: '5em 0' }}>
                 <Box>
@@ -163,14 +248,14 @@ export default function Home() {
                         </Grid>
                         <Grid item xs sx={{ m: 1 }}>
                             <Box style={{ maxWidth: 600, minWidth: 300 }}>
-                                <img src='/images/HomeInfo19.jpg' width='100%'/>
+                                <img src='/images/HomeInfo19.jpg' width='100%' />
                             </Box>
                         </Grid>
                     </Grid>
                     <Grid container xs={12}>
                         <Grid item xs sx={{ m: 1 }}>
                             <Box style={{ maxWidth: 600, minWidth: 300 }}>
-                                <img src='/images/HomeInfo12.jpg'width='100%' />
+                                <img src='/images/HomeInfo12.jpg' width='100%' />
                             </Box>
                         </Grid>
                         <Grid item xs sx={{ m: 1 }}>
@@ -204,7 +289,7 @@ export default function Home() {
                         </Grid>
                         <Grid item xs sx={{ m: 1 }}>
                             <Box style={{ maxWidth: 600, minWidth: 300 }}>
-                                <img src='/images/HomeInfo2.jpg' width='100%'/>
+                                <img src='/images/HomeInfo2.jpg' width='100%' />
                             </Box>
                         </Grid>
                     </Grid>

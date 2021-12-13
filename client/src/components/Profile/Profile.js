@@ -274,9 +274,9 @@ export default function Profile() {
     return (
         <>
             <Box style={{ backgroundColor: '#222222', padding: '3em' }}>
-                <Grid container xs={12} spacing={0} style={{ justifyContent: 'center' }}>
+                <Grid container xs={12} spacing={0} style={{ justifyContent: 'center', background:'rgb(39 39 39)', padding:'1em' }}>
                     <Grid item xs>
-                        <Box style={{ padding: '1em 1em 1em 1em', backgroundColor: '#CFCFCF', maxWidth: 400, minWidth: 300, margin: '0 auto' }}>
+                        <Box style={{ padding: '1em', backgroundColor: '#CFCFCF', maxWidth: 400, minWidth: 300, margin: '0 auto' }}>
                             <Box style={{ backgroundColor: '#E8E8E8', padding: '4em 0' }}>
                                 {
                                     // <img style={{ borderRadius: '50%', width: 200, height: 200 }} src={`http://localhost:3001/${user.userPhoto}`} alt="photo" />

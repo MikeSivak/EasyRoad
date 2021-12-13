@@ -207,6 +207,8 @@ export default function NewAd() {
                 console.log(err.message)
                 console.log("===========================")
             })
+
+        navigate('/profile')
     }
 
     useEffect(() => {
@@ -216,216 +218,218 @@ export default function NewAd() {
     if (localStorage.getItem('x-access-token')) {
         return (
             <>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={modalError}>
-                        <Typography id="modal-modal-title" style={{ textAlign: 'center', color: 'red' }} variant="h6" component="h2">
-                            Ошибка :(
-                        </Typography>
-                        <Typography id="modal-modal-description" sx={{ mt: 2, textAlign: 'center' }}>
-                            Для того, чтобы создавать объявления в качестве водителя, нужно добавить в свой профиль ваш автомобиль
-                        </Typography>
-                        <Box style={{ textAlign: 'center', padding: '2em 0 0 0' }}>
-                            <Button variant="text" onClick={goToProfile} style={{ margin: '0 auto', color: 'green' }}>Перейти в профиль</Button>
-                        </Box>
-                    </Box>
-                </Modal>
-                <Box>
-                    <Container style={stylesNewAd.mainContainer} maxWidth='lg'>
-                        <Box sx={stylesNewAd.newAddBox}>
-                            <Typography id="modal-modal-title" sx={{ mb: '2rem' }} variant="h5" component="h1">
-                                Создание объявления
+                <Box style={{ backgroundColor: '#222222' }}>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={modalError}>
+                            <Typography id="modal-modal-title" style={{ textAlign: 'center', color: 'red' }} variant="h6" component="h2">
+                                Ошибка :(
                             </Typography>
-                            <Divider />
-                            <Grid container xs={12}>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        {/* <TextField
+                            <Typography id="modal-modal-description" sx={{ mt: 2, textAlign: 'center' }}>
+                                Для того, чтобы создавать объявления в качестве водителя, нужно добавить в свой профиль ваш автомобиль
+                            </Typography>
+                            <Box style={{ textAlign: 'center', padding: '2em 0 0 0' }}>
+                                <Button variant="text" onClick={goToProfile} style={{ margin: '0 auto', color: 'green' }}>Перейти в профиль</Button>
+                            </Box>
+                        </Box>
+                    </Modal>
+                    <Box>
+                        <Container style={stylesNewAd.mainContainer} maxWidth='lg'>
+                            <Box sx={stylesNewAd.newAddBox}>
+                                <Typography id="modal-modal-title" sx={{ mb: '2rem' }} variant="h5" component="h1">
+                                    Создание объявления
+                                </Typography>
+                                <Divider />
+                                <Grid container xs={12}>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            {/* <TextField
                                             type={'text'}
                                             id="outlined-required-country"
                                             label="Страна"
                                         /> */}
-                                        <InputLabel id="demo-simple-select-label">Страна</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={country}
-                                            label="Страна"
-                                            onChange={handleCountryChange}
-                                        >
-                                            {coutries.map((country) => (
-                                                <MenuItem value={country.country}>{country.country}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        {/* <TextField
+                                            <InputLabel id="demo-simple-select-label">Страна</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={country}
+                                                label="Страна"
+                                                onChange={handleCountryChange}
+                                            >
+                                                {coutries.map((country) => (
+                                                    <MenuItem value={country.country}>{country.country}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            {/* <TextField
                                             type={'text'}
                                             id="outlined-required-city"
                                             label="Город"
                                         /> */}
-                                        <InputLabel id="demo-simple-select-label">Город</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={city}
-                                            label="Город"
-                                            onChange={handleCityChange}
-                                        >
-                                            {cities.map((city) => (
-                                                <MenuItem value={city.city}>{city.city}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <InputLabel id="demo-simple-select-label">Адрес отправления</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={startAddress}
-                                            label="Адрес отправления"
-                                            onChange={handleStartAddressChange}
-                                        >
-                                            {addresses.map((address) => (
-                                                <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <InputLabel id="demo-simple-select-label">Адрес прибытия</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={finishAddress}
-                                            label="Адрес прибытия"
-                                            onChange={handleFinishAddressChange}
-                                        >
-                                            {addresses.map((address) => (
-                                                <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }}>
-                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                            <Stack spacing={3}>
-                                                <DesktopDatePicker
-                                                    label="Дата поездки"
-                                                    inputFormat="MM/dd/yyyy"
-                                                    value={date}
-                                                    onChange={dateChange}
+                                            <InputLabel id="demo-simple-select-label">Город</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={city}
+                                                label="Город"
+                                                onChange={handleCityChange}
+                                            >
+                                                {cities.map((city) => (
+                                                    <MenuItem value={city.city}>{city.city}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <InputLabel id="demo-simple-select-label">Адрес отправления</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={startAddress}
+                                                label="Адрес отправления"
+                                                onChange={handleStartAddressChange}
+                                            >
+                                                {addresses.map((address) => (
+                                                    <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <InputLabel id="demo-simple-select-label">Адрес прибытия</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={finishAddress}
+                                                label="Адрес прибытия"
+                                                onChange={handleFinishAddressChange}
+                                            >
+                                                {addresses.map((address) => (
+                                                    <MenuItem value={address.street + ', ' + address.streetNum}>{address.street + ', ' + address.streetNum}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }}>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <Stack spacing={3}>
+                                                    <DesktopDatePicker
+                                                        label="Дата поездки"
+                                                        inputFormat="MM/dd/yyyy"
+                                                        value={date}
+                                                        onChange={dateChange}
+                                                        renderInput={(params) => <TextField {...params} />}
+                                                    />
+                                                </Stack>
+                                            </LocalizationProvider>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <LocalizationProvider locale={ru} dateAdapter={AdapterDateFns}>
+                                                <TimePicker
+                                                    label="Время отправления"
+                                                    value={startTime}
+                                                    inputFormat="HH:mm"
+                                                    onChange={(newValue) => {
+                                                        setStartTime(newValue)
+                                                    }}
                                                     renderInput={(params) => <TextField {...params} />}
                                                 />
-                                            </Stack>
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <LocalizationProvider locale={ru} dateAdapter={AdapterDateFns}>
-                                            <TimePicker
-                                                label="Время отправления"
-                                                value={startTime}
-                                                inputFormat="HH:mm"
-                                                onChange={(newValue) => {
-                                                    setStartTime(newValue)
-                                                }}
-                                                renderInput={(params) => <TextField {...params} />}
+                                            </LocalizationProvider>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <LocalizationProvider locale={ru} dateAdapter={AdapterDateFns}>
+                                                <TimePicker
+                                                    label="Время прибытия"
+                                                    value={finishTime}
+                                                    onChange={(newValue) => {
+                                                        setFinishTime(newValue)
+                                                    }}
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                />
+                                            </LocalizationProvider>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <TextField
+                                                type={'text'}
+                                                id="outlined-required"
+                                                label="Цена поездки"
+                                                value={price}
+                                                onChange={handlePriceChange}
                                             />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <LocalizationProvider locale={ru} dateAdapter={AdapterDateFns}>
-                                            <TimePicker
-                                                label="Время прибытия"
-                                                value={finishTime}
-                                                onChange={(newValue) => {
-                                                    setFinishTime(newValue)
-                                                }}
-                                                renderInput={(params) => <TextField {...params} />}
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', mb: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                            <TextField
+                                                type={'text'}
+                                                id="outlined-required"
+                                                label="Количество мест"
+                                                value={seatsCount}
+                                                onChange={handleSeatsCountChange}
                                             />
-                                        </LocalizationProvider>
-                                    </FormControl>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }}>
+                                            <InputLabel id="demo-simple-select-label">Выбрать роль</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={role}
+                                                label="Выбрать роль"
+                                                onChange={handleRoleChange}
+                                            >
+                                                <MenuItem value={'driver'}>Водитель</MenuItem>
+                                                <MenuItem value={'passenger'}>Пассажир</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs style={{ display: carField }}>
+                                        <FormControl sx={{ mx: '1rem', pb: '2em', maxWidth: 800, minWidth: 300 }}>
+                                            <InputLabel id="demo-simple-select-label">Выбрать авто</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={carId}
+                                                label="Выбрать авто"
+                                                onChange={handleCarIdChange}
+                                            >
+                                                {cars.map((car) => (
+                                                    <MenuItem value={car.id}>{car.carBrand} {car.carModel} {car.carNumber}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <TextField
-                                            type={'text'}
-                                            id="outlined-required"
-                                            label="Цена поездки"
-                                            value={price}
-                                            onChange={handlePriceChange}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', mb: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                        <TextField
-                                            type={'text'}
-                                            id="outlined-required"
-                                            label="Количество мест"
-                                            value={seatsCount}
-                                            onChange={handleSeatsCountChange}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }}>
-                                        <InputLabel id="demo-simple-select-label">Выбрать роль</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={role}
-                                            label="Выбрать роль"
-                                            onChange={handleRoleChange}
-                                        >
-                                            <MenuItem value={'driver'}>Водитель</MenuItem>
-                                            <MenuItem value={'passenger'}>Пассажир</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs style={{ display: carField }}>
-                                    <FormControl sx={{ mx: '1rem', pb: '2em', maxWidth: 800, minWidth: 300 }}>
-                                        <InputLabel id="demo-simple-select-label">Выбрать авто</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={carId}
-                                            label="Выбрать авто"
-                                            onChange={handleCarIdChange}
-                                        >
-                                            {cars.map((car) => (
-                                                <MenuItem value={car.id}>{car.carBrand} {car.carModel} {car.carNumber}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                            <Divider />
-                            <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
-                                <Button
-                                    variant="contained"
-                                    sx={{ height: '60px', minWidth: 200, maxWidth: 400, borderRadius: '8px', margin: '0 auto' }}
-                                    onClick={createAd}
-                                >
-                                    Создать
-                                </Button>
-                            </FormControl>
-                        </Box>
-                    </Container>
+                                <Divider />
+                                <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
+                                    <Button
+                                        variant="contained"
+                                        sx={{ height: '60px', minWidth: 200, maxWidth: 400, borderRadius: '8px', margin: '0 auto' }}
+                                        onClick={createAd}
+                                    >
+                                        Создать
+                                    </Button>
+                                </FormControl>
+                            </Box>
+                        </Container>
+                    </Box>
                 </Box>
             </>
         )

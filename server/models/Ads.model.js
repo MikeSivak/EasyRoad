@@ -62,7 +62,7 @@ module.exports = (sequelize, Sequelize) => {
             field: 'finishAddress'
         },
         startDate: {
-            type: Sequelize.DATE,
+            type: Sequelize.DATEONLY,
             allowNull: false,
             field: 'startDate'
         },
