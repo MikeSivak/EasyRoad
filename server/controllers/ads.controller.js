@@ -149,6 +149,16 @@ exports.searchAds = async (req, res) => {
     console.log('Finish Address: ' + finishAddress)
     console.log("=======================")
 
+    let startD = startDate
+    let endD = startDate;
+
+    if(startDate == '1970-01-01'){
+        startD = '1970-01-01';
+        endD = '2100-12-31';
+    }
+
+
+
     try {
         await Ads
             .findAll(
@@ -170,12 +180,11 @@ exports.searchAds = async (req, res) => {
                             finishAddress: {
                                 [Op.like]: `%${finishAddress}%`,
                             },
-                            startDate: startAddress
+                            startDate: {
+                                [Op.between]: [startD, endD],
+                            }
+                            // startDate: startDate
                         }]
-                        // city: city,
-                        // startAddress: startAddress,
-                        // finishAddress: finishAddress,
-                        // startDate: startDate
                     }
                 }).then((ads) => {
                     console.log('==== SEARCH RESULT ====')
