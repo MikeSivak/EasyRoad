@@ -52,6 +52,12 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ImageIcon from '@mui/icons-material/Image';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Rating from '@mui/material/Rating';
 
 import axios from 'axios'
 import { AxiosResponse, AxiosError } from 'axios'
@@ -75,6 +81,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import { styled } from '@mui/material/styles';
+import { fontSize } from "@material-ui/system";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -121,6 +128,18 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
+
+    const [rateValue, setRateValue] = React.useState(5);
+
+    const [commentsOpen, setCommentsOpen] = React.useState(false);
+
+    const handleCommentsClickOpen = () => {
+        setCommentsOpen(true);
+    };
+
+    const handleCommentsClose = () => {
+        setCommentsOpen(false);
+    };
 
     const [expanded, setExpanded] = React.useState(false);
 
@@ -369,11 +388,60 @@ export default function Profile() {
             })
     }
 
+    const [commentValue, setCommentValue] = useState('');
+
+    const handleCommentValueChange = async (event) => {
+        setCommentValue(event.target.value)
+        console.log("COMMENT CURRENT VALUE" + event.target.value);
+    }
+
+    const postComments = async (driver, passenger) => {
+        await axios.post('http://localhost:3001/orders/addreview', {
+            driverId: driver,
+            passengerId: passenger,
+            rate: rateValue,
+            comment: commentValue,
+        },
+            {
+                headers: {
+                    'x-access-token': localStorage.getItem('x-access-token')
+                }
+            }
+        )
+            .then((res) => {
+                console.log("REVIEW CREATE RESULT: " + res.data)
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log("REVIEW CREATE ERROR: " + err.message)
+            })
+    }
+
+    const [usersComments, setUsersComments] = useState([]);
+
+    const getUserComments = async () => {
+        await axios.get('/orders/getreviews', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        })
+            .then((res) => {
+                console.log("GET COMMENTS RESULT: " + res.data)
+                setUsersComments(res.data)
+                // window.location.reload();
+            })
+            .catch((err) => {
+                console.log("GET COMMENTS: " + err.message)
+            })
+    }
+
     React.useEffect(() => {
         profileData();
         getUserAds();
         getUsersList();
         getUserOrders(roleOrder);
+        getUserComments();
     }, [])
 
     return (
@@ -881,7 +949,7 @@ export default function Profile() {
                                                         {
                                                             roleOrder == 'driver'
                                                                 ?
-                                                                <Box style={{marginTop:'2em'}}>
+                                                                <Box style={{ marginTop: '2em' }}>
                                                                     <Button
                                                                         variant="contained"
                                                                         color="success"
@@ -896,6 +964,15 @@ export default function Profile() {
                                                                 </Box>
                                                                 :
                                                                 ''
+
+
+                                                        }
+                                                        {
+                                                            roleOrder == 'passenger' ?
+                                                                <Button style={{ marginTop: '2em' }}
+                                                                    onClick={handleCommentsClickOpen}>
+                                                                    Оставить отзыв</Button>
+                                                                : ''
                                                         }
                                                     </CardContent>
                                                     <CardActions disableSpacing>
@@ -906,14 +983,91 @@ export default function Profile() {
                                                             <ShareIcon />
                                                         </IconButton>
                                                     </CardActions>
+
+                                                    {/* Modal for comments */}
+                                                    {/* <Button variant="outlined" onClick={handleCommentsClickOpen}>
+                                                        Open form dialog
+                                                    </Button> */}
+                                                    <Dialog open={commentsOpen} onClose={handleCommentsClose}>
+                                                        <DialogTitle style={{ fontSize: '1.6em', textAlign: 'center' }}>Оставьте ваш отзыв о водителе</DialogTitle>
+                                                        <DialogContent>
+                                                            <DialogContentText style={{ textAlign: 'center', fontSize: '1.2em' }}>
+                                                                Чтобы оставить отзыв, оцените водителя и оставте свой комментарий о поездке.
+                                                            </DialogContentText>
+                                                            <Box style={{ textAlign: 'center', marginTop: '2em' }}>
+                                                                <Typography style={{ fontSize: '1.6em' }} component="legend">Оцените поездку</Typography>
+                                                                <Rating
+                                                                    style={{ marginTop: '5px' }}
+                                                                    name="simple-controlled"
+                                                                    value={rateValue}
+                                                                    onChange={(event, newValue) => {
+                                                                        setRateValue(newValue);
+                                                                    }}
+                                                                />
+                                                            </Box>
+                                                            <TextField
+                                                                autoFocus
+                                                                margin="dense"
+                                                                id="name"
+                                                                label="Написать комментарий"
+                                                                type="text"
+                                                                fullWidth
+                                                                variant="standard"
+                                                                onChange={handleCommentValueChange}
+                                                            />
+                                                        </DialogContent>
+                                                        <DialogActions>
+                                                            <Button onClick={handleCommentsClose}>Закрыть</Button>
+                                                            <Button onClick={() => postComments(order['DriverId.id'], order.passengerId)}>Отправить</Button>
+                                                        </DialogActions>
+                                                    </Dialog>
                                                 </Card>
                                             </Grid>
                                         ))}
                                     </Grid>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
-                                    {/* {reviews.length == 0 ? <span>У вас пока нет отзывов</span> : ''} */}
-                                    <span>У вас пока нет отзывов</span>
+                                    {usersComments.length == 0 ? <span>У вас пока нет отзывов</span> : ''}
+                                    <Box>
+                                        <Typography>Список комментарий пользователей</Typography>
+                                    </Box>
+                                    <List
+                                        sx={{
+                                            width: '100%',
+                                            maxWidth: 900,
+                                            minWidth: 300,
+                                            bgcolor: 'background.paper',
+                                            marginTop: '2em'
+                                        }}
+                                    >
+
+                                        {usersComments.map((comment) => (
+                                            <>
+                                                <ListItem>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`}>
+                                                            {/* <ImageIcon /> */}
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={'Имя: ' + comment['User.userName']} secondary={'Комментарий: ' + comment.comment} />
+                                                    <ListItemText
+                                                        style={{ textAlign: 'right' }}
+                                                        primary={
+                                                            <Typography component="legend">Оценка</Typography>
+                                                        }
+                                                        secondary={
+                                                            <Rating
+                                                                name="read-only"
+                                                                value={comment.rate}
+                                                            />
+                                                        }
+                                                    />
+                                                </ListItem>
+                                                <Divider variant="inset" component="li" />
+                                            </>
+                                        ))}
+
+                                    </List>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={3} dir={theme.direction}>
                                     <Typography>Список всех пользователей сайта</Typography>

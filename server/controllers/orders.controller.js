@@ -5,6 +5,40 @@ const db = require('../models');
 const Ads = db.Ads;
 const Users = db.Users;
 const Orders = db.Orders;
+const Reviews = db.Reviews;
+
+exports.createReview = async (req, res) => {
+    const driverId = req.body.driverId;
+    const passengerId = req.body.passengerId;
+    const rate = req.body.rate;
+    const comment = req.body.comment;
+
+    console.log("CHECK")
+    console.log("Driver id: " + driverId)
+    console.log("Passenger id: " + passengerId)
+    console.log("Rate: " + rate)
+    console.log("Comment: " + comment)
+
+    try {
+        Reviews
+            .create({
+                driverId: driverId,
+                passengerId: passengerId,
+                rate: rate,
+                comment: comment,
+            })
+            .then(
+                res.send("Review created successfully!")
+            )
+            .catch((err) => {
+                console.log("Ошибка создания отзыва: " + err.message)
+            })
+    } catch (e) {
+        res.status(500).json({
+            mesage: 'Something went wrong, try again: ' + e.mesage
+        })
+    }
+}
 
 exports.createOrder = async (req, res) => {
     const driverId = req.body.driverId;
@@ -128,38 +162,43 @@ exports.getUserOrders = async (req, res) => {
     }
 }
 
-// exports.getDriverOrders = async (req, res) => {
-//     const userId = req.headers['x-user-id'];
-//     console.log(`===== User Id For Ads: ${userId} =====`)
+exports.getUserComments = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    console.log(`@@@@@@@@@@@ User Id For COMMETS: ${userId} @@@@@@@@@@@`)
 
-//     try {
-//         await Orders
-//             .findAll({
-//                 include: [
-//                     { model: Users },
-//                     { model: Ads, where: { role: 'passenger', userId: userId } }
-//                 ],
-//                 raw: true
-//             }).then((orders) => {
-//                 orders.forEach(
-//                     element =>
-//                         console.log(
-//                             element
-//                             // `id_user: ${element['id_user']} - for example
-//                         )
-//                 )
-//                 console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
-//                 console.log(orders)
-//                 console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
-//                 res.send(orders)
-//             })
-//             .catch((err) => {
-//                 console.log("GET ORDERS ERROR: " + err.message)
-//             })
-//     }
-//     catch (e) {
-//         res.status(500).json({
-//             message: 'Something went wrong, try again: ' + e.message
-//         })
-//     }
-// }
+    try {
+        await Reviews
+            .findAll(
+                {
+                    where: { driverId: userId },
+                    include: [
+                        {
+                            model: Users
+                        },
+                    ],
+                    raw: true,
+                }
+            )
+            .then((reviews) => {
+                reviews.forEach(
+                    element =>
+                        console.log(
+                            element
+                            // `id_user: ${element['id_user']} - for example
+                        )
+                )
+                console.log("@@@@@@@@@@ REVIEWS @@@@@@@@@@")
+                console.log(reviews)
+                console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+                res.send(reviews)
+            })
+            .catch((err) => {
+                console.log("GET REVIEWS ERROR: " + err.message)
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
