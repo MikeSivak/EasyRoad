@@ -152,7 +152,7 @@ exports.searchAds = async (req, res) => {
     let startD = startDate
     let endD = startDate;
 
-    if(startDate == '1970-01-01'){
+    if (startDate == '1970-01-01') {
         startD = '1970-01-01';
         endD = '2100-12-31';
     }
@@ -162,12 +162,6 @@ exports.searchAds = async (req, res) => {
     try {
         await Ads
             .findAll(
-                // {
-                //     include: [
-                //         { model: Users },
-                //     ],
-                //     raw: true
-                // },
                 {
                     where: {
                         [Op.or]: [{
@@ -185,7 +179,11 @@ exports.searchAds = async (req, res) => {
                             }
                             // startDate: startDate
                         }]
-                    }
+                    },
+                    include: [
+                        { model: Users },
+                    ],
+                    raw: true
                 }).then((ads) => {
                     console.log('==== SEARCH RESULT ====')
                     ads.forEach(

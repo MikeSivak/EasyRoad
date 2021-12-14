@@ -71,6 +71,21 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
+import { styled } from '@mui/material/styles';
+
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -106,6 +121,13 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
+
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+
     const theme = useTheme();
     const [tabValue, setTabValue] = React.useState(0);
 
@@ -270,9 +292,15 @@ export default function Profile() {
     }
 
     const [orders, setOrders] = useState([]);
+    const [roleOrder, setRoleOrder] = useState('driver');
 
-    const getUserOrders = async () => {
-        await axios.get('/orders', {
+    const handleRoleChange = (event) => {
+        setRoleOrder(event.target.value);
+        getUserOrders(event.target.value);
+    };
+
+    const getUserOrders = async (role) => {
+        await axios.get(`/orders/${role}`, {
             headers: {
                 'x-access-token': localStorage.getItem('x-access-token'),
                 'x-user-id': localStorage.getItem('x-user-id')
@@ -345,7 +373,7 @@ export default function Profile() {
         profileData();
         getUserAds();
         getUsersList();
-        getUserOrders();
+        getUserOrders(roleOrder);
     }, [])
 
     return (
@@ -781,19 +809,107 @@ export default function Profile() {
                                     </Grid>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={1} dir={theme.direction}>
+                                    <Box sx={{ minWidth: 120, maxWidth: 200 }}>
+                                        <FormControl sx={{ m: 1, minWidth: 120 }} variant='outlined'>
+                                            <Select
+                                                labelId="demo-simple-select-helper-label"
+                                                id="demo-simple-select-helper"
+                                                value={roleOrder}
+                                                style={{ backgroundColor: 'white' }}
+                                                onChange={handleRoleChange}
+                                            >
+                                                <MenuItem value={'driver'}>Список заявок пассажиров</MenuItem>
+                                                <MenuItem value={'passenger'}>Список ваших заявок</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
                                     {orders.length == 0 ? <span>У вас пока нет заказов</span> : ''}
-                                    {orders.map((order) => (
-                                        
-                                        <div>
-                                            <h3>Объявление</h3>
-                                            <p style={{border:'1px solid green'}}>Водитель id: {order.driverId}</p>
-                                            <p>Пассажир id: {order.passengerId}</p>
-                                            <p>{order.adId}</p>
-                                            <p>{order.seatsCount}</p>
-                                            <p>{order.totalPrice}</p>
-                                            <Divider/>
-                                        </div>
-                                    ))}
+                                    <Grid container xs={12} spacing={0}>
+                                        {orders.map((order) => (
+                                            <Grid item xs style={{ textAlign: '-webkit-center' }}>
+                                                <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
+                                                    <CardHeader
+                                                        avatar={
+                                                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" src={
+                                                                roleOrder == 'driver'
+                                                                    ? `http://localhost:3001/${order['PassengerId.userPhoto']}`
+                                                                    : `http://localhost:3001/${order['DriverId.userPhoto']}`
+                                                            }>
+                                                            </Avatar>
+                                                        }
+                                                        action={
+                                                            <IconButton aria-label="settings">
+                                                                <MoreVertIcon />
+                                                            </IconButton>
+                                                        }
+                                                        titleTypographyProps={{ fontSize: '1.2em' }}
+                                                        title={
+                                                            roleOrder == 'driver'
+                                                                ? 'Пассажир: ' + order['PassengerId.userName']
+                                                                : 'Водитель: ' + order['DriverId.userName']
+                                                        }
+                                                    />
+                                                    <Divider />
+                                                    {/* <CardMedia
+                                                        component="img"
+                                                        height="194"
+                                                        image="/static/images/cards/paella.jpg"
+                                                        alt="Paella dish"
+                                                    /> */}
+                                                    <CardContent>
+                                                        <Typography variant="body2" fontSize="1.3em" >
+                                                            {
+                                                                roleOrder == 'driver'
+                                                                    ? 'Информация о пассажире'
+                                                                    : 'Информация о водителе'
+                                                            }
+                                                        </Typography>
+                                                        <Typography variant="body2" style={{ textAlign: 'left', padding: '0 2em', marginTop: '2em' }} fontSize="1em" >
+                                                            Email: {
+                                                                roleOrder == 'driver'
+                                                                    ? order['PassengerId.userEmail']
+                                                                    : order['DriverId.userEmail']
+                                                            }
+                                                        </Typography>
+                                                        <Typography variant="body2" style={{ textAlign: 'left', padding: '0 2em' }} fontSize="1em" >
+                                                            Телефон: {
+                                                                roleOrder == 'driver'
+                                                                    ? order['PassengerId.userPhone']
+                                                                    : order['DriverId.userPhone']
+                                                            }
+                                                        </Typography>
+                                                        {
+                                                            roleOrder == 'driver'
+                                                                ?
+                                                                <Box style={{marginTop:'2em'}}>
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        color="success"
+                                                                        // onClick={
+                                                                        //     () => setRoles(ad.role, ad.userId, ad.id, ad.price)
+                                                                        // }
+                                                                        sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                        startIcon={<DirectionsCarIcon />}
+                                                                    >
+                                                                        Закрыть заказ
+                                                                    </Button>
+                                                                </Box>
+                                                                :
+                                                                ''
+                                                        }
+                                                    </CardContent>
+                                                    <CardActions disableSpacing>
+                                                        <IconButton aria-label="add to favorites">
+                                                            <FavoriteIcon />
+                                                        </IconButton>
+                                                        <IconButton aria-label="share">
+                                                            <ShareIcon />
+                                                        </IconButton>
+                                                    </CardActions>
+                                                </Card>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
                                     {/* {reviews.length == 0 ? <span>У вас пока нет отзывов</span> : ''} */}

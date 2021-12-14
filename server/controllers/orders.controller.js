@@ -44,78 +44,122 @@ exports.createOrder = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
     const userId = req.headers['x-user-id'];
+    const roleOrder = req.params.roleOrder;
+
     console.log(`===== User Id For Orders: ${userId} =====`)
 
-    try {
-        await Orders
-            .findAll(
-                {
-                    where: { passengerId: userId },
-                    include: [
-                        {
-                            model: Users,
-                            as: 'PassengerId'
-                        },
-                    ],
-                    raw: true,
-                }
-            )
-            .then((orders) => {
-                orders.forEach(
-                    element =>
-                        console.log(
-                            element
-                            // `id_user: ${element['id_user']} - for example
-                        )
+    if (roleOrder == 'driver') {
+        console.log(`===== Order role: ${roleOrder} =====`)
+        try {
+            await Orders
+                .findAll(
+                    {
+                        where: { driverId: userId },
+                        include: [
+                            {
+                                model: Users,
+                                as: 'PassengerId'
+                            },
+                        ],
+                        raw: true,
+                    }
                 )
-                console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
-                console.log(orders)
-                console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
-                res.send(orders)
+                .then((orders) => {
+                    orders.forEach(
+                        element =>
+                            console.log(
+                                element
+                                // `id_user: ${element['id_user']} - for example
+                            )
+                    )
+                    console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
+                    console.log(orders)
+                    console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
+                    res.send(orders)
+                })
+                .catch((err) => {
+                    console.log("GET ORDERS ERROR: " + err.message)
+                })
+        }
+        catch (e) {
+            res.status(500).json({
+                message: 'Something went wrong, try again: ' + e.message
             })
-            .catch((err) => {
-                console.log("GET ORDERS ERROR: " + err.message)
-            })
+        }
     }
-    catch (e) {
-        res.status(500).json({
-            message: 'Something went wrong, try again: ' + e.message
-        })
+    else {
+        console.log(`===== Order role: ${roleOrder} =====`)
+        try {
+            await Orders
+                .findAll(
+                    {
+                        where: { passengerId: userId },
+                        include: [
+                            {
+                                model: Users,
+                                as: 'DriverId'
+                            },
+                        ],
+                        raw: true,
+                    }
+                )
+                .then((orders) => {
+                    orders.forEach(
+                        element =>
+                            console.log(
+                                element
+                                // `id_user: ${element['id_user']} - for example
+                            )
+                    )
+                    console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
+                    console.log(orders)
+                    console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
+                    res.send(orders)
+                })
+                .catch((err) => {
+                    console.log("GET ORDERS ERROR: " + err.message)
+                })
+        }
+        catch (e) {
+            res.status(500).json({
+                message: 'Something went wrong, try again: ' + e.message
+            })
+        }
     }
 }
 
-exports.getDriverOrders = async (req, res) => {
-    const userId = req.headers['x-user-id'];
-    console.log(`===== User Id For Ads: ${userId} =====`)
+// exports.getDriverOrders = async (req, res) => {
+//     const userId = req.headers['x-user-id'];
+//     console.log(`===== User Id For Ads: ${userId} =====`)
 
-    try {
-        await Orders
-            .findAll({
-                include: [
-                    { model: Users },
-                    { model: Ads, where: { role: 'passenger', userId: userId } }
-                ],
-                raw: true
-            }).then((orders) => {
-                orders.forEach(
-                    element =>
-                        console.log(
-                            element
-                            // `id_user: ${element['id_user']} - for example
-                        )
-                )
-                console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
-                console.log(orders)
-                console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
-                res.send(orders)
-            })
-            .catch((err) => {
-                console.log("GET ORDERS ERROR: " + err.message)
-            })
-    }
-    catch (e) {
-        res.status(500).json({
-            message: 'Something went wrong, try again: ' + e.message
-        })
-    }
-}
+//     try {
+//         await Orders
+//             .findAll({
+//                 include: [
+//                     { model: Users },
+//                     { model: Ads, where: { role: 'passenger', userId: userId } }
+//                 ],
+//                 raw: true
+//             }).then((orders) => {
+//                 orders.forEach(
+//                     element =>
+//                         console.log(
+//                             element
+//                             // `id_user: ${element['id_user']} - for example
+//                         )
+//                 )
+//                 console.log("[[[[[[[[[[[ ORDERS ]]]]]]]]]]")
+//                 console.log(orders)
+//                 console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
+//                 res.send(orders)
+//             })
+//             .catch((err) => {
+//                 console.log("GET ORDERS ERROR: " + err.message)
+//             })
+//     }
+//     catch (e) {
+//         res.status(500).json({
+//             message: 'Something went wrong, try again: ' + e.message
+//         })
+//     }
+// }

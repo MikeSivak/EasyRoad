@@ -27,6 +27,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import { useNavigate } from 'react-router-dom'
+
 import axios from 'axios';
 import { min } from "date-fns";
 
@@ -37,6 +45,17 @@ let stylesAds = {
 }
 
 export default function Ads() {
+    const navigate = useNavigate();
+
+    const [errorOpen, setErrorOpen] = useState(false);
+
+    const handleErrorClickOpen = () => {
+        setErrorOpen(true);
+    };
+
+    const handleErrorClose = () => {
+        setErrorOpen(false);
+    };
 
     const [ads, setAds] = useState([]);
 
@@ -79,36 +98,66 @@ export default function Ads() {
                 .catch((err) => {
                     console.log("CREATE ORDER ERROR: " + err.message)
                 })
+            navigate('/profile');
         }
         else {
-            console.log('AD ID: ' + ad)
-            console.log("DRIVER ID: " + localStorage.getItem('x-user-id'));
-            console.log("PASSENGER ID: " + user)
-            console.log("AD PRICE: " + price)
 
-            await axios.post('/orders/create', {
-                driverId: localStorage.getItem('x-user-id'),
-                passengerId: user,
-                adId: ad,
-                seatsCount: 1,
-                totalPrice: price
-            }, {
-                headers: {
-                    'x-access-token': localStorage.getItem('x-access-token')
-                }
-            })
-                .then((res) => {
-                    console.log("CREATE ORDER RESPONSE: " + res.data)
+            if (localStorage.getItem('x-user-cars') == []) {
+                handleErrorClickOpen();
+            }
+            else {
+                console.log('AD ID: ' + ad)
+                console.log("DRIVER ID: " + localStorage.getItem('x-user-id'));
+                console.log("PASSENGER ID: " + user)
+                console.log("AD PRICE: " + price)
+
+                await axios.post('/orders/create', {
+                    driverId: localStorage.getItem('x-user-id'),
+                    passengerId: user,
+                    adId: ad,
+                    seatsCount: 1,
+                    totalPrice: price
+                }, {
+                    headers: {
+                        'x-access-token': localStorage.getItem('x-access-token')
+                    }
                 })
-                .catch((err) => {
-                    console.log("CREATE ORDER ERROR: " + err.message)
-                })
+                    .then((res) => {
+                        console.log("CREATE ORDER RESPONSE: " + res.data)
+                    })
+                    .catch((err) => {
+                        console.log("CREATE ORDER ERROR: " + err.message)
+                    })
+
+                navigate('/profile');
+            }
         }
     }
 
     if (localStorage.getItem('x-access-token')) {
         return (
             <>
+                <Dialog
+                    open={errorOpen}
+                    onClose={handleErrorClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle style={{ textAlign: 'center', fontSize: '2em' }} id="alert-dialog-title">
+                        Ошибка!
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText style={{ textAlign: 'center', fontSize: '1.4em' }} id="alert-dialog-description">
+                            Для того, чтобы ответить на заявку пассажира, нужно добавить автомобиль в свой профиль
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { navigate('/profile') }}>Перейти к профилю</Button>
+                        <Button onClick={handleErrorClose} autoFocus>
+                            Закрыть
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <Box style={{ backgroundColor: '#222222' }}>
                     <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                         <Grid container xs={12} spacing={0}>
