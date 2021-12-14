@@ -18,7 +18,7 @@ db.sequelize = sequelize;
 
 db.Roles = require('./Roles.model.js')(sequelize, Sequelize);
 db.Users = require('./Users.model.js')(sequelize, Sequelize);
-db.Addresses = require('./Addresses.model.js')(sequelize,Sequelize);
+db.Addresses = require('./Addresses.model.js')(sequelize, Sequelize);
 db.Cars = require('./Cars.model.js')(sequelize, Sequelize);
 db.Ads = require('./Ads.model.js')(sequelize, Sequelize);
 db.Orders = require('./Orders.model.js')(sequelize, Sequelize);
@@ -30,61 +30,64 @@ db.Reviews = require('./Reviews.model.js')(sequelize, Sequelize);
 
 // between Users and Roles
 db.Users.belongsTo(db.Roles, {
-    foreignKey:'roleId'
+    foreignKey: 'roleId'
 });
 db.Roles.hasMany(db.Users); //role has many Users records
 
 // between Users and Reviews
 db.Reviews.belongsTo(db.Users, {
-    foreignKey:'driverId'
+    foreignKey: 'driverId'
 });
 db.Reviews.belongsTo(db.Users, {
-    foreignKey:'passengerId'
+    foreignKey: 'passengerId'
 });
 db.Users.hasMany(db.Reviews); //user has many Reviews records
 
 // between TravelHistory and Users
 db.TravelHistory.belongsTo(db.Users, {
-    foreignKey:'driverId'
+    foreignKey: 'driverId'
 });
 db.TravelHistory.belongsTo(db.Users, {
-    foreignKey:'passengerId'
+    foreignKey: 'passengerId'
 });
 db.Users.hasMany(db.TravelHistory); //user has many TravelHistory records
 
 //between TravelHistory and Cars
 db.TravelHistory.belongsTo(db.Cars, {
-    foreignKey:'carId'
+    foreignKey: 'carId'
 });
 db.Cars.hasMany(db.TravelHistory);
 
 //between TravelHistory and Addresses
 db.TravelHistory.belongsTo(db.Addresses, {
-    foreignKey:'startAddressId'
+    foreignKey: 'startAddressId'
 });
 db.TravelHistory.belongsTo(db.Addresses, {
-    foreignKey:'finishAddressesId'
+    foreignKey: 'finishAddressesId'
 });
 db.Addresses.hasMany(db.TravelHistory);
 
 //between Orders and Ads
 db.Orders.belongsTo(db.Ads, {
-    foreignKey:'adId'
+    foreignKey: 'adId'
 });
 db.Ads.hasMany(db.Orders);
 
 //between Orders and Users
-db.Orders.belongsTo(db.Users, {
-    foreignKey:'driverId'
-});
-db.Orders.belongsTo(db.Users, {
-    foreignKey:'passengerId'
-});
+
+
+db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId' });
+db.Orders.belongsTo(db.Users, { as: 'PassengerId', foreignKey: 'passengerId'});
 db.Users.hasMany(db.Orders);
+
+// db.Orders.belongsToMany(db.Users, { as: 'drivers', through: 'travelRoles' });
+// db.Orders.belongsToMany(db.Users, { as: 'passengers', through: 'travelRoles' });
+
+// db.Users.belongsToMany(db.Orders, { as: 'orders', through: 'travelRoles' });
 
 //between Ads and Users
 db.Ads.belongsTo(db.Users, {
-    foreignKey:'userId'
+    foreignKey: 'userId'
 });
 db.Users.hasMany(db.Ads);
 
@@ -105,7 +108,7 @@ db.Users.hasMany(db.Ads);
 
 //between Users and Cars
 db.Cars.belongsTo(db.Users, {
-    foreignKey:'userId'
+    foreignKey: 'userId'
 });
 db.Users.hasMany(db.Cars);
 

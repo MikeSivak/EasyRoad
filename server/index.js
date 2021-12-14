@@ -11,6 +11,7 @@ const { authJwt } = require("./middleware");
 const { checkStatus } = require("./middleware/checkStatus")
 // const controller = require("./controllers/user.controller");
 const adsRoutes = require('./routes/ads.routes');
+const ordersRoutes = require('./routes/orders.routes');
 const profileRoutes = require('./routes/profile.routes');
 const multer = require('multer');
 const Role = db.Roles;
@@ -87,6 +88,7 @@ app.use(
     require('./routes/admin.routes')
 );
 app.use('/ads', [authJwt.verifyToken], [checkStatus], adsRoutes);
+app.use('/orders', [authJwt.verifyToken], [checkStatus], ordersRoutes)
 app.use('/profile', [authJwt.verifyToken], [checkStatus], profileRoutes);
 
 // db.sequelize.sync({ force: true }).then(() => {
@@ -130,6 +132,23 @@ async function initial() {
     })
         .then(() => {
             console.log("Admin was registered successfully!");
+        })
+        .catch(err => {
+            console.log("message:" + err.message);
+        });
+
+    //Create user
+    await Users.create({
+        userName: 'Низар Уооооааа',
+        userPhone: '+55555555555',
+        userEmail: 'nizar@gmail.com',
+        userPassword: bcrypt.hashSync('nizar', 8),
+        roleId: 2, //user
+        gender: 'male',
+        userStatus: 1,
+    })
+        .then(() => {
+            console.log("User was registered successfully!");
         })
         .catch(err => {
             console.log("message:" + err.message);

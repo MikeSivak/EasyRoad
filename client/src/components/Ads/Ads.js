@@ -17,8 +17,18 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { fontWeight, maxWidth } from "@material-ui/system";
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import TextField from '@mui/material/TextField';
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import axios from 'axios';
+import { min } from "date-fns";
 
 let stylesAds = {
     mainContainer: {
@@ -44,6 +54,58 @@ export default function Ads() {
             })
     }, [])
 
+    const setRoles = async (role, user, ad, price) => {
+        if (role == 'driver') {
+
+            console.log('AD ID: ' + ad)
+            console.log("DRIVER ID: " + user);
+            console.log("PASSENGER ID: " + localStorage.getItem('x-user-id'))
+            console.log("AD PRICE: " + price)
+
+            await axios.post('/orders/create', {
+                driverId: user,
+                passengerId: localStorage.getItem('x-user-id'),
+                adId: ad,
+                seatsCount: 1,
+                totalPrice: price
+            }, {
+                headers: {
+                    'x-access-token': localStorage.getItem('x-access-token')
+                }
+            })
+                .then((res) => {
+                    console.log("CREATE ORDER RESPONSE: " + res.data)
+                })
+                .catch((err) => {
+                    console.log("CREATE ORDER ERROR: " + err.message)
+                })
+        }
+        else {
+            console.log('AD ID: ' + ad)
+            console.log("DRIVER ID: " + localStorage.getItem('x-user-id'));
+            console.log("PASSENGER ID: " + user)
+            console.log("AD PRICE: " + price)
+
+            await axios.post('/orders/create', {
+                driverId: localStorage.getItem('x-user-id'),
+                passengerId: user,
+                adId: ad,
+                seatsCount: 1,
+                totalPrice: price
+            }, {
+                headers: {
+                    'x-access-token': localStorage.getItem('x-access-token')
+                }
+            })
+                .then((res) => {
+                    console.log("CREATE ORDER RESPONSE: " + res.data)
+                })
+                .catch((err) => {
+                    console.log("CREATE ORDER ERROR: " + err.message)
+                })
+        }
+    }
+
     if (localStorage.getItem('x-access-token')) {
         return (
             <>
@@ -51,7 +113,7 @@ export default function Ads() {
                     <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                         <Grid container xs={12} spacing={0}>
                             {ads.map((ad) => (
-                                <Grid item xs style={{textAlign:'-webkit-center'}}>
+                                <Grid item xs style={{ textAlign: '-webkit-center' }}>
                                     <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                         <CardHeader
                                             avatar={
@@ -63,7 +125,7 @@ export default function Ads() {
                                                     <MoreVertIcon />
                                                 </IconButton>
                                             }
-                                            title={ad["User.userName"]}
+                                            title={ad.role == 'driver' ? 'Водитель: ' + ad["User.userName"] : 'Пассажир: ' + ad["User.userName"]}
                                             subheader={`Дата поездки: ${ad.startDate}`}
                                             style={{ backgroundColor: '#E8E8E8' }}
                                         />
@@ -97,11 +159,19 @@ export default function Ads() {
                                                 <Grid container xs={12}>
                                                     <Grid item xs style={{ placeSelf: 'center' }}>
                                                         <Box style={{ padding: '0 1em' }}>
-                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0', borderRadius: '8px' }}>{ad.price} руб.</Typography>
+                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0', borderRadius: '8px' }}><span id={'price' + ad.id}>{ad.price}</span> руб.</Typography>
                                                         </Box>
                                                     </Grid>
                                                     <Grid item xs>
-                                                        <Button variant="contained" color="success" sx={{ textTransform: 'none', fontSize: '1em' }} startIcon={<DirectionsCarIcon />}>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="success"
+                                                            onClick={
+                                                                () => setRoles(ad.role, ad.userId, ad.id, ad.price)
+                                                            }
+                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                            startIcon={<DirectionsCarIcon />}
+                                                        >
                                                             Поехали!
                                                         </Button>
                                                     </Grid>

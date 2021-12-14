@@ -177,7 +177,7 @@ export default function Profile() {
                 if (reason.response.status == 401) {
                     navigate('/unauth')
                 }
-                if(reason.response.status == 403){
+                if (reason.response.status == 403) {
                     navigate('/notaccess')
                 }
             })
@@ -269,6 +269,23 @@ export default function Profile() {
             })
     }
 
+    const [orders, setOrders] = useState([]);
+
+    const getUserOrders = async () => {
+        await axios.get('/orders', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        })
+            .then((res) => {
+                setOrders(res.data);
+            })
+            .catch((e) => {
+                console.log("ERROR ORDERS: " + e.message)
+            })
+    }
+
     const [usersList, setUsersList] = useState([]);
 
     const getUsersList = () => {
@@ -328,6 +345,7 @@ export default function Profile() {
         profileData();
         getUserAds();
         getUsersList();
+        getUserOrders();
     }, [])
 
     return (
@@ -698,7 +716,7 @@ export default function Profile() {
                                                                 <MoreVertIcon />
                                                             </IconButton>
                                                         }
-                                                        title={ad["User.userName"]}
+                                                        title={ad.role == 'driver' ? 'Водитель: ' + ad["User.userName"] : 'Пассажир: ' + ad["User.userName"]}
                                                         subheader={`Дата поездки: ${ad.startDate}`}
                                                         style={{ backgroundColor: '#E8E8E8' }}
                                                     />
@@ -763,8 +781,19 @@ export default function Profile() {
                                     </Grid>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={1} dir={theme.direction}>
-                                    {/* {orders.length == 0 ? <span>У вас пока нет заказов</span> : ''} */}
-                                    <span>У вас пока нет заказов</span>
+                                    {orders.length == 0 ? <span>У вас пока нет заказов</span> : ''}
+                                    {orders.map((order) => (
+                                        
+                                        <div>
+                                            <h3>Объявление</h3>
+                                            <p style={{border:'1px solid green'}}>Водитель id: {order.driverId}</p>
+                                            <p>Пассажир id: {order.passengerId}</p>
+                                            <p>{order.adId}</p>
+                                            <p>{order.seatsCount}</p>
+                                            <p>{order.totalPrice}</p>
+                                            <Divider/>
+                                        </div>
+                                    ))}
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
                                     {/* {reviews.length == 0 ? <span>У вас пока нет отзывов</span> : ''} */}

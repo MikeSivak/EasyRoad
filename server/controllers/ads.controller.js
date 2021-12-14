@@ -225,13 +225,13 @@ exports.getUserAds = async (req, res) => {
                             // `id_user: ${element['id_user']} - for example
                         )
                 )
-                console.log("[[[[[[[[[[[ DATA ]]]]]]]]]]")
-                console.log(ads)
-                console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
+                // console.log("[[[[[[[[[[[ DATA ]]]]]]]]]]")
+                // console.log(ads)
+                // console.log('[[[[[[[[[[[[[[]]]]]]]]]]]]]')
                 res.send(ads)
             })
             .catch((err) => {
-                console.log("SOME ERROR HAHAHAHA: " + err.message)
+                console.log("GET ADS ERROR: " + err.message)
             })
     }
     catch (e) {
