@@ -38,23 +38,8 @@ isAdmin = (req, res, next) => {
   return;
 };
 
-isUser = (req, res, next) => {
-  User.findByPk(req.userId)
-    .then(user => {
-      if(user.roleId == 2){
-        console.log("User: " + user.userName);
-        next();
-      }
-      else{
-        res.send("You have not access!");
-      }
-    });
-  return;
-};
-
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
-  isUser: isUser
 };
 module.exports = authJwt;

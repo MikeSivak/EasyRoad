@@ -22,7 +22,6 @@ db.Addresses = require('./Addresses.model.js')(sequelize, Sequelize);
 db.Cars = require('./Cars.model.js')(sequelize, Sequelize);
 db.Ads = require('./Ads.model.js')(sequelize, Sequelize);
 db.Orders = require('./Orders.model.js')(sequelize, Sequelize);
-db.TravelHistory = require('./TravelHistory.model.js')(sequelize, Sequelize);
 db.Reviews = require('./Reviews.model.js')(sequelize, Sequelize);
 
 
@@ -43,30 +42,6 @@ db.Reviews.belongsTo(db.Users, {
 });
 db.Users.hasMany(db.Reviews); //user has many Reviews records
 
-// between TravelHistory and Users
-db.TravelHistory.belongsTo(db.Users, {
-    foreignKey: 'driverId'
-});
-db.TravelHistory.belongsTo(db.Users, {
-    foreignKey: 'passengerId'
-});
-db.Users.hasMany(db.TravelHistory); //user has many TravelHistory records
-
-//between TravelHistory and Cars
-db.TravelHistory.belongsTo(db.Cars, {
-    foreignKey: 'carId'
-});
-db.Cars.hasMany(db.TravelHistory);
-
-//between TravelHistory and Addresses
-db.TravelHistory.belongsTo(db.Addresses, {
-    foreignKey: 'startAddressId'
-});
-db.TravelHistory.belongsTo(db.Addresses, {
-    foreignKey: 'finishAddressesId'
-});
-db.Addresses.hasMany(db.TravelHistory);
-
 //between Orders and Ads
 db.Orders.belongsTo(db.Ads, {
     foreignKey: 'adId'
@@ -74,37 +49,15 @@ db.Orders.belongsTo(db.Ads, {
 db.Ads.hasMany(db.Orders);
 
 //between Orders and Users
-
-
 db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId' });
 db.Orders.belongsTo(db.Users, { as: 'PassengerId', foreignKey: 'passengerId'});
 db.Users.hasMany(db.Orders);
-
-// db.Orders.belongsToMany(db.Users, { as: 'drivers', through: 'travelRoles' });
-// db.Orders.belongsToMany(db.Users, { as: 'passengers', through: 'travelRoles' });
-
-// db.Users.belongsToMany(db.Orders, { as: 'orders', through: 'travelRoles' });
 
 //between Ads and Users
 db.Ads.belongsTo(db.Users, {
     foreignKey: 'userId'
 });
 db.Users.hasMany(db.Ads);
-
-//between Ads and Cars
-// db.Ads.belongsTo(db.Cars, {
-//     foreignKey:'carId'
-// });
-// db.Cars.hasMany(db.Ads);
-
-// //between Ads and Addresses
-// db.Ads.belongsTo(db.Addresses, {
-//     foreignKey:'startAddressId'
-// });
-// db.Ads.belongsTo(db.Addresses, {
-//     foreignKey:'finishAddressesId'
-// });
-// db.Addresses.hasMany(db.Ads);
 
 //between Users and Cars
 db.Cars.belongsTo(db.Users, {

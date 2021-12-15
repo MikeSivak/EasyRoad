@@ -2,27 +2,6 @@ const { Router } = require('express');
 const ads_controller = require('../controllers/ads.controller.js');
 const ads_router = Router();
 
-// ads_router.get('/newad',
-//     // auth,
-//     (req, res, next) => {
-//         const cookie = req.cookies;
-//         if (cookie['x-auth-token']) {
-//             next();
-//         } else {
-//             const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-//             const obj = {
-//                 "fullUrl": fullUrl
-//             }
-//             res.render('login', {
-//                 urlPath: obj,
-//             });
-//         }
-//     },
-//     (req, res) => {
-//         res.render('newAd')
-//     }
-// );
-
 ads_router.get('/', ads_controller.getAllAds);
 ads_router.post('/searchAds', ads_controller.searchAds);
 ads_router.get('/userAds', ads_controller.getUserAds);
