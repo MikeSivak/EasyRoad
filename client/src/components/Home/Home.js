@@ -34,6 +34,8 @@ import { useNavigate } from 'react-router-dom'
 import stylesHome from './styles'
 import { addDays, daysToWeeks, set } from 'date-fns';
 
+import { YMaps, Map } from 'react-yandex-maps'
+
 export default function Home() {
     const navigate = useNavigate();
 
@@ -461,7 +463,14 @@ export default function Home() {
                 </Box>
                 <Container style={{ marginTop: '80px' }} maxWidth='lg'>
                     <Box>
-                        <Typography variant='h1' color='gray'>Здесь будет видео или карусель</Typography>
+                        {/* <Typography variant='h1' color='gray'>Здесь будет видео или карусель</Typography> */}
+
+                        <YMaps>
+                            <div>
+                                My awesome application with maps!
+                                <Map width={'100%'} height={600} defaultState={{ center: [55.75, 37.57], zoom: 10 }}></Map>
+                            </div>
+                        </YMaps>
                     </Box>
                 </Container>
             </Box>

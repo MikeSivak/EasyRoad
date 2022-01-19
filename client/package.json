@@ -28,6 +28,7 @@
     "react-router-dom": "^6.0.1",
     "react-scripts": "4.0.3",
     "react-swipeable-views": "^0.14.0",
+    "react-yandex-maps": "^4.6.0",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.1.2"
   },
