@@ -28,7 +28,7 @@ export default function Footer() {
                             </Box>
                             <Box>
                                 <Typography variant="body1" style={stylesFooter.firstGridCopyright}>
-                                    © 2021 Easy Road
+                                    © 2022 Easy Road
                                 </Typography>
                             </Box>
                         </Grid>

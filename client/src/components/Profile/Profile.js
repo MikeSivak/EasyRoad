@@ -804,7 +804,7 @@ export default function Profile() {
                                                 <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                                     <CardHeader
                                                         avatar={
-                                                            <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
+                                                            <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width: '50px', height: '50px' }} aria-label="recipe">
                                                             </Avatar>
                                                         }
                                                         action={
@@ -898,7 +898,7 @@ export default function Profile() {
                                                 <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                                     <CardHeader
                                                         avatar={
-                                                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" src={
+                                                            <Avatar sx={{ bgcolor: red[500], width: '50px', height: '50px' }} aria-label="recipe" src={
                                                                 roleOrder == 'driver'
                                                                     ? `http://localhost:3001/${order['PassengerId.userPhoto']}`
                                                                     : `http://localhost:3001/${order['DriverId.userPhoto']}`
@@ -918,12 +918,6 @@ export default function Profile() {
                                                         }
                                                     />
                                                     <Divider />
-                                                    {/* <CardMedia
-                                                        component="img"
-                                                        height="194"
-                                                        image="/static/images/cards/paella.jpg"
-                                                        alt="Paella dish"
-                                                    /> */}
                                                     <CardContent>
                                                         <Typography variant="body2" fontSize="1.3em" >
                                                             {
@@ -953,9 +947,6 @@ export default function Profile() {
                                                                     <Button
                                                                         variant="contained"
                                                                         color="success"
-                                                                        // onClick={
-                                                                        //     () => setRoles(ad.role, ad.userId, ad.id, ad.price)
-                                                                        // }
                                                                         sx={{ textTransform: 'none', fontSize: '1em' }}
                                                                         startIcon={<DirectionsCarIcon />}
                                                                     >
@@ -984,10 +975,6 @@ export default function Profile() {
                                                         </IconButton>
                                                     </CardActions>
 
-                                                    {/* Modal for comments */}
-                                                    {/* <Button variant="outlined" onClick={handleCommentsClickOpen}>
-                                                        Open form dialog
-                                                    </Button> */}
                                                     <Dialog open={commentsOpen} onClose={handleCommentsClose}>
                                                         <DialogTitle style={{ fontSize: '1.6em', textAlign: 'center' }}>Оставьте ваш отзыв о водителе</DialogTitle>
                                                         <DialogContent>
@@ -1045,7 +1032,7 @@ export default function Profile() {
                                             <>
                                                 <ListItem>
                                                     <ListItemAvatar>
-                                                        <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`}>
+                                                        <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`} sx={{ width: '50px', height: '50px' }}>
                                                             {/* <ImageIcon /> */}
                                                         </Avatar>
                                                     </ListItemAvatar>
@@ -1084,7 +1071,7 @@ export default function Profile() {
                                             <>
                                                 <ListItem>
                                                     <ListItemAvatar>
-                                                        <Avatar src={`http://localhost:3001/${user.userPhoto}`}>
+                                                        <Avatar src={`http://localhost:3001/${user.userPhoto}`} sx={{ width: '50px', height: '50px' }}>
                                                             {/* <ImageIcon /> */}
                                                         </Avatar>
                                                     </ListItemAvatar>

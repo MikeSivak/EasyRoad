@@ -31,6 +31,7 @@ import { FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/cor
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
+import Avatar from '@mui/material/Avatar';
 import axios from 'axios';
 
 const style = {
@@ -63,7 +64,7 @@ export default function Header() {
     setUserEmail(event.currentTarget.value)
   }
   const handleUserPhone = (event) => {
-    setUserPhone(event.currentTarget.value)    
+    setUserPhone(event.currentTarget.value)
   }
   const handleGender = (event) => {
     setGender(event.currentTarget.value)
@@ -114,6 +115,7 @@ export default function Header() {
           localStorage.setItem('x-role-id', res.data.role)
           localStorage.setItem('x-username', res.data.username)
           localStorage.setItem('x-user-cars', res.data.cars)
+          localStorage.setItem('x-user-photo', res.data.userPhoto)
           window.location = '/'
         })
         .catch((err) => {
@@ -221,12 +223,22 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose} style={{ fontSize: '1.2em' }}>
-        {
-          !isLoggedIn ? <Link sx={{ textDecoration: 'none' }} onClick={loginOpen}>Мой профиль</Link>
-            : <Link sx={{ textDecoration: 'none' }} href="/profile" >Мой профиль</Link>
-        }
-      </MenuItem>
+      {
+        !isLoggedIn ?
+          <>
+            <MenuItem onClick={handleMenuClose} style={{ fontSize: '1.2em' }}>
+              <Link sx={{ textDecoration: 'none' }} onClick={loginOpen}>Войти</Link>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose} style={{ fontSize: '1.2em' }}>
+              <Link sx={{ textDecoration: 'none' }} onClick={registerOpen}>Зарегистрироваться</Link>
+            </MenuItem>
+          </>
+          :
+          <MenuItem onClick={handleMenuClose} style={{ fontSize: '1.2em' }}>
+            <Link sx={{ textDecoration: 'none' }} href="/profile" >Мой профиль</Link>
+          </MenuItem>
+      }
+
       {
         isLoggedIn ? <MenuItem onClick={logout} style={{ fontSize: '1.2em', color: '#1976d2' }}>Выйти</MenuItem> : <span></span>
       }
@@ -467,18 +479,23 @@ export default function Header() {
             >
               Easy Road
             </Typography>
-            <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ flexGrow: 2 }}>
               <Button variant='success' href='/'>Главная</Button>
               <Button variant='success'>О нас</Button>
               <Button variant='success'>Портфолио</Button>
               <Button variant='success'>Блог</Button>
-              <Button variant='success' href='/ads'>Выбрать поездку</Button>
-              <Button variant='success' href='/newad'>Предложить поездку</Button>
             </Box>
+            {/* <Box sx={{ flexGrow: 1 }} /> */}
+            {
+              isLoggedIn ?
+                <Box sx={{ flexGrow: 2 }}>
+                  <Button variant='success' href='/ads'>Выбрать поездку</Button>
+                  <Button variant='success' href='/newad'>Предложить поездку</Button>
+                </Box>
+                :
+                <span></span>
+            }
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              {/* <Button variant='success'>Выбрать поездку</Button>
-            <Button variant='success'>Предложить поездку</Button> */}
               {
                 !isLoggedIn ? <Button variant='success' onClick={loginOpen}>Войти</Button> : <span></span>
               }
@@ -512,7 +529,9 @@ export default function Header() {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle fontSize="large" />
+                {/* <AccountCircle fontSize="large"  /> */}
+                <Avatar style={{ borderRadius: '50%', width: '50px', height: '50px', margin: '0 auto' }} src={`http://localhost:3001/${localStorage.getItem('x-user-photo')}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
+                </Avatar>
               </IconButton>
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
