@@ -158,13 +158,21 @@ export default function Profile() {
         setTabValue(index);
     };
 
-    const [changePassword, setChangePassword] = useState({
+    const [newPassword, setNewPassword] = useState({
         amount: '',
         password: '',
         weight: '',
         weightRange: '',
         showPassword: false,
     });
+
+    const [oldPassword, setOldPassword] = useState({
+        amount: '',
+        password: '',
+        weight: '',
+        weightRange: '',
+        showPassword: false,
+    })
 
     const [changeData, setChangeData] = useState('none');
     const [showData, setShowData] = useState('block');
@@ -183,14 +191,24 @@ export default function Profile() {
         }
     }
 
-    const handleChange = (prop) => (event) => {
-        setChangePassword({ ...changePassword, [prop]: event.target.value });
+    const handleChangeOldPass = (prop) => (event) => {
+        setOldPassword({ ...oldPassword, [prop]: event.target.value });
+    }
+    const handleChangeNewPass = (prop) => (event) => {
+        setNewPassword({ ...newPassword, [prop]: event.target.value });
     };
 
-    const handleClickShowPassword = () => {
-        setChangePassword({
-            ...changePassword,
-            showPassword: !changePassword.showPassword,
+    const handleClickShowNewPass = () => {
+        setNewPassword({
+            ...newPassword,
+            showPassword: !newPassword.showPassword,
+        });
+    };
+
+    const handleClickShowOldPass = () => {
+        setOldPassword({
+            ...oldPassword,
+            showPassword: !oldPassword.showPassword,
         });
     };
 
@@ -246,7 +264,6 @@ export default function Profile() {
         await axios.post('http://localhost:3001/uploadcarphoto', data)
             .then((res) => {
                 console.log("CAR PHOTO: " + res.data.filename);
-                // setCarPhoto(res.data.filename)
                 setCarPhoto(res.data.filename)
             })
             .catch((err) => {
@@ -290,6 +307,28 @@ export default function Profile() {
                 console.log("===== CREATE CAR ERROR =====")
                 console.log(err.message)
                 console.log("===========================")
+            })
+    }
+
+    const deleteCar = async (carId) => {
+        await axios.delete(`/profile/car/${carId}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        })
+            .then(() => {
+                cars.map((car)=>{
+                    if(car.id === carId){
+                        cars.splice(cars.indexOf(car), 1)
+                    }
+                })
+            })
+            .catch((e) => {
+                if (e.status === 404) {
+                    throw e.message
+                }
+                throw e
             })
     }
 
@@ -453,6 +492,7 @@ export default function Profile() {
                             <Box style={{ backgroundColor: '#E8E8E8', padding: '4em 0' }}>
                                 {
                                     // <img style={{ borderRadius: '50%', width: 200, height: 200 }} src={`http://localhost:3001/${user.userPhoto}`} alt="photo" />
+                                    localStorage.setItem('x-user-photo', user.userPhoto)
                                 }
                                 <Avatar style={{ borderRadius: '50%', width: 240, height: 240, margin: '0 auto' }} src={`http://localhost:3001/${user.userPhoto}`} sx={{ bgcolor: 'darkred' }} aria-label="recipe">
                                 </Avatar>
@@ -473,11 +513,11 @@ export default function Profile() {
                             </Box>
                             {/* After "Edit profile" button clicked*/}
                             <Box style={{ display: changeData }}>
-                                <Box style={{ padding: '1em', color: 'green' }}>
+                                <Box style={{ padding: '1em', color: 'rgb(133, 133, 133)' }}>
                                     <Typography style={{ fontSize: '1.4em' }}>Редактирование профиля</Typography>
                                 </Box>
-                                <Box style={{ marginTop: 5 }}>
-                                    <Box style={{ backgroundColor: '#E8E8E8', height: 450, margin: '0 auto' }}>
+                                <Box>
+                                    <Box style={{ backgroundColor: '#E8E8E8', height: 610, margin: '0 auto' }}>
                                         <Box sx={{ '& > :not(style)': { m: 2 } }}>
                                             <FormControl variant="standard" style={{ width: '84%' }}>
                                                 <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
@@ -491,7 +531,6 @@ export default function Profile() {
                                                             <EmailIcon fontSize='large' />
                                                         </InputAdornment>
                                                     }
-                                                    // defaultValue={profile.userEmail}
                                                     value={user.userEmail}
                                                 />
                                             </FormControl>
@@ -510,31 +549,53 @@ export default function Profile() {
                                                     value={user.userPhone}
                                                 />
                                             </FormControl>
+                                            <Divider />
+                                            <Box style={{ padding: '0 1em 0 0', color: '#1976d2' }}>
+                                                <Typography style={{ fontSize: '1.4em' }}>Изменение пароля</Typography>
+                                            </Box>
                                             <FormControl style={{ width: '84%' }} variant="standart">
-                                                <InputLabel htmlFor="change-password" style={{ fontSize: '1.1em' }}>
-                                                    Изменить пароль
-                                                </InputLabel>
                                                 <Input
                                                     style={{ fontSize: '1.4em' }}
                                                     id="change-password"
-                                                    type={changePassword.showPassword ? 'text' : 'password'}
-                                                    value={changePassword.password}
-                                                    onChange={handleChange('password')}
+                                                    type={oldPassword.showPassword ? 'text' : 'password'}
+                                                    value={oldPassword.password}
+                                                    onChange={handleChangeOldPass('password')}
+                                                    placeholder='Введите старый пароль'
+                                                    startAdornment={
+                                                        <InputAdornment position="start">
+                                                            <IconButton
+                                                                aria-label="toggle password visibility"
+                                                                onClick={handleClickShowOldPass}
+                                                                onMouseDown={handleMouseDownPassword}
+                                                                edge="end"
+                                                            >
+                                                                {oldPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    }
+                                                />
+                                                <Input
+                                                    style={{ fontSize: '1.4em', marginTop: '1.5em' }}
+                                                    id="change-password"
+                                                    type={newPassword.showPassword ? 'text' : 'password'}
+                                                    value={newPassword.password}
+                                                    onChange={handleChangeNewPass('password')}
                                                     placeholder='Введите новый пароль'
                                                     startAdornment={
                                                         <InputAdornment position="start">
                                                             <IconButton
                                                                 aria-label="toggle password visibility"
-                                                                onClick={handleClickShowPassword}
+                                                                onClick={handleClickShowNewPass}
                                                                 onMouseDown={handleMouseDownPassword}
                                                                 edge="end"
                                                             >
-                                                                {changePassword.showPassword ? <VisibilityOff fontSize='large' /> : <Visibility fontSize='large' />}
+                                                                {newPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
                                                             </IconButton>
                                                         </InputAdornment>
                                                     }
                                                 />
                                             </FormControl>
+                                            <Divider />
                                             <Box style={{ backgroundColor: '#CFCFCF', padding: '1em' }}>
                                                 <FormControl component="fieldset">
                                                     <FormLabel component="legend" style={{ fontSize: '1.5em' }}>Gender</FormLabel>
@@ -573,6 +634,9 @@ export default function Profile() {
                                                 </FormControl>
                                             </Box>
                                         </Box>
+                                    </Box>
+                                    <Box style={{ backgroundColor: 'rgb(232, 232, 232)', marginBottom: '1em', padding: '0em 1em 1em 1em' }}>
+                                        <Button variant="contained" style={{ width: '100%', height: '50px' }}>Изменить</Button>
                                     </Box>
                                 </Box>
                                 <Accordion style={{ padding: '1em', backgroundColor: '#E8E8E8' }}>
@@ -726,12 +790,6 @@ export default function Profile() {
                                     <AccordionDetails>
                                         {cars.map((car) => (
                                             <Card style={{ width: '100%', marginTop: '2em' }}>
-                                                {/* <CardMedia
-                                            component="img"
-                                            height="200"
-                                            image="/images/portfolio.jpg"
-                                            alt="car"
-                                        /> */}
                                                 <CardContent style={{}}>
                                                     <Typography gutterBottom variant="h4" component="div">
                                                         {car.carBrand} {car.carModel}
@@ -760,7 +818,7 @@ export default function Profile() {
                                                     <Grid item xs>
                                                         <Tooltip title="Удалить" placement="left">
                                                             <IconButton aria-label="delete" size="medium">
-                                                                <DeleteIcon fontSize="inherit" />
+                                                                <DeleteIcon fontSize="inherit" onClick={() => deleteCar(car.id)} />
                                                             </IconButton>
                                                         </Tooltip>
                                                     </Grid>
@@ -1021,7 +1079,7 @@ export default function Profile() {
                                     <List
                                         sx={{
                                             width: '100%',
-                                            maxWidth: 900,
+                                            // maxWidth: 900,
                                             minWidth: 300,
                                             bgcolor: 'background.paper',
                                             marginTop: '2em'
@@ -1061,7 +1119,7 @@ export default function Profile() {
                                     <List
                                         sx={{
                                             width: '100%',
-                                            maxWidth: 900,
+                                            // maxWidth: 900,
                                             minWidth: 300,
                                             bgcolor: 'background.paper',
                                             marginTop: '2em'

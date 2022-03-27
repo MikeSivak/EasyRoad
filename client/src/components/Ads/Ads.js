@@ -166,7 +166,7 @@ export default function Ads() {
                                     <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                         <CardHeader
                                             avatar={
-                                                <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width:'50px', height:'50px' }} aria-label="recipe">
+                                                <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width: '50px', height: '50px' }} aria-label="recipe">
                                                 </Avatar>
                                             }
                                             action={
@@ -174,15 +174,16 @@ export default function Ads() {
                                                     <MoreVertIcon />
                                                 </IconButton>
                                             }
-                                            title={ad.role == 'driver' ? 'Водитель: ' + ad["User.userName"] : 'Пассажир: ' + ad["User.userName"]}
-                                            subheader={`Дата поездки: ${ad.startDate}`}
+                                            title={ad.role == 'driver' ? <span style={{ fontSize: '18px' }}>{'Водитель: ' + ad["User.userName"]}</span>
+                                                : <span style={{ fontSize: '18px' }}>{'Пассажир: ' + ad["User.userName"]}</span>}
+                                            subheader={<span style={{ fontSize: '16px' }}>{`Дата поездки: ${ad.startDate}`}</span>}
                                             style={{ backgroundColor: '#E8E8E8' }}
                                         />
                                         {/* <CardMedia
                                             component="img"
                                             height="194"
-                                            image="/images/HomeInfo19.jpg"
-                                            alt="Paella dish"
+                                            image={ad.carPhotoLink}
+                                            alt="photo"
                                         /> */}
                                         <CardMedia>
                                             <Box style={{ padding: '2em 0' }}>

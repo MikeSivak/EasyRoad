@@ -134,6 +134,9 @@ db.Ads.hasMany(db.Orders, {
     sourceKey: 'id'
 });
 
+//between Ads and Cars
+db.Ads.belongsTo(db.Cars);
+
 //between Orders and Users
 db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId' });
 db.Orders.belongsTo(db.Users, { as: 'PassengerId', foreignKey: 'passengerId' });

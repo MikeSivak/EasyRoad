@@ -27,20 +27,6 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true,
             field: 'carId'
         },
-        // startAddressId: {
-        //     type: Sequelize.INTEGER,
-        //     allowNull: false,
-        //     references: Addresses,
-        //     referencesKey: 'id',
-        //     field: 'startAddressId',
-        // },
-        // finishAddressId: {
-        //     type: Sequelize.INTEGER,
-        //     allowNull: false,
-        //     references: Addresses,
-        //     referencesKey: 'id',
-        //     field: 'finishAddressId'
-        // },
         country: {
             type: Sequelize.STRING,
             allowNull: false,

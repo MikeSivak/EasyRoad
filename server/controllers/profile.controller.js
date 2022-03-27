@@ -45,6 +45,17 @@ exports.getProfileInfo = async (req, res) => {
     }
 }
 
+exports.deleteCar = async(req, res) => {
+    const carId = req.params.id;
+    await Cars.destroy({where: {id: carId}})
+    .then(()=>{
+        res.status(202).send("Car successfully deleted :)")
+    })
+    .catch((err)=>{
+        throw err.message
+    })
+}
+
 exports.addCar = async (req, res) => {
     const userId = req.body.userId;
     const carBrand = req.body.carBrand;

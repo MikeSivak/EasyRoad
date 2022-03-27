@@ -34,7 +34,7 @@ import { useNavigate } from 'react-router-dom'
 import stylesHome from './styles'
 import { addDays, daysToWeeks, set } from 'date-fns';
 
-import { YMaps, Map } from 'react-yandex-maps'
+import { YMaps, Map, ZoomControl, TypeSelector, RouteButton } from 'react-yandex-maps'
 
 export default function Home() {
     const navigate = useNavigate();
@@ -467,8 +467,11 @@ export default function Home() {
 
                         <YMaps>
                             <div>
-                                My awesome application with maps!
-                                <Map width={'100%'} height={600} defaultState={{ center: [55.75, 37.57], zoom: 10 }}></Map>
+                                <Map width={'100%'} height={600} defaultState={{ center: [55.75, 37.57], zoom: 10, controls: [] }}>
+                                    <ZoomControl options={{ float: 'right' }} />
+                                    <TypeSelector options={{ float: 'right' }} />
+                                    <RouteButton options={{ float: 'right' }} />
+                                </Map>
                             </div>
                         </YMaps>
                     </Box>
