@@ -19,7 +19,8 @@ import {
     Button,
     getNativeSelectUtilityClasses,
     Divider,
-    FormGroup
+    FormGroup,
+    Checkbox
 } from "@material-ui/core";
 
 import EmailIcon from '@mui/icons-material/Email';
@@ -249,13 +250,13 @@ export default function Profile() {
                 'x-user-id': localStorage.getItem('x-user-id')
             }
         })
-        .then((res)=>{
-            console.log(res.data)
-            setCars(res.data);
-        })
-        .catch((err)=>{
-            throw err.message
-        })
+            .then((res) => {
+                console.log(res.data)
+                setCars(res.data);
+            })
+            .catch((err) => {
+                throw err.message
+            })
     }
 
     // const [photo, setPhoto] = useState({});
@@ -326,6 +327,27 @@ export default function Profile() {
             })
     }
 
+    const updateCar = async (carId) => {
+        await axios.put(`/profile/updateCar/${carId}`, {
+            carBrand: carBrand,
+            carModel: carModel,
+            carNumber: carNumber,
+            carPhotoLink: carPhoto
+        }, {
+            headers: { 'x-access-token': localStorage.getItem('x-access-token') }
+        })
+            .then(() => {
+                getCars();
+                setCarBrand('');
+                setCarModel('');
+                setCarNumber('');
+                setCarPhoto('');
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
     const deleteCar = async (carId) => {
         await axios.delete(`/profile/car/${carId}`, {
             headers: {
@@ -334,7 +356,6 @@ export default function Profile() {
             }
         })
             .then((res) => {
-                
                 getCars();
             })
             .catch((e) => {
@@ -714,7 +735,11 @@ export default function Profile() {
                                                     </label>
                                                 </FormControl>
                                             </Box>
-                                            <img style={{ width: 300 }} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                            {
+                                                carPhoto
+                                                    ? <img style={{ width: 300 }} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                                    : ''
+                                            }
                                             <Box style={{ padding: '0 0 0 0' }}>
                                                 <Button variant='contained' size='large' onClick={addCar} >Добавить</Button>
                                             </Box>
@@ -820,22 +845,100 @@ export default function Profile() {
                                                     alt="car"
                                                 />
                                                 <Divider style={{ marginTop: '20px' }} />
-                                                <Grid container xs={12} p={"0.5em 0em"}>
-                                                    <Grid item xs>
-                                                        <Tooltip title="Изменить" placement="right">
-                                                            <IconButton aria-label="edit" size="medium">
-                                                                <EditIcon fontSize="inherit" />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </Grid>
-                                                    <Grid item xs>
-                                                        <Tooltip title="Удалить" placement="left">
-                                                            <IconButton aria-label="delete" size="medium">
-                                                                <DeleteIcon fontSize="inherit" onClick={() => deleteCar(car.id)} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </Grid>
-                                                </Grid>
+                                                <Accordion>
+                                                    <AccordionSummary
+                                                        expandIcon={
+                                                            <Tooltip title="Изменить" placement="left">
+                                                                <IconButton aria-label="edit" size="medium">
+                                                                    <EditIcon fontSize="inherit" />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        }
+                                                        aria-label="Expand"
+                                                        aria-controls="additional-actions1-content"
+                                                        id="additional-actions1-header"
+                                                        style={{ padding: '0em 3em' }}
+                                                    >
+                                                        <FormControlLabel
+                                                            aria-label="Acknowledge"
+                                                            onClick={(event) => event.stopPropagation()}
+                                                            onFocus={(event) => event.stopPropagation()}
+                                                            control={
+                                                                <Tooltip title="Удалить" placement="right">
+                                                                    <IconButton aria-label="delete" size="medium">
+                                                                        <DeleteIcon fontSize="inherit" onClick={() => deleteCar(car.id)} />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                            label=""
+                                                        />
+                                                    </AccordionSummary>
+                                                    <Divider />
+                                                    <AccordionDetails>
+                                                        <Typography style={{ fontSize: '1.1em', marginTop: '20px', color: '#1976d2' }}>
+                                                            Редактирование
+                                                        </Typography>
+                                                        <Box sx={{ '& > :not(style)': { mt: 4 } }}>
+                                                            <FormControl variant="standard" style={{ width: '100%' }}>
+                                                                <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
+                                                                    Марка автомобиля
+                                                                </InputLabel>
+                                                                <Input
+                                                                    style={{ fontSize: '1.4em' }}
+                                                                    id="input-with-icon-adornment"
+                                                                    value={carBrand}
+                                                                    defaultValue=''
+                                                                    onChange={handleCarBrandChange}
+                                                                    placeholder='Введите марку авто'
+                                                                />
+                                                            </FormControl>
+                                                            <FormControl variant="standard" style={{ width: '100%' }}>
+                                                                <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
+                                                                    Модель автомобиля
+                                                                </InputLabel>
+                                                                <Input
+                                                                    style={{ fontSize: '1.4em' }}
+                                                                    id="input-with-icon-adornment"
+                                                                    value={carModel}
+                                                                    defaultValue=''
+                                                                    onChange={handleCarModelChange}
+                                                                    placeholder='Введите модель авто'
+                                                                />
+                                                            </FormControl>
+                                                            <FormControl variant="standard" style={{ width: '100%' }}>
+                                                                <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
+                                                                    Номер автомобиля
+                                                                </InputLabel>
+                                                                <Input
+                                                                    style={{ fontSize: '1.4em' }}
+                                                                    id="input-with-icon-adornment"
+                                                                    value={carNumber}
+                                                                    defaultValue=''
+                                                                    onChange={handleCarNumberChange}
+                                                                    placeholder='Введите номер авто'
+                                                                />
+                                                            </FormControl>
+                                                            <Box>
+                                                                <FormControl variant="standard" >
+                                                                    <label htmlFor="icon-button-car-photo-file">
+                                                                        <Input sx={{ display: 'none' }} accept="image/*" onChange={uploadCarPhoto} id="icon-button-car-photo-file" type="file" name='file' />
+                                                                        <IconButton color="primary" aria-label="upload picture" component="span">
+                                                                            <PhotoCamera style={{ fontSize: '2em' }} />
+                                                                        </IconButton>
+                                                                    </label>
+                                                                </FormControl>
+                                                            </Box>
+                                                            {
+                                                                carPhoto
+                                                                    ? <img style={{ width: 300 }} src={`http://localhost:3001/${carPhoto}`} alt='car photo' />
+                                                                    : ''
+                                                            }
+                                                            <Box style={{ padding: '0 0 0 0' }}>
+                                                                <Button variant='contained' size='large' onClick={() => updateCar(car.id)} >Изменить</Button>
+                                                            </Box>
+                                                        </Box>
+                                                    </AccordionDetails>
+                                                </Accordion>
                                             </Card>
                                         ))}
                                     </AccordionDetails>
@@ -934,14 +1037,6 @@ export default function Profile() {
                                                             </Grid>
                                                         </Typography>
                                                     </CardContent>
-                                                    <CardActions disableSpacing style={{ backgroundColor: '#E8E8E8' }}>
-                                                        <IconButton aria-label="add to favorites">
-                                                            <FavoriteIcon />
-                                                        </IconButton>
-                                                        <IconButton aria-label="share">
-                                                            <ShareIcon />
-                                                        </IconButton>
-                                                    </CardActions>
                                                 </Card>
                                             </Grid>
                                         ))}
@@ -1011,39 +1106,35 @@ export default function Profile() {
                                                                     : order['DriverId.userPhone']
                                                             }
                                                         </Typography>
-                                                        {
-                                                            roleOrder == 'driver'
-                                                                ?
-                                                                <Box style={{ marginTop: '2em' }}>
-                                                                    <Button
-                                                                        variant="contained"
-                                                                        color="success"
-                                                                        sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                                        startIcon={<DirectionsCarIcon />}
-                                                                    >
-                                                                        Закрыть заказ
-                                                                    </Button>
-                                                                </Box>
-                                                                :
-                                                                ''
-
-
-                                                        }
-                                                        {
-                                                            roleOrder == 'passenger' ?
-                                                                <Button style={{ marginTop: '2em' }}
-                                                                    onClick={handleCommentsClickOpen}>
-                                                                    Оставить отзыв</Button>
-                                                                : ''
-                                                        }
                                                     </CardContent>
                                                     <CardActions disableSpacing>
-                                                        <IconButton aria-label="add to favorites">
-                                                            <FavoriteIcon />
-                                                        </IconButton>
-                                                        <IconButton aria-label="share">
-                                                            <ShareIcon />
-                                                        </IconButton>
+                                                        <div style={{ width: '100%', textAlign: 'center', padding: '1em 0em' }}>
+                                                            {
+                                                                roleOrder == 'driver'
+                                                                    ?
+                                                                    <Box style={{ marginTop: '2em' }}>
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="success"
+                                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                            startIcon={<DirectionsCarIcon />}
+                                                                        >
+                                                                            Закрыть заказ
+                                                                        </Button>
+                                                                    </Box>
+                                                                    :
+                                                                    ''
+
+
+                                                            }
+                                                            {
+                                                                roleOrder == 'passenger' ?
+                                                                    <Button style={{ marginTop: '2em' }}
+                                                                        onClick={handleCommentsClickOpen}>
+                                                                        Оставить отзыв</Button>
+                                                                    : ''
+                                                            }
+                                                        </div>
                                                     </CardActions>
 
                                                     <Dialog open={commentsOpen} onClose={handleCommentsClose}>
@@ -1087,7 +1178,7 @@ export default function Profile() {
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
                                     {usersComments.length == 0 ? <span>У вас пока нет отзывов</span> : ''}
                                     <Box>
-                                        <Typography>Список комментарий пользователей</Typography>
+                                        <Typography>Список комментариев пользователей</Typography>
                                     </Box>
                                     <List
                                         sx={{

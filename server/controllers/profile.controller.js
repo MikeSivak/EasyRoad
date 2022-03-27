@@ -95,6 +95,35 @@ exports.addCar = async (req, res) => {
         })
 }
 
+exports.updateCar = async (req, res) => {
+    const carId = req.params.id;
+    const carBrand = req.body.carBrand;
+    const carModel = req.body.carModel;
+    const carNumber = req.body.carNumber;
+    const carPhoto = req.body.carPhotoLink;
+
+    await Cars
+        .update(
+            {
+                carBrand: carBrand,
+                carModel: carModel,
+                carNumber: carNumber,
+                carPhotoLink: carPhoto,
+            },
+            {
+                where: { id: carId }
+            }
+        )
+        .then((car) => {
+            res.send(car)
+        })
+        .catch((e) => {
+            res.status(500).json({
+                mesage: 'Something went wrong, try again: ' + e.mesage
+            })
+        })
+}
+
 exports.updateProfileInfo = async (req, res) => {
     const id = req.body.id;
     const email = req.body.email;
