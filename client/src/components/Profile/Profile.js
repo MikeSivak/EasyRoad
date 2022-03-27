@@ -242,6 +242,22 @@ export default function Profile() {
             })
     }
 
+    const getCars = async () => {
+        await axios.get('/profile/cars', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+                'x-user-id': localStorage.getItem('x-user-id')
+            }
+        })
+        .then((res)=>{
+            console.log(res.data)
+            setCars(res.data);
+        })
+        .catch((err)=>{
+            throw err.message
+        })
+    }
+
     // const [photo, setPhoto] = useState({});
 
     function uploadHandler(event) {
@@ -317,12 +333,9 @@ export default function Profile() {
                 'x-user-id': localStorage.getItem('x-user-id')
             }
         })
-            .then(() => {
-                cars.map((car)=>{
-                    if(car.id === carId){
-                        cars.splice(cars.indexOf(car), 1)
-                    }
-                })
+            .then((res) => {
+                
+                getCars();
             })
             .catch((e) => {
                 if (e.status === 404) {
