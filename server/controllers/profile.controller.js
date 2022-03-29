@@ -125,53 +125,86 @@ exports.updateCar = async (req, res) => {
 }
 
 exports.updateProfileInfo = async (req, res) => {
-    const id = req.body.id;
-    const email = req.body.email;
-    const password = req.body.password;
-    const number = req.body.number;
-    const name = req.body.name;
-    const gender = req.body.gender;
+    const userId = req.body.userId;
+    const userEmail = req.body.userEmail;
+    const userPhone = req.body.number;
+    const userName = req.body.name;
+    const userGender = req.body.gender;
 
-    if (!email || !password || !number) {
+    const user = await Users.findOne({
+        where: {
+            id: userId
+        }
+    })
+
+    if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+    }
+
+    await Users.update({
+        userName: userName,
+        userEmail: userEmail,
+        userPhone: userPhone,
+        gender: userGender,
+    }, {
+        where: {
+            id: userId
+        }
+    })
+        .then((user) => {
+            res.send(user)
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}
+
+exports.changePassword = async (req, res) => {
+    const userId = req.body.userId;
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    if(!oldPassword || !newPassword){
         res.send('Заполните все поля!')
     }
-    else if (password.length < 4) {
+
+    if (oldPassword.length < 4 || newPassword.length < 4) {
         res.send('Пароль должен иметь не менее 4 символов!');
     }
-    else {
-        let updateUser = new users({
-            user_email: email,
-            user_number: number,
-            us_name: name,
-            gender: gender,
-            user_password: password,
-        });
 
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(updateUser.user_password, salt, function (err, hash) {
-                if (err) {
-                    console.log(err);
-                }
-                console.log("HASH: " + hash);
-                updateUser.user_password = hash;
+    const user = await Users.findOne({
+        where: {
+            id: userId
+        }
+    })
 
-                Users
-                    .update({
-                        user_email: updateUser.user_email,
-                        user_password: updateUser.user_password,
-                        user_number: updateUser.user_number,
-                        us_name: updateUser.us_name,
-                        gender: updateUser.gender
-                    },
-                        {
-                            where: {
-                                id: id
-                            }
-                        })
-                    .then(
-                        res.send('(' + id + ')' + ' profile updated')
-                    )
-            });
+    if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(
+        oldPassword,
+        user.userPassword
+    );
+
+    if (!passwordIsValid) {
+        return res.status(401).send({
+            accessToken: null,
+            message: "Invalid Password!"
         });
     }
+
+    await Users.update({
+        userPassword: bcrypt.hashSync(newPassword, 8)
+    }, {
+        where: {
+            id: userId
+        }
+    })
+        .then((user) => {
+            res.send(user)
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
 }

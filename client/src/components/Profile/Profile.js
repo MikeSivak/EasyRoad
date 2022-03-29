@@ -25,6 +25,7 @@ import {
 
 import EmailIcon from '@mui/icons-material/Email';
 import MaleIcon from '@mui/icons-material/Male';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import PhoneIphone from "@mui/icons-material/PhoneIphone";
@@ -167,6 +168,24 @@ export default function Profile() {
         showPassword: false,
     });
 
+    const [userEmail, setUserEmail] = useState('');
+    const [userPhone, setUserPhone] = useState('');
+    const [userName, setUserName] = useState('');
+    const [userGender, setUserGender] = useState('');
+
+    const handleChangeUserEmail = (event) => {
+        setUserEmail(event.currentTarget.value)
+    }
+    const handleChangeUserPhone = (event) => {
+        setUserPhone(event.currentTarget.value)
+    }
+    const handleChangeUserName = (event) => {
+        setUserName(event.currentTarget.value)
+    }
+    const handleChangeUserGender = (event) => {
+        setUserGender(event.currentTarget.value)
+    }
+
     const [oldPassword, setOldPassword] = useState({
         amount: '',
         password: '',
@@ -232,6 +251,10 @@ export default function Profile() {
             .then((res) => {
                 setUser(res.data['data']['user'])
                 setCars(res.data['data']['cars'])
+                setUserEmail(res.data['data']['user'].userEmail)
+                setUserName(res.data['data']['user'].userName)
+                setUserPhone(res.data['data']['user'].userPhone)
+                setUserGender(res.data['data']['user'].gender)
             })
             .catch((reason: AxiosError) => {
                 if (reason.response.status == 401) {
@@ -240,6 +263,40 @@ export default function Profile() {
                 if (reason.response.status == 403) {
                     navigate('/notaccess')
                 }
+            })
+    }
+
+    const updateProfileInfo = async () => {
+        await axios.put('/profile/update', {
+            userId: localStorage.getItem('x-user-id'),
+            userEmail: userEmail,
+            number: userPhone,
+            name: userName,
+            gender: userGender
+        }, {
+            headers: { 'x-access-token': localStorage.getItem('x-access-token') }
+        })
+            .then(() => {
+                window.location.reload()
+            })
+            .catch((err) => {
+                throw err.message;
+            })
+    }
+
+    const changePassword = async () => {
+        await axios.patch('/profile/changePassword', {
+            userId: localStorage.getItem('x-user-id'),
+            oldPassword: oldPassword.password,
+            newPassword: newPassword.password,
+        }, {
+            headers: { 'x-access-token': localStorage.getItem('x-access-token') }
+        })
+            .then(() => {
+                window.location.reload()
+            })
+            .catch((err) => {
+                throw err.message;
             })
     }
 
@@ -258,8 +315,6 @@ export default function Profile() {
                 throw err.message
             })
     }
-
-    // const [photo, setPhoto] = useState({});
 
     function uploadHandler(event) {
         const data = new FormData();
@@ -551,8 +606,24 @@ export default function Profile() {
                                     <Typography style={{ fontSize: '1.4em' }}>Редактирование профиля</Typography>
                                 </Box>
                                 <Box>
-                                    <Box style={{ backgroundColor: '#E8E8E8', height: 610, margin: '0 auto' }}>
+                                    <Box style={{ backgroundColor: '#E8E8E8', height: 540, margin: '0 auto' }}>
                                         <Box sx={{ '& > :not(style)': { m: 2 } }}>
+                                            <FormControl variant="standard" style={{ width: '84%' }}>
+                                                <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
+                                                    Изменить имя
+                                                </InputLabel>
+                                                <Input
+                                                    style={{ fontSize: '1.4em' }}
+                                                    id="input-with-icon-adornment"
+                                                    startAdornment={
+                                                        <InputAdornment position="start">
+                                                            <DriveFileRenameOutlineIcon fontSize='large' />
+                                                        </InputAdornment>
+                                                    }
+                                                    value={userName}
+                                                    onChange={handleChangeUserName}
+                                                />
+                                            </FormControl>
                                             <FormControl variant="standard" style={{ width: '84%' }}>
                                                 <InputLabel htmlFor="input-with-icon-adornment" style={{ fontSize: '1.1em' }}>
                                                     Изменить почту
@@ -565,7 +636,8 @@ export default function Profile() {
                                                             <EmailIcon fontSize='large' />
                                                         </InputAdornment>
                                                     }
-                                                    value={user.userEmail}
+                                                    value={userEmail}
+                                                    onChange={handleChangeUserEmail}
                                                 />
                                             </FormControl>
                                             <FormControl variant="standard" style={{ width: '84%' }}>
@@ -580,53 +652,8 @@ export default function Profile() {
                                                             <PhoneIphoneIcon fontSize='large' />
                                                         </InputAdornment>
                                                     }
-                                                    value={user.userPhone}
-                                                />
-                                            </FormControl>
-                                            <Divider />
-                                            <Box style={{ padding: '0 1em 0 0', color: '#1976d2' }}>
-                                                <Typography style={{ fontSize: '1.4em' }}>Изменение пароля</Typography>
-                                            </Box>
-                                            <FormControl style={{ width: '84%' }} variant="standart">
-                                                <Input
-                                                    style={{ fontSize: '1.4em' }}
-                                                    id="change-password"
-                                                    type={oldPassword.showPassword ? 'text' : 'password'}
-                                                    value={oldPassword.password}
-                                                    onChange={handleChangeOldPass('password')}
-                                                    placeholder='Введите старый пароль'
-                                                    startAdornment={
-                                                        <InputAdornment position="start">
-                                                            <IconButton
-                                                                aria-label="toggle password visibility"
-                                                                onClick={handleClickShowOldPass}
-                                                                onMouseDown={handleMouseDownPassword}
-                                                                edge="end"
-                                                            >
-                                                                {oldPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    }
-                                                />
-                                                <Input
-                                                    style={{ fontSize: '1.4em', marginTop: '1.5em' }}
-                                                    id="change-password"
-                                                    type={newPassword.showPassword ? 'text' : 'password'}
-                                                    value={newPassword.password}
-                                                    onChange={handleChangeNewPass('password')}
-                                                    placeholder='Введите новый пароль'
-                                                    startAdornment={
-                                                        <InputAdornment position="start">
-                                                            <IconButton
-                                                                aria-label="toggle password visibility"
-                                                                onClick={handleClickShowNewPass}
-                                                                onMouseDown={handleMouseDownPassword}
-                                                                edge="end"
-                                                            >
-                                                                {newPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    }
+                                                    value={userPhone}
+                                                    onChange={handleChangeUserPhone}
                                                 />
                                             </FormControl>
                                             <Divider />
@@ -634,11 +661,13 @@ export default function Profile() {
                                                 <FormControl component="fieldset">
                                                     <FormLabel component="legend" style={{ fontSize: '1.5em' }}>Gender</FormLabel>
                                                     <FormLabel component="legend" style={{ fontSize: '1.1em', marginTop: '0.5em' }}>Изменить пол</FormLabel>
-                                                    <RadioGroup row aria-label="gender" name="customized-radios" style={{ marginTop: '0.5em' }}>
+                                                    <RadioGroup row aria-label="gender" name="customized-radios" style={{ marginTop: '0.5em' }}
+                                                        onChange={handleChangeUserGender}
+                                                    >
                                                         <FormControlLabel
                                                             value="female"
                                                             control={
-                                                                user.gender == 'female' ? <Radio checked /> : <Radio />
+                                                                userGender == 'female' ? <Radio checked /> : <Radio />
                                                             }
                                                             label={<FemaleIcon
                                                                 fontSize='large'
@@ -648,7 +677,7 @@ export default function Profile() {
                                                         <FormControlLabel
                                                             value="male"
                                                             control={
-                                                                user.gender == 'male' ? <Radio checked /> : <Radio />
+                                                                userGender == 'male' ? <Radio checked /> : <Radio />
                                                             }
                                                             label={<MaleIcon fontSize='large'
                                                                 sx={{ color: '#1976d2' }}
@@ -657,7 +686,7 @@ export default function Profile() {
                                                         <FormControlLabel
                                                             value="other"
                                                             control={
-                                                                user.gender == 'other' ? <Radio checked /> : <Radio />
+                                                                userGender == 'other' ? <Radio checked /> : <Radio />
                                                             }
                                                             label={<TransgenderIcon
                                                                 fontSize='large'
@@ -667,12 +696,76 @@ export default function Profile() {
                                                     </RadioGroup>
                                                 </FormControl>
                                             </Box>
+                                            <Box style={{ backgroundColor: 'rgb(232, 232, 232)', marginBottom: '1em', padding: '0em 0em 0em 0em' }}>
+                                                <Button variant="contained" style={{ width: '100%', height: '50px' }} onClick={() => updateProfileInfo()}> Изменить</Button>
+                                            </Box>
                                         </Box>
                                     </Box>
-                                    <Box style={{ backgroundColor: 'rgb(232, 232, 232)', marginBottom: '1em', padding: '0em 1em 1em 1em' }}>
-                                        <Button variant="contained" style={{ width: '100%', height: '50px' }}>Изменить</Button>
-                                    </Box>
                                 </Box>
+                                {/* --------------------------------------------------------------------- */}
+                                <Accordion style={{ padding: '1em', backgroundColor: '#E8E8E8' }}>
+                                    <Box style={{ backgroundColor: '#CFCFCF' }}>
+                                        <AccordionSummary
+                                            aria-controls="change-password-content"
+                                            id="change-password-header"
+                                            style={{ flexDirection: 'column', padding: '0em 0' }}
+                                        >
+                                            <Typography style={{ fontSize: '1.2em' }}>Нажмите для изменения пароля</Typography>
+                                        </AccordionSummary>
+                                    </Box>
+                                    <AccordionDetails>
+                                        <Box style={{ color: '#1976d2' }}>
+                                            <Typography style={{ fontSize: '1.2em' }}>Изменение пароля</Typography>
+                                        </Box>
+                                        <FormControl style={{ width: '90%', marginTop: '3em' }} variant="standart">
+                                            <Input
+                                                style={{ fontSize: '1.2em' }}
+                                                id="old-password"
+                                                type={oldPassword.showPassword ? 'text' : 'password'}
+                                                value={oldPassword.password}
+                                                onChange={handleChangeOldPass('password')}
+                                                placeholder='Введите старый пароль'
+                                                startAdornment={
+                                                    <InputAdornment position="start">
+                                                        <IconButton
+                                                            aria-label="toggle password visibility"
+                                                            onClick={handleClickShowOldPass}
+                                                            onMouseDown={handleMouseDownPassword}
+                                                            edge="end"
+                                                        >
+                                                            {oldPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormControl style={{ width: '90%', marginTop: '1em' }} variant="standart">
+                                            <Input
+                                                style={{ fontSize: '1.2em', marginTop: '1.5em' }}
+                                                id="new-password"
+                                                type={newPassword.showPassword ? 'text' : 'password'}
+                                                value={newPassword.password}
+                                                onChange={handleChangeNewPass('password')}
+                                                placeholder='Введите новый пароль'
+                                                startAdornment={
+                                                    <InputAdornment position="start">
+                                                        <IconButton
+                                                            aria-label="toggle password visibility"
+                                                            onClick={handleClickShowNewPass}
+                                                            onMouseDown={handleMouseDownPassword}
+                                                            edge="end"
+                                                        >
+                                                            {newPassword.showPassword ? <Visibility fontSize='large' /> : <VisibilityOff fontSize='large' />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                }
+                                            />
+                                        </FormControl>
+                                        <Box style={{ backgroundColor: 'rgb(232, 232, 232)', marginTop: '2em', padding: '1em 0em 0em 0em' }}>
+                                            <Button variant="contained" style={{ width: '80%', height: '50px' }} onClick={() => changePassword()}>Изменить пароль</Button>
+                                        </Box>
+                                    </AccordionDetails>
+                                </Accordion>
                                 <Accordion style={{ padding: '1em', backgroundColor: '#E8E8E8' }}>
                                     <Box style={{ backgroundColor: '#CFCFCF' }}>
                                         <AccordionSummary
