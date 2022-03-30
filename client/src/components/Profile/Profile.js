@@ -309,6 +309,7 @@ export default function Profile() {
         })
             .then((res) => {
                 console.log(res.data)
+                localStorage.setItem('x-user-cars', res.data);
                 setCars(res.data);
             })
             .catch((err) => {
