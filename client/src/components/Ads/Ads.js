@@ -1,4 +1,5 @@
 import { Container, Grid, Box, Card, FormGroup, Divider, Button } from "@material-ui/core";
+import Input from '@mui/material/Input';
 import { useEffect, useState } from "react";
 import { styled } from '@mui/material/styles';
 // import Card from '@mui/material/Card';
@@ -16,7 +17,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import { fontWeight, maxWidth } from "@material-ui/system";
+import { fontWeight, maxWidth, width } from "@material-ui/system";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -32,6 +33,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { useNavigate } from 'react-router-dom'
 
@@ -73,9 +76,13 @@ export default function Ads() {
             })
     }, [])
 
-    const setRoles = async (role, user, ad, price) => {
+    const setRoles = async (role, user, ad, price, seatsAvailable) => {
         if (role == 'driver') {
 
+            let seatsCount = Number(document.getElementById('seatsCount' + ad).value);
+            price *= seatsCount;
+
+            console.log("SEATS COUNT: " + seatsCount)
             console.log('AD ID: ' + ad)
             console.log("DRIVER ID: " + user);
             console.log("PASSENGER ID: " + localStorage.getItem('x-user-id'))
@@ -85,8 +92,9 @@ export default function Ads() {
                 driverId: user,
                 passengerId: localStorage.getItem('x-user-id'),
                 adId: ad,
-                seatsCount: 1,
-                totalPrice: price
+                seatsCount: seatsCount,
+                totalPrice: price,
+                seatsAvailable: seatsAvailable
             }, {
                 headers: {
                     'x-access-token': localStorage.getItem('x-access-token')
@@ -101,7 +109,6 @@ export default function Ads() {
             navigate('/profile');
         }
         else {
-
             if (localStorage.getItem('x-user-cars') == []) {
                 handleErrorClickOpen();
             }
@@ -110,13 +117,15 @@ export default function Ads() {
                 console.log("DRIVER ID: " + localStorage.getItem('x-user-id'));
                 console.log("PASSENGER ID: " + user)
                 console.log("AD PRICE: " + price)
+                console.log("FFFFFFFFFFFFFFFFFFFFFF: " + seatsAvailable)
 
                 await axios.post('/orders/create', {
                     driverId: localStorage.getItem('x-user-id'),
                     passengerId: user,
                     adId: ad,
-                    seatsCount: 1,
-                    totalPrice: price
+                    seatsCount: seatsAvailable,
+                    totalPrice: price,
+                    seatsAvailable: seatsAvailable
                 }, {
                     headers: {
                         'x-access-token': localStorage.getItem('x-access-token')
@@ -132,6 +141,23 @@ export default function Ads() {
                 navigate('/profile');
             }
         }
+    }
+
+    const incrementCount = async (id) => {
+        let current = Number(document.getElementById('seatsCount' + id).value);
+        let seatsAvailable = Number(document.getElementById('seat' + id).innerHTML);
+        current === seatsAvailable
+            ? current = seatsAvailable
+            : current++
+        document.getElementById('seatsCount' + id).value = current;
+    }
+
+    const decrementCount = async (id) => {
+        let current = Number(document.getElementById('seatsCount' + id).value);
+        if (current > 1) {
+            current--;
+        }
+        document.getElementById('seatsCount' + id).value = current;
     }
 
     if (localStorage.getItem('x-access-token')) {
@@ -162,7 +188,19 @@ export default function Ads() {
                     <Container sx={stylesAds.mainContainer} maxWidth='lg'>
                         <Grid container xs={12} spacing={0}>
                             {ads.map((ad) => (
-                                <Grid item xs style={{ textAlign: '-webkit-center' }}>
+                                <Grid
+                                    item
+                                    xs
+                                    style={
+                                        ad.seatsCount !== 0
+                                            ? { textAlign: '-webkit-center' }
+                                            : {
+                                                textAlign: '-webkit-center',
+                                                pointerEvents: 'none',
+                                                opacity: '0.4'
+                                            }
+                                    }
+                                >
                                     <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                         <CardHeader
                                             avatar={
@@ -205,28 +243,93 @@ export default function Ads() {
                                                 </Grid>
                                             </Box>
                                             <Divider />
-                                            <Box style={{ padding: '2em 0 0 0' }}>
-                                                <Grid container xs={12}>
-                                                    <Grid item xs style={{ placeSelf: 'center' }}>
-                                                        <Box style={{ padding: '0 1em' }}>
-                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0', borderRadius: '8px' }}><span id={'price' + ad.id}>{ad.price}</span> руб.</Typography>
-                                                        </Box>
-                                                    </Grid>
-                                                    <Grid item xs>
-                                                        <Button
-                                                            variant="contained"
-                                                            color="success"
-                                                            onClick={
-                                                                () => setRoles(ad.role, ad.userId, ad.id, ad.price)
+                                            {
+                                                ad.seatsCount !== 0
+                                                    ?
+                                                    <>
+                                                        <Box style={{ padding: '1em 1em' }}>
+                                                            {
+                                                                ad.role == 'driver'
+                                                                    ?
+                                                                    <Typography>
+                                                                        Кол. своб. мест:
+                                                                    </Typography>
+                                                                    :
+                                                                    <Typography>
+                                                                        Кол. ожид. мест:
+                                                                    </Typography>
                                                             }
-                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                            startIcon={<DirectionsCarIcon />}
-                                                        >
-                                                            Поехали!
-                                                        </Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </Box>
+                                                            <Typography
+                                                                style={{
+                                                                    fontSize: '1.4em',
+                                                                    backgroundColor: '#EEFFF0',
+                                                                    borderRadius: '8px',
+                                                                    width: '100px'
+                                                                }}><span id={'seat' + ad.id}>{ad.seatsCount}</span>
+                                                            </Typography>
+                                                        </Box>
+                                                        {
+                                                            ad.role == 'driver'
+                                                                ?
+                                                                <Box style={{ padding: '2em 0 0em 0' }}>
+                                                                    <Typography>
+                                                                        Выберите количество мест
+                                                                    </Typography>
+                                                                    <FormControl variant="standard">
+                                                                        <Input
+                                                                            id={'seatsCount' + ad.id}
+                                                                            defaultValue={1}
+                                                                            startAdornment={
+                                                                                <IconButton
+                                                                                    aria-label="minus"
+                                                                                    onClick={() => decrementCount(ad.id)}
+                                                                                >
+                                                                                    <RemoveCircleIcon
+                                                                                        style={{
+                                                                                            color: 'rgb(25, 118, 210)',
+                                                                                            fontSize: '1.4em'
+                                                                                        }}
+                                                                                    />
+                                                                                </IconButton>
+                                                                            }
+                                                                            endAdornment={
+                                                                                <IconButton
+                                                                                    aria-label="plus"
+                                                                                    onClick={() => incrementCount(ad.id)}
+                                                                                >
+                                                                                    <AddCircleIcon
+                                                                                        style={{
+                                                                                            color: 'rgb(25, 118, 210)',
+                                                                                            fontSize: '1.4em'
+                                                                                        }}
+                                                                                    />
+                                                                                </IconButton>
+                                                                            }
+                                                                            inputProps={{
+                                                                                min: 0,
+                                                                                style: {
+                                                                                    textAlign: 'center',
+                                                                                    width: '100px',
+                                                                                    fontSize: '1.4em'
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                </Box>
+                                                                :
+                                                                <></>
+                                                        }
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <Box style={{ padding: '2em 0em 0em 0em' }}>
+                                                            <Typography style={{ fontSize: '1.4em' }}>
+                                                                Свободных мест нет :(
+                                                            </Typography>
+                                                        </Box>
+                                                    </>
+                                            }
+
                                         </CardMedia>
                                         <CardContent>
                                             <Typography variant="body2" color="text.secondary">
@@ -240,12 +343,28 @@ export default function Ads() {
                                             </Typography>
                                         </CardContent>
                                         <CardActions disableSpacing style={{ backgroundColor: '#E8E8E8' }}>
-                                            <IconButton aria-label="add to favorites">
-                                                <FavoriteIcon />
-                                            </IconButton>
-                                            <IconButton aria-label="share">
-                                                <ShareIcon />
-                                            </IconButton>
+                                            <Box style={{ padding: '1em 1em' }}>
+                                                <Grid container xs={12}>
+                                                    <Grid item xs style={{ placeSelf: 'center' }}>
+                                                        <Box style={{ padding: '0 1em' }}>
+                                                            <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0.5em', borderRadius: '8px' }}><span id={'price' + ad.id}>{ad.price}</span> руб.</Typography>
+                                                        </Box>
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="success"
+                                                            onClick={
+                                                                () => setRoles(ad.role, ad.userId, ad.id, ad.price, ad.seatsCount)
+                                                            }
+                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                            startIcon={<DirectionsCarIcon />}
+                                                        >
+                                                            Поехали!
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Box>
                                         </CardActions>
                                     </Card>
                                 </Grid>

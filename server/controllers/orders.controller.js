@@ -46,6 +46,7 @@ exports.createOrder = async (req, res) => {
     const adId = req.body.adId;
     const seatsCount = req.body.seatsCount;
     const totalPrice = req.body.totalPrice;
+    let seatsAvailable = req.body.seatsAvailable;
 
     console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
     console.log("Driver id: " + driverId)
@@ -53,6 +54,8 @@ exports.createOrder = async (req, res) => {
     console.log("Ad id: " + adId)
     console.log("Seats count: " + seatsCount)
     console.log("Total price: " + totalPrice)
+    seatsAvailable -= seatsCount;
+    console.log('AVAILABLE SEATS: ' + seatsAvailable)
 
     try {
         Orders
@@ -70,6 +73,28 @@ exports.createOrder = async (req, res) => {
                 console.log("Ошибка создания заказа: " + err.message)
             })
     } catch (e) {
+        res.status(500).json({
+            mesage: 'Something went wrong, try again: ' + e.mesage
+        })
+    }
+
+    try {
+        Ads
+            .update({
+                seatsCount: seatsAvailable
+            }, {
+                where: {
+                    id: adId
+                }
+            })
+            .then((res) => {
+                res.status(202).send(res);
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+    catch (err) {
         res.status(500).json({
             mesage: 'Something went wrong, try again: ' + e.mesage
         })
