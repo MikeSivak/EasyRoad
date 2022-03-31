@@ -10,7 +10,9 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <SwitchRouter routes={routes} />
+      <div style={{marginTop:'74px'}}>
+        <SwitchRouter routes={routes} />
+      </div>
       <Footer />
     </div>
   );

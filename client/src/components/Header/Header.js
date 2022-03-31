@@ -460,7 +460,7 @@ export default function Header() {
       </Modal>
 
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar style={{ backgroundColor: 'black' }} position="static">
+        <AppBar style={{ backgroundColor: 'black' }} position="fixed">
           <Toolbar>
             <IconButton
               size="large"
