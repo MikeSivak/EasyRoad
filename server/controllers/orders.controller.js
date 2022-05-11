@@ -19,6 +19,19 @@ exports.createReview = async (req, res) => {
     console.log("Rate: " + rate)
     console.log("Comment: " + comment)
 
+    const user = await Users
+        .findOne(
+            {
+                where: {
+                    id: driverId
+                }
+            }
+        )
+
+    let userRate = user.rate
+        ? ((rate + user.rate) / 2).toFixed(2)
+        : rate
+
     try {
         Reviews
             .create({
@@ -33,7 +46,22 @@ exports.createReview = async (req, res) => {
             .catch((err) => {
                 console.log("Ошибка создания отзыва: " + err.message)
             })
+
+        await Users
+            .update({
+                rate: userRate
+            },
+                {
+                    where: {
+                        id: driverId
+                    }
+                })
+            .then(
+                res.send('(' + id + ')' + ' profile updated')
+            )
     } catch (e) {
+        console.log('5555555555555555555555555555555555555555')
+        console.log(e.message)
         res.status(500).json({
             mesage: 'Something went wrong, try again: ' + e.mesage
         })
@@ -187,6 +215,28 @@ exports.getUserOrders = async (req, res) => {
     }
 }
 
+exports.getOrdersByAdId = async (req, res) => {
+    const adId = req.params.id;
+    await Orders.findAll({
+        where: {
+            adId: adId
+        },
+        include: [
+            {
+                model: Users,
+                as: 'PassengerId'
+            },
+        ],
+        raw: true,
+    })
+        .then((orders) => {
+            res.send(orders)
+        })
+        .catch((err) => {
+            res.status(500).send({ message: err.message })
+        })
+}
+
 exports.getUserComments = async (req, res) => {
     const userId = req.headers['x-user-id'];
     console.log(`@@@@@@@@@@@ User Id For COMMETS: ${userId} @@@@@@@@@@@`)
@@ -219,6 +269,26 @@ exports.getUserComments = async (req, res) => {
             })
             .catch((err) => {
                 console.log("GET REVIEWS ERROR: " + err.message)
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
+exports.deleteComment = (req, res) => {
+    const commentId = req.params.id;
+
+    try {
+        Reviews
+            .destroy({ where: { id: commentId } })
+            .then(() => {
+                res.status(202).json({ message: 'comment deleted successfully!' });
+            })
+            .catch((err) => {
+                throw err.message;
             })
     }
     catch (e) {

@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             references: Roles,
             referencesKey: 'id',
-            field: 'roleId'
+            field: 'roleId',
+            onDelete: 'CASCADE'
         },
         userName: {
             type: Sequelize.STRING,
@@ -50,6 +51,11 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             field: 'userStatus'    
+        },
+        rate: {
+            type: Sequelize.DOUBLE,
+            allowNull: true,
+            field: 'rate'
         }
     },{
         modelName: 'Users',

@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             references: Users,
             referencesKey: 'id',
-            field: 'userId'
+            field: 'userId',
+            onDelete: 'CASCADE'
         },
         // for get list of ads by role (driver/passenger)
         role: {

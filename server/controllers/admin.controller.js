@@ -194,7 +194,8 @@ exports.unblockUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-    let id = req.body.id;
+    let id = req.params.id;
+
     try {
         Users
             .destroy(
@@ -204,11 +205,12 @@ exports.deleteUser = async (req, res) => {
                     }
                 }
             )
-            .then(
-                res.send('(' + id + ')' + ' user deleted')
-            )
+            .then(() => {
+                res.status(202).json({ message: 'user deleted successfully!' });
+            })
     }
     catch (e) {
+        console.log('------- ERROR: ' + e.message)
         res.status(500).json({
             mesage: 'Something went wrong, try again: ' + e.mesage
         })

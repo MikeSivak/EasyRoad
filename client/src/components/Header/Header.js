@@ -266,15 +266,7 @@ export default function Header() {
       {
         isLoggedIn ?
           <>
-            <MenuItem>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
+            {/* <MenuItem>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -285,7 +277,7 @@ export default function Header() {
                 </Badge>
               </IconButton>
               <p>Notifications</p>
-            </MenuItem>
+            </MenuItem> */}
           </>
           : <span></span>
       }
@@ -502,12 +494,7 @@ export default function Header() {
               {
                 isLoggedIn ?
                   <>
-                    <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                      <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                      </Badge>
-                    </IconButton>
-                    <IconButton
+                    {/* <IconButton
                       size="large"
                       aria-label="show 17 new notifications"
                       color="inherit"
@@ -515,7 +502,7 @@ export default function Header() {
                       <Badge badgeContent={17} color="error">
                         <NotificationsIcon />
                       </Badge>
-                    </IconButton>
+                    </IconButton> */}
                   </>
                   : <span></span>
               }

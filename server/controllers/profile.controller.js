@@ -6,6 +6,7 @@ const Cars = db.Cars;
 const Ads = db.Ads;
 const Roles = db.Roles;
 const TravelHistory = db.TravelHistory;
+const Orders = db.Orders;
 
 const bcrypt = require('bcryptjs');
 
@@ -164,7 +165,7 @@ exports.changePassword = async (req, res) => {
     const oldPassword = req.body.oldPassword;
     const newPassword = req.body.newPassword;
 
-    if(!oldPassword || !newPassword){
+    if (!oldPassword || !newPassword) {
         res.send('Заполните все поля!')
     }
 
@@ -207,4 +208,28 @@ exports.changePassword = async (req, res) => {
         .catch(err => {
             res.status(500).send({ message: err.message });
         });
+}
+
+exports.deleteProfile = async (req, res) => {
+    let id = req.params.id;
+
+    try {
+        Users
+            .destroy(
+                {
+                    where: {
+                        id: id
+                    }
+                }
+            )
+            .then(() => {
+                res.status(202).json({ message: 'user deleted successfully!' });
+            })
+    }
+    catch (e) {
+        console.log('------- ERROR: ' + e.message)
+        res.status(500).json({
+            mesage: 'Something went wrong, try again: ' + e.mesage
+        })
+    }
 }

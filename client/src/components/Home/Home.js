@@ -9,6 +9,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TimePicker from '@mui/lab/TimePicker';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import { height } from '@material-ui/system';
 import Avatar from '@mui/material/Avatar';
@@ -457,13 +458,12 @@ export default function Home() {
                 </Box>
                 <br></br>
             </Box>
-            <Box style={{ backgroundColor: '#282828', padding: '5em 0' }}>
+            {/* <Box style={{ backgroundColor: '#282828', padding: '5em 0' }}>
                 <Box>
                     <Typography variant='h3' color='white'>Как пользоваться нашим сервисом</Typography>
                 </Box>
                 <Container style={{ marginTop: '80px' }} maxWidth='lg'>
                     <Box>
-                        {/* <Typography variant='h1' color='gray'>Здесь будет видео или карусель</Typography> */}
 
                         <YMaps>
                             <div>
@@ -476,7 +476,7 @@ export default function Home() {
                         </YMaps>
                     </Box>
                 </Container>
-            </Box>
+            </Box> */}
             <Box style={{ backgroundColor: '#19181C', padding: '5em 0' }}>
                 <Box>
                     <Typography variant='h3' color='white'>Наши преимущества</Typography>

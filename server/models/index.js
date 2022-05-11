@@ -101,7 +101,8 @@ db.Reviews = require('./Reviews.model.js')(sequelize, Sequelize);
 
 // between Users and Roles
 db.Users.belongsTo(db.Roles, {
-    foreignKey: 'roleId'
+    foreignKey: 'roleId',
+    onDelete: 'CASCADE'
 });
 db.Roles.hasMany(db.Users, {
     foreignKey: 'roleId',
@@ -110,61 +111,73 @@ db.Roles.hasMany(db.Users, {
 
 // between Users and Reviews
 db.Reviews.belongsTo(db.Users, {
-    foreignKey: 'driverId'
+    foreignKey: 'driverId',
+    onDelete: 'CASCADE'
 });
 db.Reviews.belongsTo(db.Users, {
-    foreignKey: 'passengerId'
+    foreignKey: 'passengerId',
+    onDelete: 'CASCADE'
 });
 db.Users.hasMany(db.Reviews, {
     foreignKey: 'driverId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 }); //driver has many Reviews records
 db.Users.hasMany(db.Reviews, {
     foreignKey: 'driverId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 }); //passenger has many Reviews records
 
 
 //between Orders and Ads
 db.Orders.belongsTo(db.Ads, {
-    foreignKey: 'adId'
+    foreignKey: 'adId',
+    onDelete: 'CASCADE'
 });
 db.Ads.hasMany(db.Orders, {
     foreignKey: 'adId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 });
 
 //between Ads and Cars
 db.Ads.belongsTo(db.Cars);
 
 //between Orders and Users
-db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId' });
-db.Orders.belongsTo(db.Users, { as: 'PassengerId', foreignKey: 'passengerId' });
+db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId', onDelete: 'CASCADE' });
+db.Orders.belongsTo(db.Users, { as: 'PassengerId', foreignKey: 'passengerId', onDelete: 'CASCADE' });
 db.Users.hasMany(db.Orders, {
     foreignKey: 'driverId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 });
 db.Users.hasMany(db.Orders, {
     foreignKey: 'passengerId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 });
 
 //between Ads and Users
 db.Ads.belongsTo(db.Users, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
+    onDelete: 'CASCADE'
 });
 db.Users.hasMany(db.Ads, {
     foreignKey: 'userId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 });
 
 //between Users and Cars
 db.Cars.belongsTo(db.Users, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
+    onDelete: 'CASCADE'
 });
 db.Users.hasMany(db.Cars, {
     foreignKey: 'userId',
-    sourceKey: 'id'
+    sourceKey: 'id',
+    onDelete: 'CASCADE'
 });
 
 // ----------------------------------

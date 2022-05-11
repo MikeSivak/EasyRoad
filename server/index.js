@@ -139,10 +139,10 @@ async function initial() {
 
     //Create user
     await Users.create({
-        userName: 'Низар Уооооааа',
-        userPhone: '+55555555555',
-        userEmail: 'nizar@gmail.com',
-        userPassword: bcrypt.hashSync('nizar', 8),
+        userName: 'Test User',
+        userPhone: '+375291452255',
+        userEmail: 'test@gmail.com',
+        userPassword: bcrypt.hashSync('test', 8),
         roleId: 2, //user
         gender: 'male',
         userStatus: 1,

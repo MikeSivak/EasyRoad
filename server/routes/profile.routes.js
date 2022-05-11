@@ -9,6 +9,7 @@ profile_router.put('/update', profile_controller.updateProfileInfo);
 profile_router.post('/addCar', [authJwt.verifyToken], profile_controller.addCar);
 profile_router.put('/updateCar/:id', [authJwt.verifyToken], profile_controller.updateCar)
 profile_router.delete('/car/:id', [authJwt.verifyToken], profile_controller.deleteCar)
+profile_router.delete('/delete/:id', [authJwt.verifyToken], profile_controller.deleteProfile)
 profile_router.patch('/changePassword', [authJwt.verifyToken], profile_controller.changePassword)
 
 module.exports = profile_router;

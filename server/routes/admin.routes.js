@@ -9,7 +9,7 @@ admin_router.get('/', admin_controller.getAdminProfile);
 admin_router.get('/users', admin_controller.getAllUsers);
 admin_router.post('/user/block', admin_controller.blockUser);
 admin_router.post('/user/unblock', admin_controller.unblockUser);
-admin_router.post('/user/delete', admin_controller.deleteUser);
+admin_router.delete('/user/delete/:id', admin_controller.deleteUser);
 admin_router.get('/ads', ads_controller.getAllAds);
 admin_router.post('/ad/delete', admin_controller.deleteAd);
 //Completed

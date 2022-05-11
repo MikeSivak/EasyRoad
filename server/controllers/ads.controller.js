@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { Reviews } = require('../models');
 const Op = Sequelize.Op;
 const db = require('../models');
 const Ads = db.Ads;
@@ -106,8 +107,8 @@ exports.getCars = async (req, res) => {
 }
 
 exports.getAllAds = async (req, res) => {
+    // const loggedUser = req.params.userId;
     try {
-
         await Addresses.findAll().then((address) => {
             console.log("{{{{{{{{{{{{{---- ADDRESSES ----}}}}}}}}}}}}}}")
             console.log(address);

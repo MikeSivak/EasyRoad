@@ -14,14 +14,16 @@ module.exports = (sequelize, Sequelize) =>{
             allowNull: false,
             references: Users,
             referencesKey: 'id',
-            field: 'driverId'
+            field: 'driverId',
+            onDelete: 'CASCADE'
         },
         passengerId:{
             type: Sequelize.INTEGER,
             allowNull: false,
             references: Users,
             referencesKey: 'id',
-            field:'passengerId'
+            field:'passengerId',
+            onDelete: 'CASCADE'
         },
         adId:{
             type: Sequelize.INTEGER,

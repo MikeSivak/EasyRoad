@@ -20,11 +20,13 @@ import {
     getNativeSelectUtilityClasses,
     Divider,
     FormGroup,
-    Checkbox
+    Checkbox,
+    ListItemButton,
 } from "@material-ui/core";
 
 import EmailIcon from '@mui/icons-material/Email';
 import MaleIcon from '@mui/icons-material/Male';
+import CloseIcon from '@mui/icons-material/Close';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -38,6 +40,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FilledInput from '@mui/material/FilledInput';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import * as React from 'react';
 
@@ -60,6 +63,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Rating from '@mui/material/Rating';
+import Snackbar from '@mui/material/Snackbar';
 
 import axios from 'axios'
 import { AxiosResponse, AxiosError } from 'axios'
@@ -130,6 +134,35 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
+
+    const [snackState, setSnackState] = React.useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'center',
+    });
+
+    const { vertical, horizontal, open } = snackState;
+
+    const snackHandleClick = (newState) => () => {
+        setSnackState({ open: true, ...newState });
+    }
+
+    const snackHandleClose = () => {
+        setSnackState({ ...snackState, open: false });
+    };
+
+    const action = (
+        <React.Fragment>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={snackHandleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
 
     const [rateValue, setRateValue] = React.useState(5);
 
@@ -546,6 +579,25 @@ export default function Profile() {
             })
     }
 
+    const [adOrders, setAdOrders] = useState([]);
+
+    const getOrdersByAd = async (adId) => {
+        axios.get(`/orders/ordersByAd/${adId}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then((res) => {
+                setAdOrders(res.data)
+                console.log("------ Вот твои данные пидор! ------")
+                console.log(res.data)
+                console.log('====================================')
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
     const [usersComments, setUsersComments] = useState([]);
 
     const getUserComments = async () => {
@@ -565,6 +617,57 @@ export default function Profile() {
             })
     }
 
+    const deleteComment = async (id) => {
+        await axios.delete(`/orders/comment/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                getUserComments();
+                snackHandleClick({
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                })();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
+    const deleteUser = async (id) => {
+        await axios.delete(`/admin/user/delete/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                getUsersList();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
+    const deleteProfile = async (id) => {
+        await axios.delete(`/profile/delete/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                logout();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location = '/'
+    }
+
     React.useEffect(() => {
         profileData();
         getUserAds();
@@ -575,6 +678,15 @@ export default function Profile() {
 
     return (
         <>
+            <Snackbar
+                open={snackState.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical, horizontal }}
+                onClose={snackHandleClose}
+                message="Comment deleted successfully!"
+                action={action}
+                key={vertical + horizontal}
+            />
             <Box style={{ backgroundColor: '#222222', padding: '3em' }}>
                 <Grid container xs={12} spacing={0} style={{ justifyContent: 'center', background: 'rgb(39 39 39)', padding: '1em' }}>
                     <Grid item xs>
@@ -599,6 +711,9 @@ export default function Profile() {
                                 <Typography style={{ fontSize: '30px', fontWeight: '400' }}>{user.userName}</Typography>
                                 <Typography style={{ fontSize: '30px', fontWeight: '400' }}>
                                     <Button sx={{ textTransform: 'none', fontSize: '0.6em' }} onClick={handeChangeData}>Редактировать</Button>
+                                </Typography>
+                                <Typography style={{ fontSize: '20px', fontWeight: '400' }}>
+                                    <Button sx={{ textTransform: 'none', fontSize: '0.6em' }} onClick={() => deleteProfile(user.id)}>Удалить профиль</Button>
                                 </Typography>
                             </Box>
                             {/* After "Edit profile" button clicked*/}
@@ -1084,12 +1199,6 @@ export default function Profile() {
                                                         subheader={`Дата поездки: ${ad.startDate}`}
                                                         style={{ backgroundColor: '#E8E8E8' }}
                                                     />
-                                                    {/* <CardMedia
-                                            component="img"
-                                            height="194"
-                                            image="/images/HomeInfo19.jpg"
-                                            alt="Paella dish"
-                                        /> */}
                                                     <CardMedia>
                                                         <Box style={{ padding: '2em 0' }}>
                                                             <Grid container xs={12}>
@@ -1120,17 +1229,39 @@ export default function Profile() {
                                                             </Grid>
                                                         </Box>
                                                     </CardMedia>
-                                                    <CardContent>
-                                                        <Typography variant="body2" color="text.secondary">
-                                                            <Grid container xs={12}>
-                                                                <Grid item xs>
-                                                                    <FormGroup>
+                                                    {/* <CardContent>
+                                                        <Accordion>
+                                                            <AccordionSummary
+                                                                expandIcon={<ExpandMoreIcon />}
+                                                                aria-controls="panel1a-content"
+                                                                id="panel1a-header"
+                                                            >
+                                                                <Typography>Посмотреть заказы</Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails>
+                                                                <Divider />
+                                                                <List
+                                                                    sx={{
+                                                                        width: '100%',
+                                                                        minWidth: 300,
+                                                                        bgcolor: 'background.paper',
+                                                                        marginTop: '2em'
+                                                                    }}
+                                                                >
+                                                                    <>
+                                                                        <ListItem>
+                                                                            <ListItemAvatar>
+                                                                                <Avatar src={`http://localhost:3001/${user.userPhoto}`} sx={{ width: '50px', height: '50px' }}>
+                                                                                </Avatar>
+                                                                            </ListItemAvatar>
+                                                                            <ListItemText primary={user.userName} secondary={`Статус пользователя: ${user.userStatus == 1 ? 'Разблокирован' : 'Заблокирован'}`} />
 
-                                                                    </FormGroup>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Typography>
-                                                    </CardContent>
+                                                                        </ListItem>
+                                                                    </>
+                                                                </List>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    </CardContent> */}
                                                 </Card>
                                             </Grid>
                                         ))}
@@ -1206,16 +1337,17 @@ export default function Profile() {
                                                             {
                                                                 roleOrder == 'driver'
                                                                     ?
-                                                                    <Box style={{ marginTop: '2em' }}>
-                                                                        <Button
-                                                                            variant="contained"
-                                                                            color="success"
-                                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                                            startIcon={<DirectionsCarIcon />}
-                                                                        >
-                                                                            Закрыть заказ
-                                                                        </Button>
-                                                                    </Box>
+                                                                    // <Box style={{ marginTop: '2em' }}>
+                                                                    //     <Button
+                                                                    //         variant="contained"
+                                                                    //         color="success"
+                                                                    //         sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                    //         startIcon={<DirectionsCarIcon />}
+                                                                    //     >
+                                                                    //         Закрыть заказ
+                                                                    //     </Button>
+                                                                    // </Box>
+                                                                    <></>
                                                                     :
                                                                     ''
 
@@ -1270,47 +1402,66 @@ export default function Profile() {
                                     </Grid>
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={2} dir={theme.direction}>
-                                    {usersComments.length == 0 ? <span>У вас пока нет отзывов</span> : ''}
-                                    <Box>
-                                        <Typography>Список комментариев пользователей</Typography>
-                                    </Box>
-                                    <List
-                                        sx={{
-                                            width: '100%',
-                                            // maxWidth: 900,
-                                            minWidth: 300,
-                                            bgcolor: 'background.paper',
-                                            marginTop: '2em'
-                                        }}
-                                    >
-
-                                        {usersComments.map((comment) => (
+                                    {
+                                        usersComments.length == 0
+                                            ? <span>У вас пока нет отзывов</span>
+                                            :
                                             <>
-                                                <ListItem>
-                                                    <ListItemAvatar>
-                                                        <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`} sx={{ width: '50px', height: '50px' }}>
-                                                            {/* <ImageIcon /> */}
-                                                        </Avatar>
-                                                    </ListItemAvatar>
-                                                    <ListItemText primary={'Имя: ' + comment['User.userName']} secondary={'Комментарий: ' + comment.comment} />
-                                                    <ListItemText
-                                                        style={{ textAlign: 'right' }}
-                                                        primary={
-                                                            <Typography component="legend">Оценка</Typography>
-                                                        }
-                                                        secondary={
-                                                            <Rating
-                                                                name="read-only"
-                                                                value={comment.rate}
-                                                            />
-                                                        }
-                                                    />
-                                                </ListItem>
-                                                <Divider variant="inset" component="li" />
-                                            </>
-                                        ))}
+                                                <Box>
+                                                    <Typography>Список комментариев пользователей</Typography>
+                                                </Box>
+                                                <List
+                                                    sx={{
+                                                        width: '100%',
+                                                        // maxWidth: 900,
+                                                        minWidth: 300,
+                                                        bgcolor: 'background.paper',
+                                                        marginTop: '2em'
+                                                    }}
+                                                >
 
-                                    </List>
+                                                    {usersComments.map((comment) => (
+                                                        <>
+                                                            <ListItem>
+                                                                <ListItemAvatar>
+                                                                    <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`} sx={{ width: '50px', height: '50px' }}>
+                                                                        {/* <ImageIcon /> */}
+                                                                    </Avatar>
+                                                                </ListItemAvatar>
+                                                                <ListItemText primary={'Имя: ' + comment['User.userName']} secondary={'Комментарий: ' + comment.comment} />
+                                                                <ListItemText
+                                                                    style={{ textAlign: 'right' }}
+                                                                    primary={
+                                                                        <Typography component="legend">Оценка</Typography>
+                                                                    }
+                                                                    secondary={
+                                                                        <Rating
+                                                                            name="read-only"
+                                                                            value={comment.rate}
+                                                                        />
+                                                                    }
+                                                                />
+                                                                <Box style={{ paddingLeft: '2em' }}>
+                                                                    <Tooltip title="Удалить комментарий">
+                                                                        <IconButton aria-label="delete"
+                                                                            onClick={() => deleteComment(comment.id)}
+                                                                        >
+                                                                            <HighlightOffIcon
+                                                                                style={{
+                                                                                    color: 'darkred'
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </Box>
+                                                            </ListItem>
+                                                            <Divider variant="inset" component="li" />
+                                                        </>
+                                                    ))}
+
+                                                </List>
+                                            </>
+                                    }
                                 </TabPanel>
                                 <TabPanel value={tabValue} index={3} dir={theme.direction}>
                                     <Typography>Список всех пользователей сайта</Typography>
@@ -1328,11 +1479,23 @@ export default function Profile() {
                                                 <ListItem>
                                                     <ListItemAvatar>
                                                         <Avatar src={`http://localhost:3001/${user.userPhoto}`} sx={{ width: '50px', height: '50px' }}>
-                                                            {/* <ImageIcon /> */}
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText primary={user.userName} secondary={`Статус пользователя: ${user.userStatus == 1 ? 'Разблокирован' : 'Заблокирован'}`} />
                                                     {user.userStatus == 1 ? <Button onClick={() => blockUser(user.id)}>Блокировать</Button> : <Button onClick={() => unblockUser(user.id)} >Разблокировать</Button>}
+                                                    <Box style={{ paddingLeft: '2em' }}>
+                                                        <Tooltip title="Удалить пользователя">
+                                                            <IconButton aria-label="delete"
+                                                                onClick={() => deleteUser(user.id)}
+                                                            >
+                                                                <HighlightOffIcon
+                                                                    style={{
+                                                                        color: 'darkred'
+                                                                    }}
+                                                                />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </Box>
                                                 </ListItem>
                                                 <Divider variant="inset" component="li" />
                                             </>
