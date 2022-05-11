@@ -334,7 +334,7 @@ export default function Ads() {
                                                         <>
                                                             <Typography style={{
                                                                 color: 'black',
-                                                                backgroundColor: 'rgb(210 158 255)',
+                                                                backgroundColor: 'rgb(199 201 255)',
                                                                 padding: '0.4em 1em',
                                                                 borderRadius: '10px',
                                                                 marginTop: '1em',
@@ -398,7 +398,8 @@ export default function Ads() {
                                                                 <img src='/images/line.svg' />
                                                             </Grid>
                                                             <Grid item xs={7} style={{ placeSelf: 'center' }}>
-                                                                <Typography style={{ fontSize: '2em' }}><span style={{ fontWeight: 'bold' }}>1.3 км.</span></Typography>
+                                                                {/* <Typography style={{ fontSize: '2em' }}><span style={{ fontWeight: 'bold' }}>1.3 км.</span></Typography> */}
+                                                                <img src="https://img.icons8.com/fluent/76/000000/car.png" />
                                                             </Grid>
                                                         </Grid>
                                                         <Grid container xs={12}>
@@ -426,7 +427,7 @@ export default function Ads() {
                                                                     <Typography
                                                                         style={{
                                                                             fontSize: '1.4em',
-                                                                            backgroundColor: '#EEFFF0',
+                                                                            backgroundColor: 'rgb(199 201 255)',
                                                                             borderRadius: '8px',
                                                                             width: '100px'
                                                                         }}><span id={'seat' + ad.id}>{ad.seatsCount}</span>
@@ -507,17 +508,17 @@ export default function Ads() {
                                                     </Typography>
                                                 </CardContent>
                                                 <CardActions disableSpacing style={{ backgroundColor: '#E8E8E8' }}>
-                                                    <Box style={{ padding: '1em 1em' }}>
-                                                        <Grid container xs={12}>
-                                                            <Grid item xs style={{ placeSelf: 'center' }}>
+                                                    <Box style={{ padding: '1em 1em', width:'100%' }}>
+                                                        {/* <Grid container xs={12}> */}
+                                                            {/* <Grid item xs style={{ placeSelf: 'center' }}>
                                                                 <Box style={{ padding: '0 1em' }}>
                                                                     <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0.5em', borderRadius: '8px' }}><span id={'price' + ad.id}>{ad.price}</span> руб.</Typography>
                                                                 </Box>
-                                                            </Grid>
-                                                            <Grid item xs>
+                                                            </Grid> */}
+                                                            {/* <Grid> */}
                                                                 <Button
                                                                     variant="contained"
-                                                                    color="success"
+                                                                    
                                                                     onClick={
                                                                         () => setRoles(ad.role, ad.userId, ad.id, ad.price, ad.seatsCount)
                                                                     }
@@ -526,8 +527,8 @@ export default function Ads() {
                                                                 >
                                                                     Поехали!
                                                                 </Button>
-                                                            </Grid>
-                                                        </Grid>
+                                                            {/* </Grid> */}
+                                                        {/* </Grid> */}
                                                     </Box>
                                                 </CardActions>
                                             </Card>
