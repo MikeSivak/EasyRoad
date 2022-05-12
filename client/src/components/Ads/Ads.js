@@ -43,6 +43,11 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import stylesHome from '../Home/styles'
 import Search from "../Shared/Search/Shearch";
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+
+
 import { useNavigate } from 'react-router-dom'
 
 import axios from 'axios';
@@ -303,19 +308,19 @@ export default function Ads() {
                                                     //     <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width: '50px', height: '50px' }} aria-label="recipe">
                                                     //     </Avatar>
                                                     // }
-                                                    action={
-                                                        <IconButton aria-label="settings">
-                                                            <MoreVertIcon />
-                                                        </IconButton>
-                                                    }
+                                                    // action={
+                                                    //     <IconButton aria-label="settings">
+                                                    //         <MoreVertIcon />
+                                                    //     </IconButton>
+                                                    // }
                                                     title={
                                                         <>
                                                             <Grid container xs={12}>
-                                                                <Grid item xs>
+                                                                <Grid item xs={3}>
                                                                     <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width: '50px', height: '50px' }} aria-label="recipe">
                                                                     </Avatar>
                                                                 </Grid>
-                                                                <Grid item xs={9}>
+                                                                <Grid item xs={7}>
                                                                     <Grid>
                                                                         {ad.role == 'driver' ? <span style={{ fontSize: '16px' }}>{'Водитель: ' + ad["User.userName"]}</span>
                                                                             : <span style={{ fontSize: '16px' }}>{'Пассажир: ' + ad["User.userName"]}</span>}
@@ -332,61 +337,79 @@ export default function Ads() {
                                                     }
                                                     subheader={
                                                         <>
-                                                            <Typography style={{
-                                                                color: 'black',
-                                                                backgroundColor: 'rgb(199 201 255)',
-                                                                padding: '0.4em 1em',
-                                                                borderRadius: '10px',
-                                                                marginTop: '1em',
-                                                                width: '100%',
-                                                                fontSize: '1.2em'
-                                                            }}>
-                                                                Информация о поездке
-                                                            </Typography>
-                                                            <Grid container mt={2} pl={2}>
-                                                                <Grid>
-                                                                    <span style={{ fontSize: '15px' }}>
-                                                                        <span style={{ fontWeight: 'bold' }}>Дата поездки: </span>
-                                                                        <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.startDate}</span>
-                                                                    </span>
-                                                                </Grid>
-                                                                <Grid>
-                                                                    <span style={{ fontSize: '15px' }}>
-                                                                        <span style={{ fontWeight: 'bold' }}>Отправление в: </span>
-                                                                        <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.startTime}</span>
-                                                                    </span>
-                                                                </Grid>
-                                                                <Grid>
-                                                                    <span style={{ fontSize: '15px' }}>
-                                                                        <span style={{ fontWeight: 'bold' }}>Прибытие в: </span>
-                                                                        <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.finishTime}</span>
-                                                                    </span>
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Grid container xs p={2}>
-                                                                <Grid item>
-                                                                    <Typography style={{ fontSize: '1.2em' }}>
-                                                                        Рейтинг:
+                                                            <Accordion style={{ boxShadow: 'none', backgroundColor: 'inherit' }}>
+                                                                <AccordionSummary
+                                                                    // expandIcon={<ExpandMoreIcon />}
+                                                                    aria-controls="panel2a-content"
+                                                                    id="panel2a-header"
+                                                                    style={{ padding: '0' }}
+                                                                >
+                                                                    <Typography style={{
+                                                                        color: 'black',
+                                                                        backgroundColor: 'rgb(199 201 255)',
+                                                                        padding: '0.4em 1em',
+                                                                        borderRadius: '10px',
+                                                                        width: '100%',
+                                                                        fontSize: '1.2em'
+                                                                    }}>
+                                                                        Подробнее
                                                                     </Typography>
-                                                                </Grid>
-                                                                <Grid item ml={1} mt={0.2}>
-                                                                    <Rating
-                                                                        precision={0.5}
-                                                                        name="read-only"
-                                                                        value={ad['User.rate']}
-                                                                    />
-                                                                </Grid>
-                                                            </Grid>
+                                                                </AccordionSummary>
+                                                                <AccordionDetails>
+                                                                    <Grid container mt={2} pl={2}>
+                                                                        <Grid>
+                                                                            <span style={{ fontSize: '15px' }}>
+                                                                                <span style={{ fontWeight: 'bold' }}>Дата поездки: </span>
+                                                                                <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.startDate}</span>
+                                                                            </span>
+                                                                        </Grid>
+                                                                        <Grid>
+                                                                            <span style={{ fontSize: '15px' }}>
+                                                                                <span style={{ fontWeight: 'bold' }}>Отправление в: </span>
+                                                                                <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.startTime}</span>
+                                                                            </span>
+                                                                        </Grid>
+                                                                        <Grid>
+                                                                            <span style={{ fontSize: '15px' }}>
+                                                                                <span style={{ fontWeight: 'bold' }}>Прибытие в: </span>
+                                                                                <span style={{ color: 'rgb(25, 118, 210)' }}>{ad.finishTime}</span>
+                                                                            </span>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                    <Grid container xs p={2}>
+                                                                        <Grid item>
+                                                                            <Typography style={{ fontSize: '1.2em' }}>
+                                                                                Рейтинг:
+                                                                            </Typography>
+                                                                        </Grid>
+                                                                        <Grid item ml={1} mt={0.2}>
+                                                                            <Rating
+                                                                                precision={0.5}
+                                                                                name="read-only"
+                                                                                value={ad['User.rate']}
+                                                                            />
+                                                                        </Grid>
+                                                                    </Grid>
+
+                                                                    {
+                                                                        ad.role == 'driver' ?
+                                                                            <CardMedia
+                                                                                component="img"
+                                                                                height="194"
+                                                                                image={
+                                                                                    `http://localhost:3001/${ad["Car.carPhotoLink"]}`
+                                                                                }
+                                                                                alt="car"
+                                                                            />
+                                                                            :
+                                                                            ""
+                                                                    }
+                                                                </AccordionDetails>
+                                                                <Divider style={{ padding: "0.2em 0" }} />
+                                                            </Accordion>
                                                         </>
                                                     }
-                                                    style={{ backgroundColor: '#E8E8E8' }}
                                                 />
-                                                {/* <CardMedia
-                                            component="img"
-                                            height="194"
-                                            image={ad.carPhotoLink}
-                                            alt="photo"
-                                        /> */}
                                                 <CardMedia>
                                                     <Box style={{ padding: '2em 0' }}>
                                                         <Grid container xs={12}>
@@ -508,26 +531,26 @@ export default function Ads() {
                                                     </Typography>
                                                 </CardContent>
                                                 <CardActions disableSpacing style={{ backgroundColor: '#E8E8E8' }}>
-                                                    <Box style={{ padding: '1em 1em', width:'100%' }}>
+                                                    <Box style={{ padding: '1em 1em', width: '100%' }}>
                                                         {/* <Grid container xs={12}> */}
-                                                            {/* <Grid item xs style={{ placeSelf: 'center' }}>
+                                                        {/* <Grid item xs style={{ placeSelf: 'center' }}>
                                                                 <Box style={{ padding: '0 1em' }}>
                                                                     <Typography style={{ fontSize: '1.2em', backgroundColor: '#EEFFF0', padding: '0.3em 0.5em', borderRadius: '8px' }}><span id={'price' + ad.id}>{ad.price}</span> руб.</Typography>
                                                                 </Box>
                                                             </Grid> */}
-                                                            {/* <Grid> */}
-                                                                <Button
-                                                                    variant="contained"
-                                                                    
-                                                                    onClick={
-                                                                        () => setRoles(ad.role, ad.userId, ad.id, ad.price, ad.seatsCount)
-                                                                    }
-                                                                    sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                                    startIcon={<DirectionsCarIcon />}
-                                                                >
-                                                                    Поехали!
-                                                                </Button>
-                                                            {/* </Grid> */}
+                                                        {/* <Grid> */}
+                                                        <Button
+                                                            variant="contained"
+
+                                                            onClick={
+                                                                () => setRoles(ad.role, ad.userId, ad.id, ad.price, ad.seatsCount)
+                                                            }
+                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                            startIcon={<DirectionsCarIcon />}
+                                                        >
+                                                            Поехали!
+                                                        </Button>
+                                                        {/* </Grid> */}
                                                         {/* </Grid> */}
                                                     </Box>
                                                 </CardActions>

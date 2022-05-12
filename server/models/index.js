@@ -142,7 +142,10 @@ db.Ads.hasMany(db.Orders, {
 });
 
 //between Ads and Cars
-db.Ads.belongsTo(db.Cars);
+db.Ads.belongsTo(db.Cars, {
+    foreignKey: 'carId',
+    onDelete: 'CASCADE'
+});
 
 //between Orders and Users
 db.Orders.belongsTo(db.Users, { as: 'DriverId', foreignKey: 'driverId', onDelete: 'CASCADE' });

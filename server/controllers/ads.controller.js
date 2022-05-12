@@ -118,6 +118,7 @@ exports.getAllAds = async (req, res) => {
             .findAll({
                 include: [
                     { model: Users },
+                    { model: Cars }
                 ],
                 raw: true
             }).then((ads) => {

@@ -26,7 +26,10 @@ module.exports = (sequelize, Sequelize) => {
         carId: {
             type: Sequelize.INTEGER,
             allowNull: true,
-            field: 'carId'
+            field: 'carId',
+            references: Cars,
+            referencesKey: 'id',
+            onDelete: 'CASCADE'
         },
         country: {
             type: Sequelize.STRING,
