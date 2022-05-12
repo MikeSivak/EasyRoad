@@ -1210,7 +1210,6 @@ export default function Profile() {
                                                                     <img src='/images/line.svg' />
                                                                 </Grid>
                                                                 <Grid item xs={7} style={{ placeSelf: 'center' }}>
-                                                                    {/* <Typography style={{ fontSize: '2em' }}><span style={{ fontWeight: 'bold' }}>1.3 км.</span></Typography> */}
                                                                     <img src="https://img.icons8.com/fluent/76/000000/car.png" />
                                                                 </Grid>
                                                             </Grid>
