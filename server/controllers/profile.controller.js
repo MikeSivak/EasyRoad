@@ -103,14 +103,20 @@ exports.updateCar = async (req, res) => {
     const carNumber = req.body.carNumber;
     const carPhoto = req.body.carPhotoLink;
 
+    let updateData = {
+        carBrand: carBrand,
+        carModel: carModel,
+        carNumber: carNumber,
+        carPhotoLink: carPhoto,
+    }
+
+    Object.keys(updateData).map((key, index) => {
+        if(!updateData[key]) {delete updateData[key]}
+    })
+
     await Cars
         .update(
-            {
-                carBrand: carBrand,
-                carModel: carModel,
-                carNumber: carNumber,
-                carPhotoLink: carPhoto,
-            },
+            updateData,
             {
                 where: { id: carId }
             }
