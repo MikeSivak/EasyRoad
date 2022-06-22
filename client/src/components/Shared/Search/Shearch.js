@@ -343,15 +343,6 @@ export default function Search() {
                                     >
                                         <Card sx={{ maxWidth: 350, mx: '1rem', mt: '2rem', minWidth: 300 }}>
                                             <CardHeader
-                                                // avatar={
-                                                //     <Avatar src={`http://localhost:3001/${ad["User.userPhoto"]}`} sx={{ bgcolor: 'darkred', width: '50px', height: '50px' }} aria-label="recipe">
-                                                //     </Avatar>
-                                                // }
-                                                // action={
-                                                //     <IconButton aria-label="settings">
-                                                //         <MoreVertIcon />
-                                                //     </IconButton>
-                                                // }
                                                 title={
                                                     <>
                                                         <Grid container xs={12}>

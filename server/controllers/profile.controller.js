@@ -233,7 +233,6 @@ exports.deleteProfile = async (req, res) => {
             })
     }
     catch (e) {
-        console.log('------- ERROR: ' + e.message)
         res.status(500).json({
             mesage: 'Something went wrong, try again: ' + e.mesage
         })

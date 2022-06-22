@@ -91,6 +91,9 @@ export default function Header() {
           setRegisterForm(false)
         })
         .catch((err) => {
+          if(err.status = 400) {
+            console.log('ffffffffffffffffffffffffffff')
+          }
           console.log(err)
         })
     }
@@ -476,12 +479,12 @@ export default function Header() {
               <Button variant='success'>О нас</Button>
               <Button variant='success'>Портфолио</Button>
               <Button variant='success'>Блог</Button>
+              <Button variant='success' href='/ads'>Выбрать поездку</Button>
             </Box>
             {/* <Box sx={{ flexGrow: 1 }} /> */}
             {
               isLoggedIn ?
                 <Box sx={{ flexGrow: 2 }}>
-                  <Button variant='success' href='/ads'>Выбрать поездку</Button>
                   <Button variant='success' href='/newad'>Предложить поездку</Button>
                 </Box>
                 :

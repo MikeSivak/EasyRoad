@@ -4,6 +4,7 @@ import NotAccess from '../components/Errors/NotAccess';
 import Home from '../components/Home/Home'
 import NewAd from '../components/NewAd/NewAd';
 import Profile from '../components/Profile/Profile';
+import NotFound from '../components/Errors/NotFound';
 
 const routes = [
     {
@@ -36,6 +37,11 @@ const routes = [
         path: '/notaccess',
         component: <NotAccess />,
         id: 5
+    },
+    {
+        path: '*',
+        component: <NotFound />,
+        id: 6
     }
 ]
 

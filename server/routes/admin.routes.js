@@ -12,6 +12,7 @@ admin_router.post('/user/unblock', admin_controller.unblockUser);
 admin_router.delete('/user/delete/:id', admin_controller.deleteUser);
 admin_router.get('/ads', ads_controller.getAllAds);
 admin_router.post('/ad/delete', admin_controller.deleteAd);
+admin_router.get('/allComments', admin_controller.getAllComments)
 //Completed
 
 //Need to update

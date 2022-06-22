@@ -62,7 +62,7 @@ export default function NewAd() {
     const [city, setCity] = useState('');
     const [startAddress, setStartAddress] = useState('');
     const [finishAddress, setFinishAddress] = useState('')
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState('10');
     const [seatsCount, setSeatsCount] = useState('');
     const [cars, setCars] = useState([]);
 
@@ -363,17 +363,17 @@ export default function NewAd() {
                                             </LocalizationProvider>
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs>
+                                    {/* <Grid item xs hidden>
                                         <FormControl sx={{ mx: '1rem', mt: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
                                             <TextField
                                                 type={'text'}
                                                 id="outlined-required"
                                                 label="Цена поездки"
-                                                value={price}
+                                                value={10}
                                                 onChange={handlePriceChange}
                                             />
                                         </FormControl>
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid item xs>
                                         <FormControl sx={{ mx: '1rem', mt: '2rem', mb: '2rem', maxWidth: 500, minWidth: 300 }} variant='outlined'>
                                             <TextField

@@ -256,7 +256,7 @@ export default function Ads() {
         document.getElementById('seatsCount' + id).value = current;
     }
 
-    if (localStorage.getItem('x-access-token')) {
+    // if (localStorage.getItem('x-access-token')) {
         return (
             <>
                 <Dialog
@@ -565,8 +565,8 @@ export default function Ads() {
                 </Box>
             </>
         );
-    }
-    else {
-        window.location = '/'
-    }
+    // }
+    // else {
+    //     window.location = '/'
+    // }
 }

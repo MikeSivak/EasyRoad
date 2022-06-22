@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Reviews } = require('../models');
+const { Reviews, Orders } = require('../models');
 const Op = Sequelize.Op;
 const db = require('../models');
 const Ads = db.Ads;
@@ -285,17 +285,24 @@ exports.createAd = async (req, res) => {
 }
 
 exports.deleteAd = async (req, res) => {
-    let id_ad = req.body.id_ad;
+    let adId = req.params.id;
+    console.log('------ adID: ' + adId)
+
+    await Orders.destroy({
+        where:{
+            adId: adId
+        }
+    });
 
     try {
-        ads
+        await Ads
             .destroy({
                 where: {
-                    id: id_ad
+                    id: adId
                 }
             })
             .then(
-                res.send('(' + id_ad + ')' + ' ad deleted')
+                res.send('(' + adId + ')' + ' ad deleted')
             )
     } catch (e) {
         res.status(500).json({

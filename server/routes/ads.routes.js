@@ -12,6 +12,6 @@ ads_router.get('/addresses/:city', ads_controller.getAddresses);
 ads_router.get('/cars', ads_controller.getCars);
 ads_router.post('/create', ads_controller.createAd);
 ads_router.post('/update', ads_controller.updateAd);
-ads_router.post('/delete', ads_controller.deleteAd);
+ads_router.delete('/delete/:id', ads_controller.deleteAd);
 
 module.exports = ads_router;

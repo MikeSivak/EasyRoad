@@ -40,7 +40,6 @@ exports.getAdminProfile = async (req, res) => {
 exports.updateAdminProfile = async (req, res) => {
     let id = req.body.id;
     let user_email = req.body.user_email;
-    // let user_password = req.body.user_password;
     let user_number = req.body.user_number;
     let us_name = req.body.us_name;
     let gender = req.body.gender;
@@ -50,7 +49,6 @@ exports.updateAdminProfile = async (req, res) => {
         await users
             .update({
                 user_email: user_email,
-                // user_password: user_password,
                 user_number: user_number,
                 us_name: us_name,
                 gender: gender,
@@ -82,13 +80,6 @@ exports.getAllAds = async (req, res) => {
                 ],
                 raw: true
             }).then(ads => {
-                ads.forEach(
-                    element =>
-                        console.log(
-                            element
-                            // `id_user: ${element['id_user']} - for example
-                        )
-                )
                 res.send(ads)
             })
     }
@@ -126,7 +117,6 @@ exports.getAllUsers = async (req, res) => {
 
 exports.deleteAd = async (req, res) => {
     let id = req.body.id;
-
     try {
         Ads
             .destroy(
@@ -195,7 +185,6 @@ exports.unblockUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     let id = req.params.id;
-
     try {
         Users
             .destroy(
@@ -210,9 +199,36 @@ exports.deleteUser = async (req, res) => {
             })
     }
     catch (e) {
-        console.log('------- ERROR: ' + e.message)
         res.status(500).json({
             mesage: 'Something went wrong, try again: ' + e.mesage
+        })
+    }
+}
+
+exports.getAllComments = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    try {
+        await Reviews
+            .findAll(
+                {
+                    include: [
+                        {
+                            model: Users
+                        },
+                    ],
+                    raw: true,
+                }
+            )
+            .then((reviews) => {
+                res.send(reviews)
+            })
+            .catch((err) => {
+                console.log("GET REVIEWS ERROR: " + err.message)
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
         })
     }
 }

@@ -87,7 +87,7 @@ app.use(
     [authJwt.verifyToken, authJwt.isAdmin],
     require('./routes/admin.routes')
 );
-app.use('/ads', [authJwt.verifyToken], [checkStatus], adsRoutes);
+app.use('/ads', adsRoutes);
 app.use('/orders', [authJwt.verifyToken], [checkStatus], ordersRoutes)
 app.use('/profile', [authJwt.verifyToken], [checkStatus], profileRoutes);
 
@@ -157,6 +157,10 @@ async function initial() {
 
 app.get('/', (req, res) => {
     res.json({ message: 'Home page' })
+});
+
+app.get('*', function(req, res){
+    res.send('what???', 404);
 });
 
 app.listen(PORT);

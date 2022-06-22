@@ -205,6 +205,7 @@ export default function Profile() {
     const [userPhone, setUserPhone] = useState('');
     const [userName, setUserName] = useState('');
     const [userGender, setUserGender] = useState('');
+    const [userRole, setUserRole] = useState('');
 
     const handleChangeUserEmail = (event) => {
         setUserEmail(event.currentTarget.value)
@@ -288,6 +289,7 @@ export default function Profile() {
                 setUserName(res.data['data']['user'].userName)
                 setUserPhone(res.data['data']['user'].userPhone)
                 setUserGender(res.data['data']['user'].gender)
+                setUserRole(res.data['data']['user'].roleId)
             })
             .catch((reason: AxiosError) => {
                 if (reason.response.status == 401) {
@@ -496,6 +498,7 @@ export default function Profile() {
     }
 
     const [usersList, setUsersList] = useState([]);
+    const [allCommentsList, setAllCommentsList] = useState([]);
 
     const getUsersList = () => {
         axios.get('/admin/users', {
@@ -617,6 +620,21 @@ export default function Profile() {
             })
     }
 
+    const getAllUserComments = async () => {
+        await axios.get('/admin/allComments', {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then((res) => {
+                console.log("GET COMMENTS RESULT: " + res.data)
+                setAllCommentsList(res.data)
+            })
+            .catch((err) => {
+                console.log("GET COMMENTS: " + err.message)
+            })
+    }
+
     const deleteComment = async (id) => {
         await axios.delete(`/orders/comment/${id}`, {
             headers: {
@@ -625,10 +643,43 @@ export default function Profile() {
         })
             .then(() => {
                 getUserComments();
+                getAllUserComments();
                 snackHandleClick({
                     vertical: 'bottom',
                     horizontal: 'right',
                 })();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
+    const cancelOrder = async (id) => {
+        await axios.delete(`/orders/cancel/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                getUserOrders(roleOrder);
+                // snackHandleClick({
+                //     vertical: 'bottom',
+                //     horizontal: 'right',
+                // })();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
+    const deleteAd = async (id) => {
+        await axios.delete(`/ads/delete/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                getUserAds()
             })
             .catch((err) => {
                 throw err.message
@@ -674,6 +725,7 @@ export default function Profile() {
         getUsersList();
         getUserOrders(roleOrder);
         getUserComments();
+        getAllUserComments();
     }, [])
 
     return (
@@ -1168,10 +1220,11 @@ export default function Profile() {
                                     aria-label="full width tabs example"
                                     style={{ background: 'rgb(232, 232, 232)' }}
                                 >
-                                    <Tab label="Объявления" {...a11yProps(0)} />
+                                    <Tab label="Мои объявления" {...a11yProps(0)} />
                                     <Tab label="Заказы" {...a11yProps(1)} />
                                     <Tab label="Отзывы" {...a11yProps(2)} />
                                     {usersList.length !== 0 ? <Tab label="Пользователи" {...a11yProps(3)} /> : ''}
+                                    {userRole === 1 ? <Tab label="Модерация отзывов" {...a11yProps(4)} /> : ''}
                                 </Tabs>
                             </AppBar>
                             <SwipeableViews
@@ -1229,6 +1282,26 @@ export default function Profile() {
                                                             </Grid>
                                                         </Box> */}
                                                     </CardMedia>
+                                                    {
+                                                        ad.role == 'driver'
+                                                            ?
+                                                            <CardActions disableSpacing>
+                                                                <div style={{ width: '100%', textAlign: 'center', padding: '1em 0em' }}>
+                                                                    <Box style={{ marginTop: '0em' }}>
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="success"
+                                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                            startIcon={<DirectionsCarIcon />}
+                                                                            onClick={() => deleteAd(ad.id)}
+                                                                        >
+                                                                            Закрыть заказ
+                                                                        </Button>
+                                                                    </Box>
+                                                                </div>
+                                                            </CardActions>
+                                                            : ''
+                                                    }
                                                     {/* <CardContent>
                                                         <Accordion>
                                                             <AccordionSummary
@@ -1331,23 +1404,38 @@ export default function Profile() {
                                                                     : order['DriverId.userPhone']
                                                             }
                                                         </Typography>
+                                                        <Typography variant="body2" style={{ textAlign: 'left', padding: '0 2em' }} fontSize="1em" >
+                                                            {
+                                                                roleOrder == 'driver'
+                                                                    ? `Пол пассажира: ${order['PassengerId.gender'] === 'male' ? 'мужской' : order['PassengerId.gender'] === 'female' ? 'женский' : 'другой'} `
+                                                                    : `Пол водителя: ${order['DriverId.gender'] === 'male' ? 'мужской' : order['PassengerId.gender'] === 'female' ? 'женский' : 'другой'} `
+                                                            }
+                                                        </Typography>
+                                                        <Typography variant="body2" style={{ textAlign: 'center', marginTop: '1em', padding: '0 2em' }} fontSize="1em" >
+                                                            {
+                                                                roleOrder == 'driver'
+                                                                    ? 'Мест заказано: ' + order.seatsCount
+                                                                    : 'Вы заказали мест: ' + order.seatsCount
+                                                            }
+                                                        </Typography>
                                                     </CardContent>
                                                     <CardActions disableSpacing>
                                                         <div style={{ width: '100%', textAlign: 'center', padding: '1em 0em' }}>
                                                             {
                                                                 roleOrder == 'driver'
                                                                     ?
-                                                                    // <Box style={{ marginTop: '2em' }}>
-                                                                    //     <Button
-                                                                    //         variant="contained"
-                                                                    //         color="success"
-                                                                    //         sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                                    //         startIcon={<DirectionsCarIcon />}
-                                                                    //     >
-                                                                    //         Закрыть заказ
-                                                                    //     </Button>
-                                                                    // </Box>
-                                                                    <></>
+                                                                    <Box style={{ marginTop: '0em' }}>
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            color="error"
+                                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                            startIcon={<DirectionsCarIcon />}
+                                                                            onClick={() => cancelOrder(order.id)}
+                                                                        >
+                                                                            Отклонить заявку
+                                                                        </Button>
+                                                                    </Box>
+                                                                    // <></>
                                                                     :
                                                                     ''
                                                             }
@@ -1499,6 +1587,68 @@ export default function Profile() {
                                             </>
                                         ))}
                                     </List>
+                                </TabPanel>
+                                <TabPanel value={tabValue} index={4} dir={theme.direction}>
+                                    {
+                                        allCommentsList.length == 0
+                                            ? <span>На сайте ещё нет отзывов</span>
+                                            :
+                                            <>
+                                                <Box>
+                                                    <Typography>Список всех отзывов в системе</Typography>
+                                                </Box>
+                                                <List
+                                                    sx={{
+                                                        width: '100%',
+                                                        // maxWidth: 900,
+                                                        minWidth: 300,
+                                                        bgcolor: 'background.paper',
+                                                        marginTop: '2em'
+                                                    }}
+                                                >
+
+                                                    {allCommentsList.map((comment) => (
+                                                        <>
+                                                            <ListItem>
+                                                                <ListItemAvatar>
+                                                                    <Avatar src={`http://localhost:3001/${comment['User.userPhoto']}`} sx={{ width: '50px', height: '50px' }}>
+                                                                        {/* <ImageIcon /> */}
+                                                                    </Avatar>
+                                                                </ListItemAvatar>
+                                                                <ListItemText primary={'Имя: ' + comment['User.userName']} secondary={'Комментарий: ' + comment.comment} />
+                                                                <ListItemText
+                                                                    style={{ textAlign: 'right' }}
+                                                                    primary={
+                                                                        <Typography component="legend">Оценка</Typography>
+                                                                    }
+                                                                    secondary={
+                                                                        <Rating
+                                                                            name="read-only"
+                                                                            value={comment.rate}
+                                                                        />
+                                                                    }
+                                                                />
+                                                                <Box style={{ paddingLeft: '2em' }}>
+                                                                    <Tooltip title="Удалить комментарий">
+                                                                        <IconButton aria-label="delete"
+                                                                            onClick={() => deleteComment(comment.id)}
+                                                                        >
+                                                                            <HighlightOffIcon
+                                                                                style={{
+                                                                                    color: 'darkred'
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </Box>
+                                                            </ListItem>
+                                                            <Divider variant="inset" component="li" />
+                                                        </>
+                                                    ))}
+
+                                                </List>
+                                            </>
+                                    }
                                 </TabPanel>
                             </SwipeableViews>
                         </Box>

@@ -237,6 +237,62 @@ exports.getOrdersByAdId = async (req, res) => {
         })
 }
 
+exports.cancelOrder = async (req, res) => {
+    const orderId = req.params.id;
+    const order = await Orders.findOne({
+        where: {
+            id: orderId
+        },
+        raw: true,
+    })
+
+    const ad = await Ads.findOne({
+        where: {
+            id: order.adId
+        },
+        raw: true,
+    })
+    const seatsAvailable = ad.seatsCount + order.seatsCount;
+
+    try {
+        Ads
+            .update({
+                seatsCount: seatsAvailable
+            }, {
+                where: {
+                    id: ad.id
+                }
+            })
+            .then((res) => {
+                res.status(202).send(res);
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+    catch (err) {
+        res.status(500).json({
+            mesage: 'Something went wrong, try again: ' + e.mesage
+        })
+    }
+
+    try {
+        Orders
+            .destroy({ where: { id: orderId } })
+            .then(() => {
+                res.status(202).json({ message: 'order canceled successfully!' });
+            })
+            .catch((err) => {
+                throw err.message;
+            })
+    }
+    catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong, try again: ' + e.message
+        })
+    }
+}
+
 exports.getUserComments = async (req, res) => {
     const userId = req.headers['x-user-id'];
     console.log(`@@@@@@@@@@@ User Id For COMMETS: ${userId} @@@@@@@@@@@`)

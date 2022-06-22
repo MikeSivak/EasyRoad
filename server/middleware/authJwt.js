@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
@@ -28,7 +27,6 @@ isAdmin = (req, res, next) => {
   User.findByPk(req.userId)
     .then(user => {
       if(user.roleId == 1){
-        console.log("Admin: " + user.userName);
         next();
       }
       else{

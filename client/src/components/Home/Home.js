@@ -208,25 +208,6 @@ export default function Home() {
             <Box style={stylesHome.bannerBoxImage}>
                 <Search />
             </Box>
-            {/* <Box style={{ backgroundColor: '#282828', padding: '5em 0' }}>
-                <Box>
-                    <Typography variant='h3' color='white'>Как пользоваться нашим сервисом</Typography>
-                </Box>
-                <Container style={{ marginTop: '80px' }} maxWidth='lg'>
-                    <Box>
-
-                        <YMaps>
-                            <div>
-                                <Map width={'100%'} height={600} defaultState={{ center: [55.75, 37.57], zoom: 10, controls: [] }}>
-                                    <ZoomControl options={{ float: 'right' }} />
-                                    <TypeSelector options={{ float: 'right' }} />
-                                    <RouteButton options={{ float: 'right' }} />
-                                </Map>
-                            </div>
-                        </YMaps>
-                    </Box>
-                </Container>
-            </Box> */}
             <Box style={{ backgroundColor: '#19181C', padding: '5em 0' }}>
                 <Box>
                     <Typography variant='h3' color='white'>Наши преимущества</Typography>
