@@ -248,7 +248,7 @@ export default function Search() {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Box style={{ backgroundColor: "rgb(34, 34, 34)" }}>
+            <Box>
                 <Container style={stylesHome.mainSearchContainer} maxWidth='lg'>
                     <Grid container xs={12} spacing={2}>
                         <Grid item xs>

@@ -672,6 +672,24 @@ export default function Profile() {
             })
     }
 
+    const acceptOrder = async (id) => {
+        await axios.delete(`/orders/accept/${id}`, {
+            headers: {
+                'x-access-token': localStorage.getItem('x-access-token'),
+            }
+        })
+            .then(() => {
+                getUserOrders(roleOrder);
+                // snackHandleClick({
+                //     vertical: 'bottom',
+                //     horizontal: 'right',
+                // })();
+            })
+            .catch((err) => {
+                throw err.message
+            })
+    }
+
     const deleteAd = async (id) => {
         await axios.delete(`/ads/delete/${id}`, {
             headers: {
@@ -1424,18 +1442,34 @@ export default function Profile() {
                                                             {
                                                                 roleOrder == 'driver'
                                                                     ?
-                                                                    <Box style={{ marginTop: '0em' }}>
-                                                                        <Button
-                                                                            variant="contained"
-                                                                            color="error"
-                                                                            sx={{ textTransform: 'none', fontSize: '1em' }}
-                                                                            startIcon={<DirectionsCarIcon />}
-                                                                            onClick={() => cancelOrder(order.id)}
-                                                                        >
-                                                                            Отклонить заявку
-                                                                        </Button>
-                                                                    </Box>
-                                                                    // <></>
+                                                                    <Grid container xs>
+                                                                        <Grid item xs>
+                                                                            <Box style={{ marginTop: '0em' }}>
+                                                                                <Button
+                                                                                    variant="contained"
+                                                                                    color="success"
+                                                                                    sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                                    startIcon={<DirectionsCarIcon />}
+                                                                                    onClick={() => acceptOrder(order.id)}
+                                                                                >
+                                                                                    Принять
+                                                                                </Button>
+                                                                            </Box>
+                                                                        </Grid>
+                                                                        <Grid item xs>
+                                                                            <Box style={{ marginTop: '0em' }}>
+                                                                                <Button
+                                                                                    variant="contained"
+                                                                                    color="error"
+                                                                                    sx={{ textTransform: 'none', fontSize: '1em' }}
+                                                                                    startIcon={<DirectionsCarIcon />}
+                                                                                    onClick={() => cancelOrder(order.id)}
+                                                                                >
+                                                                                    Отклонить
+                                                                                </Button>
+                                                                            </Box>
+                                                                        </Grid>
+                                                                    </Grid>
                                                                     :
                                                                     ''
                                                             }
