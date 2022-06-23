@@ -1,6 +1,0 @@
-insert into roles(role_name)
-values
-('admin'),
-('user')
-
-select * from roles

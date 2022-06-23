@@ -97,7 +97,7 @@ app.use('/profile', [authJwt.verifyToken], [checkStatus], profileRoutes);
 // });
 
 db.sequelize.sync();
-
+// initial();
 async function initial() {
     await Role.create({
         id: 1,
